@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - run: dotnet restore Certiva.sln
+      - run: dotnet build Certiva.sln --configuration Release --no-restore
+      - run: dotnet test Certiva.sln --configuration Release --no-build --no-restore
+      - run: git diff --check
+
+  playwright:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: dotnet restore Certiva.sln
+      - run: dotnet build Certiva.sln --configuration Release --no-restore
+      - run: dotnet test Certiva.sln --configuration Release --no-build --no-restore
+      - run: npm ci
+        working-directory: tests/Certiva.Web.Tests/Browser
+      - run: npx playwright install --with-deps chromium
+        working-directory: tests/Certiva.Web.Tests/Browser
+      - run: npm test
+        working-directory: tests/Certiva.Web.Tests/Browser

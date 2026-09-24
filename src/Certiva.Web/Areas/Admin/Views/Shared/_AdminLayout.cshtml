@@ -1,0 +1,155 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentUserName = User.Identity?.Name ?? "Administrateur";
+    var nameParts = currentUserName.Split('@')[0].Split(new[] { '.', '_', '-', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+    var avatarText = nameParts.Length > 1
+        ? string.Concat(nameParts.Take(2).Select(part => char.ToUpperInvariant(part[0])))
+        : currentUserName[..Math.Min(2, currentUserName.Length)].ToUpperInvariant();
+    var pathSegments = Context.Request.Path.Value?.Split('/', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+    var currentLanguageSegment = pathSegments.Length > 0 && pathSegments[0] is "fr" or "en";
+    var languagePath = (string language) => "/" + string.Join('/', currentLanguageSegment
+        ? new[] { language }.Concat(pathSegments.Skip(1))
+        : new[] { language }.Concat(pathSegments));
+}
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10253f" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>@ViewData["Title"] · Certiva Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin/exams.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="admin-body">
+    <div class="admin-shell admin-app">
+        <aside class="admin-sidebar" id="adminSidebar" aria-labelledby="adminSidebarTitle">
+            <div class="admin-sidebar-brand">
+                <a class="admin-brand" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                    <img id="adminSidebarTitle" class="certiva-admin-brand-image" src="~/images/branding/certiva-logo-admin.png" width="480" height="160" alt="Certiva — PRACTICE • LEARN • CERTIFY" />
+                    <span class="admin-brand-copy"><small>@T["Administration"]</small></span>
+                </a>
+                <button class="admin-sidebar-close" type="button" aria-label="@T["Fermer la navigation"]" data-sidebar-close>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+                </button>
+            </div>
+
+            <nav class="admin-sidebar-nav" aria-label="@T["Navigation d’administration"]">
+                <a class="admin-nav-link @(currentController == "Dashboard" ? "is-active" : "")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z" /></svg><span>@T["Dashboard"]</span>
+                </a>
+
+                <div class="admin-sidebar-section">
+                    <h2 class="admin-sidebar-section-title">@T["Gestion des examens"]</h2>
+                    <a class="admin-nav-link @(currentController == "Exam" ? "is-active" : "")" asp-area="Admin" asp-controller="Exam" asp-action="Index">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H5V3z" /><path d="M14 3v6h5M8 13h8M8 17h8" /></svg><span>@T["Examens"]</span>
+                    </a>
+                    <a class="admin-nav-link @(currentController == "Skill" ? "is-active" : "")" asp-area="Admin" asp-controller="Skill" asp-action="Index">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg><span>@T["Compétences"]</span>
+                    </a>
+                    <a class="admin-nav-link @(currentController == "Question" ? "is-active" : "")" asp-area="Admin" asp-controller="Question" asp-action="Index">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1 .9-1.9 1.3-1.9 2.8M12 17h.01" /></svg><span>@T["Questions"]</span>
+                    </a>
+                </div>
+
+                <div class="admin-sidebar-section">
+                    <h2 class="admin-sidebar-section-title">@T["Suivi"]</h2>
+                    <a class="admin-nav-link @(currentController == "Attempts" ? "is-active" : "")" asp-area="Admin" asp-controller="Attempts" asp-action="Index">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h17M8 15l4-4 3 2 5-6" /></svg><span>@T["Tentatives"]</span>
+                    </a>
+                    <span class="admin-nav-link is-disabled" aria-disabled="true">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5" /></svg><span>@T["Rapports"]</span><span class="admin-nav-badge">@T["Bientôt"]</span>
+                    </span>
+                </div>
+
+                <div class="admin-sidebar-section">
+                    <h2 class="admin-sidebar-section-title">@T["Paramètres"]</h2>
+                    <span class="admin-nav-link is-disabled" aria-disabled="true">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3" /><path d="M3 20v-1a6 6 0 0 1 12 0v1zM17 11a3 3 0 1 0-1-5.8M18 14a5 5 0 0 1 3 4.6v1.4h-4" /></svg><span>@T["Utilisateurs"]</span><span class="admin-nav-badge">@T["Bientôt"]</span>
+                    </span>
+                    <span class="admin-nav-link is-disabled" aria-disabled="true">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 14 5l2.7-.3.8 2.6 2.3 1.5-.9 2.6.9 2.6-2.3 1.5-.8 2.6-2.7-.3-2 1.7-2-1.7-2.7.3-.8-2.6-2.3-1.5.9-2.6-.9-2.6 2.3-1.5.8-2.6L10 5z" /><circle cx="12" cy="12" r="3" /></svg><span>@T["Paramètres"]</span><span class="admin-nav-badge">@T["Bientôt"]</span>
+                    </span>
+                </div>
+            </nav>
+
+            <footer class="admin-sidebar-footer">
+                <div class="admin-sidebar-user">
+                    <span class="admin-avatar admin-avatar-muted" aria-hidden="true">@avatarText</span>
+                    <span class="admin-user-copy"><strong>@currentUserName</strong><small>@T["Administrateur"]</small></span>
+                </div>
+                <a class="admin-public-link" asp-area="" asp-controller="Home" asp-action="Index">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg><span>@T["Retour au site public"]</span>
+                </a>
+            </footer>
+        </aside>
+
+        <button class="admin-sidebar-backdrop" type="button" aria-label="@T["Fermer la navigation"]" data-sidebar-close hidden></button>
+
+        <div class="admin-main">
+            <header class="admin-topbar">
+                <div class="admin-topbar-start">
+                    <button class="admin-menu-toggle" type="button" aria-expanded="false" aria-controls="adminSidebar" aria-label="@T["Ouvrir la navigation"]" data-sidebar-toggle>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    </button>
+                    <label class="admin-search" title="@T["Recherche globale bientôt disponible"]" aria-label="@T["Recherche globale bientôt disponible"]">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>
+                        <input type="search" placeholder="@T["Rechercher un examen, une question, une compétence…"]" disabled aria-disabled="true" />
+                    </label>
+                </div>
+                <div class="admin-topbar-user">
+                    <span class="admin-avatar" aria-hidden="true">@avatarText</span>
+                    <span class="admin-user-copy"><strong>@currentUserName</strong><small>@T["Administrateur"]</small></span>
+                    <div class="admin-language-switch" aria-label="@T["Langue"]"><a lang="fr" href="@($"{languagePath("fr")}{Context.Request.QueryString}")" aria-current="@(System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "fr" ? "page" : null)">FR</a><span aria-hidden="true">|</span><a lang="en" href="@($"{languagePath("en")}{Context.Request.QueryString}")" aria-current="@(System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "en" ? "page" : null)">EN</a></div>
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                        <button class="admin-logout" type="submit" aria-label="@T["Se déconnecter"]" title="@T["Se déconnecter"]">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M21 3v18" /></svg><span>@T["Déconnexion"]</span>
+                        </button>
+                    </form>
+                </div>
+            </header>
+
+            <main class="admin-content" id="adminContent">
+                @if (IsSectionDefined("Breadcrumb"))
+                {
+                    <nav class="admin-breadcrumb" aria-label="@T["Fil d’Ariane"]"><ol class="breadcrumb mb-0">@await RenderSectionAsync("Breadcrumb")</ol></nav>
+                }
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (() => {
+            const sidebar = document.getElementById('adminSidebar');
+            const toggle = document.querySelector('[data-sidebar-toggle]');
+            const closeButtons = document.querySelectorAll('[data-sidebar-close]');
+            const backdrop = document.querySelector('.admin-sidebar-backdrop');
+            const mobileQuery = window.matchMedia('(max-width: 991.98px)');
+
+            const setSidebarOpen = (isOpen) => {
+                const shouldOpen = mobileQuery.matches && isOpen;
+                sidebar.classList.toggle('is-open', shouldOpen);
+                backdrop.hidden = !shouldOpen;
+                toggle.setAttribute('aria-expanded', String(shouldOpen));
+                document.body.classList.toggle('admin-sidebar-open', shouldOpen);
+            };
+
+            toggle.addEventListener('click', () => setSidebarOpen(!sidebar.classList.contains('is-open')));
+            closeButtons.forEach(button => button.addEventListener('click', () => setSidebarOpen(false)));
+            sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+                if (mobileQuery.matches) setSidebarOpen(false);
+            }));
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') setSidebarOpen(false);
+            });
+            mobileQuery.addEventListener('change', () => setSidebarOpen(false));
+        })();
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

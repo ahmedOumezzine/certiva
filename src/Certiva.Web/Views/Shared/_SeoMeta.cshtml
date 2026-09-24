@@ -1,0 +1,50 @@
+@{
+    var currentLanguage = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var seoTitle = ViewData["DocumentTitle"]?.ToString() ?? ViewData["Title"]?.ToString() ?? "Certiva";
+    var seoDescription = ViewData["MetaDescription"]?.ToString();
+    if (string.IsNullOrWhiteSpace(seoDescription))
+    {
+        seoDescription = T["seo.home.description"].Value;
+    }
+    var robots = ViewData["Robots"]?.ToString() ?? "index,follow";
+    var canonicalUrl = ViewData["CanonicalUrl"]?.ToString();
+    var isIndexable = !robots.Contains("noindex", StringComparison.OrdinalIgnoreCase);
+    var alternates = ViewData["AlternateLanguages"] as IDictionary<string, string>;
+    var jsonLd = ViewData["JsonLd"]?.ToString();
+}
+<title>@seoTitle</title>
+<meta name="robots" content="@robots" />
+@if (isIndexable)
+{
+    <meta name="description" content="@seoDescription" />
+}
+@if (isIndexable && !string.IsNullOrWhiteSpace(canonicalUrl))
+{
+    <link rel="canonical" href="@canonicalUrl" />
+}
+@if (isIndexable)
+{
+    <meta property="og:title" content="@seoTitle" />
+    <meta property="og:description" content="@seoDescription" />
+    @if (!string.IsNullOrWhiteSpace(canonicalUrl))
+    {
+        <meta property="og:url" content="@canonicalUrl" />
+    }
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Certiva" />
+    <meta property="og:locale" content="@(currentLanguage == "en" ? "en_US" : "fr_FR")" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="@seoTitle" />
+    <meta name="twitter:description" content="@seoDescription" />
+    @if (alternates is not null)
+    {
+        foreach (var alternate in alternates)
+        {
+            <link rel="alternate" hreflang="@alternate.Key" href="@alternate.Value" />
+        }
+    }
+    @if (!string.IsNullOrWhiteSpace(jsonLd))
+    {
+        <script type="application/ld+json">@Html.Raw(jsonLd)</script>
+    }
+}

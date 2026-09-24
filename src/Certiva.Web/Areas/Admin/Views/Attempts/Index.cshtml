@@ -1,0 +1,128 @@
+@using Certiva.Domain.Enums
+@model Certiva.Areas.Admin.ViewModels.AttemptIndexViewModel
+@{
+    ViewData["Title"] = T["Tentatives d’examen"];
+    var firstResult = Model.Attempts.Count == 0 ? 0 : (Model.Page - 1) * Model.PageSize + 1;
+    var lastResult = Model.Attempts.Count == 0 ? 0 : firstResult + Model.Attempts.Count - 1;
+}
+
+@section Breadcrumb { <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">@T["Exam Simulator"]</a></li><li class="breadcrumb-item active">@T["Tentatives"]</li> }
+
+<div class="exam-admin admin-page admin-list-page attempt-list-page">
+    <div class="admin-title-row admin-page-header">
+        <div><span class="admin-eyebrow admin-page-eyebrow">@T["SUIVI DES EXAMENS"]</span><h1 class="admin-page-title">@T["Tentatives"]</h1><p class="admin-page-subtitle">@T["Consultez les sessions et résultats des candidats."]</p></div>
+        <span class="attempt-total-badge">@Model.TotalCount @T[Model.TotalCount == 1 ? "Admin.AttemptSingular" : "Admin.AttemptPlural"]</span>
+    </div>
+
+    <form class="admin-filter-card exam-filter-card attempt-filter-card" method="get" asp-area="Admin" asp-controller="Attempts" asp-action="Index">
+        <label class="exam-status-field admin-filter-control">
+            <span class="visually-hidden">@T["Filtrer par statut"]</span>
+            <select id="status" name="status">
+                <option value="">@T["Tous les statuts"]</option>
+                @foreach (var status in Enum.GetValues<ExamAttemptStatus>())
+                {
+                    <option value="@status" selected="@(Model.Status == status)">@T.EnumLabel(status)</option>
+                }
+            </select>
+        </label>
+        <input type="hidden" name="examId" value="@Model.ExamId" />
+        <button type="submit" class="admin-primary admin-filter-submit exam-filter-submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6.5 7.5v5l-3 1v-6z" /></svg><span>@T["Appliquer le filtre"]</span>
+        </button>
+    </form>
+
+    <section class="admin-card admin-table-card exam-table-card attempt-table-card" aria-label="@T["Liste des tentatives"]">
+        @if (Model.Attempts.Count > 0)
+        {
+            <div class="exam-table-scroll">
+                <table class="admin-table admin-list-table attempt-list-table">
+                    <thead>
+                        <tr><th scope="col">@T["Examen"]</th><th scope="col">@T["Candidat"]</th><th scope="col">@T["Début (UTC)"]</th><th scope="col">@T["Terminé (UTC)"]</th><th scope="col">@T["Statut"]</th><th scope="col">@T["Score"]</th><th scope="col">@T["Résultat"]</th><th scope="col" class="attempt-actions-heading">@T["Actions"]</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var attempt in Model.Attempts)
+                    {
+                        var statusLabel = T.EnumLabel(attempt.Status);
+                        var statusClass = attempt.Status switch
+                        {
+                            ExamAttemptStatus.Completed => "admin-badge-success",
+                            ExamAttemptStatus.InProgress => "admin-badge-warning",
+                            _ => "admin-badge-muted"
+                        };
+                        <tr>
+                            <td class="attempt-exam-cell"><strong>@attempt.ExamName</strong></td>
+                            <td class="attempt-candidate-cell">
+                                @if (attempt.IsGuest)
+                                {
+                                    <span class="admin-badge admin-badge-muted">@T["Guest"]</span>
+                                    <span class="attempt-guest-email">@attempt.CandidateEmail</span>
+                                }
+                                else
+                                {
+                                    @attempt.Candidate
+                                }
+                            </td>
+                            <td>@(attempt.StartedAtUtc.ToString("g", System.Globalization.CultureInfo.CurrentCulture) + " UTC")</td>
+                            <td>@(attempt.CompletedAtUtc.HasValue ? attempt.CompletedAtUtc.Value.ToString("g", System.Globalization.CultureInfo.CurrentCulture) + " UTC" : "—")</td>
+                            <td><span class="admin-badge @statusClass">@statusLabel</span></td>
+                            <td>@(attempt.Score.HasValue ? $"{attempt.Score:0.##} / {attempt.MaxScore:0.##}" : "—")</td>
+                            <td>@(attempt.Percentage.HasValue ? $"{attempt.Percentage:0.#}% · {T[attempt.Passed == true ? "Réussite" : "Échec"]}" : "—")</td>
+                            <td>
+                                <div class="admin-actions attempt-actions">
+                                    <a class="admin-action-button admin-action-btn admin-action-btn-primary attempt-detail-action" asp-area="Admin" asp-controller="Attempts" asp-action="Details" asp-route-id="@attempt.Id" aria-label="@T["Détail"]" title="@T["Afficher le détail"]">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg><span>@T["Détail"]</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="admin-empty-state exam-list-empty">
+                <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h17M8 15l4-4 3 2 5-6" /></svg></span>
+                <h2>@T["Aucune tentative"]</h2>
+                <p>@T["Aucune tentative ne correspond à ce filtre."]</p>
+            </div>
+        }
+
+        <div class="exam-table-footer admin-list-footer">
+            <span>@T["Affichage de"] <strong>@firstResult–@lastResult</strong> @T["sur"] <strong>@Model.TotalCount</strong> @T[Model.TotalCount == 1 ? "Admin.AttemptSingular" : "Admin.AttemptPlural"]</span>
+            @if (Model.TotalPages > 1)
+            {
+                <nav class="admin-pagination" aria-label="@T["Pagination des tentatives"]">
+                    @if (Model.Page > 1)
+                    {
+                        <a asp-area="Admin" asp-controller="Attempts" asp-action="Index" asp-route-page="@(Model.Page - 1)" asp-route-status="@Model.Status" asp-route-examId="@Model.ExamId" aria-label="@T["Page précédente"]" title="@T["Page précédente"]">‹</a>
+                    }
+                    else
+                    {
+                        <span class="is-disabled" aria-disabled="true" aria-label="@T["Page précédente"]">‹</span>
+                    }
+                    @for (var pageNumber = 1; pageNumber <= Model.TotalPages; pageNumber++)
+                    {
+                        if (pageNumber == Model.Page)
+                        {
+                            <span class="is-current" aria-current="page">@pageNumber</span>
+                        }
+                        else
+                        {
+                            <a asp-area="Admin" asp-controller="Attempts" asp-action="Index" asp-route-page="@pageNumber" asp-route-status="@Model.Status" asp-route-examId="@Model.ExamId" aria-label="Page @pageNumber">@pageNumber</a>
+                        }
+                    }
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <a asp-area="Admin" asp-controller="Attempts" asp-action="Index" asp-route-page="@(Model.Page + 1)" asp-route-status="@Model.Status" asp-route-examId="@Model.ExamId" aria-label="@T["Page suivante"]" title="@T["Page suivante"]">›</a>
+                    }
+                    else
+                    {
+                        <span class="is-disabled" aria-disabled="true" aria-label="@T["Page suivante"]">›</span>
+                    }
+                </nav>
+            }
+        </div>
+    </section>
+</div>

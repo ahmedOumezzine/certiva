@@ -1,0 +1,211 @@
+@using Certiva.Domain.Enums
+@model Certiva.Models.Exams.TakeExamViewModel
+@{
+    ViewData["Title"] = $"{T["Simulation"]} - {Model.ExamName}";
+    ViewData["Robots"] = "noindex,nofollow";
+    string TypeLabel(QuestionType type) => T.EnumLabel(type);
+    var totalQuestions = Model.Questions.Count;
+    var culture = LocalizedPublicRoutes.CultureFromPath(Context.Request.Path.Value);
+    var detailsRoute = LocalizedPublicRoutes.Details(culture);
+}
+
+<section class="exam-take-page take-shell" data-exam-slug="@Model.ExamSlug" data-attempt-id="@Model.AttemptId" data-save-url="/@culture/Home/SaveAnswer">
+    <header class="exam-take-header">
+        <div class="exam-take-identity">
+            <span class="exam-take-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M10 7h28v34H10zM16 15h16M16 22h16M16 29h16M16 36h10"/><path d="M6 12v32h28"/></svg></span>
+            <div class="exam-take-title">
+                <h1>@Model.ExamName</h1>
+                @if (!string.IsNullOrWhiteSpace(Model.ExamDescription))
+                {
+                    <p>@Model.ExamDescription</p>
+                }
+                <div class="exam-take-meta">
+                    @if (!string.IsNullOrWhiteSpace(Model.ExamCode)) { <span><b aria-hidden="true">▤</b> @T["Code"] : @Model.ExamCode</span> }
+                    <span><b aria-hidden="true">☷</b> @totalQuestions @T["questionsLabel"]</span>
+                    <span><b aria-hidden="true">◷</b> @(Model.DurationMinutes.HasValue ? $"{Model.DurationMinutes} {T["minutes"]}" : T["NoLimit"].Value)</span>
+                    <span><b aria-hidden="true">★</b> @T["ThresholdLabel"] : @Model.PassingPercentage%</span>
+                </div>
+            </div>
+        </div>
+        <div class="exam-take-header-actions">
+            <a asp-route="@detailsRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@Model.ExamSlug" class="exam-quit-link"><span aria-hidden="true">←</span> @T["Quitter l’examen"]</a>
+            <div class="exam-take-timer" id="timer" data-has-deadline="@Model.ExpiresAtUtc.HasValue" data-remaining-seconds="@Model.RemainingSeconds" role="timer" aria-label="@T["Temps restant"]">
+                <span class="exam-timer-icon" aria-hidden="true">◷</span>
+                <strong id="timerValue">@(Model.ExpiresAtUtc.HasValue ? "00:00" : "Sans limite")</strong>
+                <small>@T["Temps restant"]</small>
+            </div>
+        </div>
+    </header>
+
+    @if (!Model.Questions.Any())
+    {
+        <div class="exam-take-empty">
+            <h2>@T["Aucune question disponible"]</h2>
+            <p>@T["Cette tentative ne contient pas de question accessible."]</p>
+            <a asp-route="@detailsRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@Model.ExamSlug" class="exam-take-secondary-button">@T["Retour aux détails"]</a>
+        </div>
+    }
+    else
+    {
+        <form asp-area="" asp-controller="Home" asp-action="SubmitAttempt" asp-route-culture="@culture" method="post" id="examForm" class="exam-take-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="attemptId" value="@Model.AttemptId" />
+
+            <div class="exam-take-layout">
+                <aside class="exam-take-sidebar" aria-label="@T["Progression et navigation des questions"]">
+                    <section class="exam-progress-card">
+                        <div class="exam-take-card-heading"><h2>@T["Progression"]</h2><span><b id="questionCounter">1</b> / @totalQuestions @T["questionsLabel"]</span></div>
+                        <div class="exam-progress-track" role="progressbar" aria-label="@T["Progression dans l’examen"]" aria-valuemin="0" aria-valuemax="@totalQuestions" aria-valuenow="1">
+                            <span id="progressBar"></span>
+                        </div>
+                        <div class="exam-progress-foot"><span id="progressPercentage">@(totalQuestions == 0 ? 0 : Math.Max(1, (int)Math.Ceiling(100d / totalQuestions)))%</span></div>
+                    </section>
+
+                    <details class="exam-question-nav-card exam-question-nav-mobile" open>
+                        <summary><span class="exam-take-card-heading"><strong>@T["Questions"]</strong><small id="questionsNavSummary">1 @T["js.of"] @totalQuestions</small></span><span class="exam-nav-chevron" aria-hidden="true">⌄</span></summary>
+                        <div class="exam-question-nav" id="questionPalette" aria-label="@T["Aller à une question"]">
+                            @for (var i = 0; i < totalQuestions; i++)
+                            {
+                                <button type="button" data-jump="@i" aria-label="@T["Question {0}", i + 1]" aria-current="@(i == 0 ? "step" : null)">@(i + 1)</button>
+                            }
+                        </div>
+                    </details>
+
+                    <section class="exam-take-legend-card" aria-labelledby="take-legend-title">
+                        <h2 id="take-legend-title">@T["Légende"]</h2>
+                        <ul>
+                            <li><i class="legend-current"></i>@T["Question actuelle"]</li>
+                            <li><i class="legend-answered"></i>@T["Réponse enregistrée"]</li>
+                            <li><i class="legend-saving"></i>@T["Enregistrement en cours"]</li>
+                            <li><i class="legend-save-error"></i>@T["Réponse non enregistrée"]</li>
+                            <li><i class="legend-review"></i>@T["Marquée pour révision"]</li>
+                            <li><i class="legend-empty"></i>@T["Non répondue"]</li>
+                        </ul>
+                    </section>
+                </aside>
+
+                <main class="exam-question-stage">
+                    @for (var i = 0; i < totalQuestions; i++)
+                    {
+                        var question = Model.Questions[i];
+                        <article class="question-panel exam-question-panel @(i == 0 ? "active" : "")" data-question-index="@i" data-question-id="@question.Id" data-attempt-question-id="@question.AttemptQuestionId">
+                            <header class="exam-question-heading">
+                                <div><p class="exam-question-counter">@T["Question"] <strong>@(i + 1)</strong> @T["js.of"] @totalQuestions</p></div>
+                                <label class="exam-review-button">
+                                    <input type="checkbox" class="mark-review" aria-label="@T["Marquer la question {0} pour révision", i + 1]" />
+                                    <span class="exam-review-button-icon" aria-hidden="true">⚑</span>
+                                    <span class="review-button-text">@T["Marquer pour révision"]</span>
+                                </label>
+                            </header>
+
+                            <div class="exam-question-badges"><span>@question.SkillName</span><span>@TypeLabel(question.QuestionType)</span></div>
+                            <h2 class="exam-question-text" tabindex="-1">@question.Description</h2>
+                            <p class="exam-question-helper">@(question.QuestionType == QuestionType.MultiChoice ? T["Plusieurs réponses peuvent être correctes."] : question.QuestionType == QuestionType.ShortAnswer ? T["Saisissez votre réponse dans le champ ci-dessous."] : T["Choisissez la réponse qui vous semble correcte."])</p>
+                            <p class="answer-save-status exam-answer-save-status" data-state="saved" aria-live="polite"></p>
+
+                            @if (question.QuestionType is QuestionType.SingleChoice or QuestionType.TrueFalse)
+                            {
+                                <div class="choice-list exam-answer-list">
+                                    @foreach (var choice in question.Choices)
+                                    {
+                                        var label = question.QuestionType == QuestionType.TrueFalse
+                                            ? (string.Equals(choice.ChoiceText.Trim(), "True", StringComparison.OrdinalIgnoreCase) ? "Vrai" : string.Equals(choice.ChoiceText.Trim(), "False", StringComparison.OrdinalIgnoreCase) ? "Faux" : choice.ChoiceText)
+                                            : choice.ChoiceText;
+                                        <label class="choice-option exam-answer-option">
+                                            <input type="radio" name="question_@question.Id" value="@choice.Id" data-attempt-choice-id="@choice.AttemptChoiceId" id="choice_@choice.Id" checked="@(question.SelectedChoiceIds.Contains(choice.Id))" />
+                                            <span class="exam-answer-indicator" aria-hidden="true"></span>
+                                            <span class="exam-answer-label">@label</span>
+                                        </label>
+                                    }
+                                </div>
+                            }
+                            else if (question.QuestionType is QuestionType.MultiChoice or QuestionType.DragAndDrop or QuestionType.DragAndDrop2)
+                            {
+                                <div class="choice-list exam-answer-list">
+                                    @foreach (var group in question.Choices.GroupBy(c => c.GroupBy ?? "Options"))
+                                    {
+                                        @if (question.QuestionType is QuestionType.DragAndDrop or QuestionType.DragAndDrop2)
+                                        {
+                                            <h3 class="exam-answer-group-heading">@group.Key</h3>
+                                        }
+                                        @foreach (var choice in group)
+                                        {
+                                            <label class="choice-option exam-answer-option exam-answer-option-checkbox">
+                                                <input type="checkbox" name="question_@question.Id" value="@choice.Id" data-attempt-choice-id="@choice.AttemptChoiceId" id="choice_@choice.Id" checked="@(question.SelectedChoiceIds.Contains(choice.Id))" />
+                                                <span class="exam-answer-indicator" aria-hidden="true"></span>
+                                                <span class="exam-answer-label">@choice.ChoiceText</span>
+                                            </label>
+                                        }
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <label class="exam-short-answer">
+                                    <span class="visually-hidden">@T["Votre réponse"]</span>
+                                    <textarea name="question_@(question.Id)_text" rows="4" placeholder="@T["Saisissez votre réponse"]">@question.TextAnswer</textarea>
+                                </label>
+                            }
+
+                            <aside class="exam-generic-tip"><span aria-hidden="true">i</span><p><strong>@T["Conseil"]</strong>@T["Prenez le temps de lire attentivement la question."]</p></aside>
+                        </article>
+                    }
+
+                    <footer class="exam-question-navigation">
+                        <button type="button" class="exam-take-secondary-button" id="prevQuestion"><span aria-hidden="true">←</span> @T["Précédent"]</button>
+                        <button type="button" class="exam-take-primary-button" id="nextQuestion">@T["Suivant"] <span aria-hidden="true">→</span></button>
+                    </footer>
+                </main>
+            </div>
+
+            <footer class="exam-submit-bar">
+                <button type="button" class="exam-take-secondary-button" id="showQuestionList"><span aria-hidden="true">☷</span> @T["Liste des questions"]</button>
+                <button type="submit" class="exam-take-submit-button" id="finishExam"><span aria-hidden="true">✓</span> @T["Terminer l’examen"]</button>
+            </footer>
+
+            <dialog class="exam-submit-dialog" id="submitDialog" aria-labelledby="submitDialogTitle">
+                <div class="exam-submit-dialog-icon" aria-hidden="true">✓</div>
+                <h2 id="submitDialogTitle">@T["Terminer l’examen ?"]</h2>
+                <p>@T["Vérifiez votre progression avant d’envoyer vos réponses."]</p>
+                <p id="submitSaveError" class="text-danger" role="alert" hidden></p>
+                <dl>
+                    <div><dt>@T["Questions"]</dt><dd>@totalQuestions</dd></div>
+                    <div><dt>@T["Répondues"]</dt><dd id="submitAnsweredCount">0</dd></div>
+                    <div><dt>@T["Sans réponse"]</dt><dd id="submitUnansweredCount">@totalQuestions</dd></div>
+                    <div><dt>@T["À revoir"]</dt><dd id="submitReviewCount">0</dd></div>
+                </dl>
+                <div class="exam-submit-dialog-actions">
+                    <button type="button" class="exam-take-secondary-button" id="cancelSubmit">@T["Continuer l’examen"]</button>
+                    <button type="button" class="exam-take-submit-button" id="confirmSubmit">@T["Terminer l’examen"]</button>
+                </div>
+            </dialog>
+        </form>
+    }
+</section>
+
+@section Scripts {
+    <script>
+        window.examI18n = {
+            saving: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.saving"].Value)),
+            offline: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.offline"].Value)),
+            expiredAnswer: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.expiredAnswer"].Value)),
+            saved: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.saved"].Value)),
+            retry: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.retry"].Value)),
+            failed: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.failed"].Value)),
+            savesFailed: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.savesFailed"].Value)),
+            expiring: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.expiring"].Value)),
+            answerSaved: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.answerSaved"].Value)),
+            savingAnswer: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.savingAnswer"].Value)),
+            answerFailed: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.answerFailed"].Value)),
+            unanswered: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.unanswered"].Value)),
+            reviewMarked: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.reviewMarked"].Value)),
+            markReview: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.markReview"].Value)),
+            confirmSubmit: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.confirmSubmit"].Value)),
+            remaining: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.remaining"].Value)),
+            question: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.question"].Value)),
+            reviewSuffix: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.reviewSuffix"].Value)),
+            of: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(T["js.of"].Value))
+        };
+    </script>
+    <script src="~/js/exams.js" asp-append-version="true"></script>
+}

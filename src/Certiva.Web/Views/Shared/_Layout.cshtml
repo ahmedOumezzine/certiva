@@ -1,0 +1,78 @@
+@{
+    var currentCulture = LocalizedPublicRoutes.CultureFromPath(Context.Request.Path.Value);
+    var languageSwitchUrls = ViewData["LanguageSwitchUrls"] as IDictionary<string, string>;
+    var languagePath = (string language) => languageSwitchUrls != null && languageSwitchUrls.ContainsKey(language)
+        ? languageSwitchUrls[language]
+        : LocalizedPublicRoutes.SwitchPath(Context.Request.Path.Value, language);
+    var isAttemptPage = Context.Request.Path.Value?.Contains("/passer/", StringComparison.OrdinalIgnoreCase) == true
+        || Context.Request.Path.Value?.Contains("/take/", StringComparison.OrdinalIgnoreCase) == true
+        || Context.Request.Path.Value?.Contains("/resultat/", StringComparison.OrdinalIgnoreCase) == true
+        || Context.Request.Path.Value?.Contains("/result/", StringComparison.OrdinalIgnoreCase) == true;
+}
+<!DOCTYPE html>
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="application-name" content="Certiva" />
+    <partial name="_SeoMeta" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/exams-public.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Certiva.Web.styles.css" asp-append-version="true" />
+</head>
+<body class="public-body">
+    <header class="public-header">
+        <nav class="public-navbar" aria-label="@T["Navigation principale"]">
+            <a class="public-brand" href="/@currentCulture" aria-label="Certiva, accueil">
+                <img src="~/images/branding/certiva-logo.png" width="2172" height="724" alt="Certiva — PRACTICE • LEARN • CERTIFY" />
+                <span class="public-brand-mobile" aria-hidden="true">Certiva</span>
+            </a>
+            <button class="public-nav-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#publicNav" aria-controls="publicNav" aria-expanded="false" aria-label="@T["Ouvrir le menu"]">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="public-nav-panel collapse" id="publicNav">
+                <ul class="public-nav-links">
+                    <li><a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "is-active" : "")" href="/@currentCulture">@T["Accueil"]</a></li>
+                    <li><a href="@(currentCulture == "en" ? "/en/exams" : "/fr/examens")#exams-title">@T["Examens"]</a></li>
+                </ul>
+                <ul class="public-nav-actions">
+                    <li class="public-language-switch" aria-label="@T["Langue"]">
+                        @if (isAttemptPage)
+                        {
+                            <span lang="fr" aria-current="@(currentCulture == "fr" ? "page" : null)">FR</span><span aria-hidden="true">|</span><span lang="en" aria-current="@(currentCulture == "en" ? "page" : null)" title="@T["La langue est conservée pendant une tentative."]">EN</span>
+                        }
+                        else
+                        {
+                            <a lang="fr" href="@($"{languagePath("fr")}{Context.Request.QueryString}")" aria-current="@(currentCulture == "fr" ? "page" : null)">FR</a><span aria-hidden="true">|</span><a lang="en" href="@($"{languagePath("en")}{Context.Request.QueryString}")" aria-current="@(currentCulture == "en" ? "page" : null)">EN</a>
+                        }
+                    </li>
+                    <partial name="_LoginPartial" />
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="public-main" role="main">
+        @if (ViewData["ShowEnglishFallbackNotice"] as bool? == true)
+        {
+            <p class="alert alert-info" role="status">@T["public.fallbackNotice"]</p>
+        }
+        <div class="public-page-container @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "public-home-container" : "")">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="public-footer">
+        <div class="public-footer-inner">
+            <div><span>© @DateTime.Now.Year - Certiva</span></div>
+            <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5ZM5 11v5c4 3 10 3 14 0v-5" /></svg>@T["Votre réussite, notre mission"]</p>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,314 @@
+@model QuestionEditViewModel
+@{
+    var isEdit = Model.Id != Guid.Empty;
+    var pageTitle = isEdit ? T["Modifier la question"].Value : T["Créer une question"].Value;
+    var questionTypeLabel = T.EnumLabel(Model.QuestionType);
+    var selectedExam = Model.Exams.FirstOrDefault(exam => exam.Id == Model.ExamId);
+    var selectedSkill = Model.Skills.FirstOrDefault(skill => skill.Id == Model.SkillId);
+    ViewData["Title"] = pageTitle;
+}
+@section Breadcrumb {
+    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Question" asp-action="Index">@T["Questions"]</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@pageTitle</li>
+}
+
+<div class="exam-admin admin-page admin-form-page">
+    <header class="admin-title-row admin-page-header admin-form-header">
+        <div>
+            <span class="admin-eyebrow admin-page-eyebrow">@T["BANQUE DE QUESTIONS"]</span>
+            <h1 class="admin-page-title">@pageTitle</h1>
+            <p class="admin-page-subtitle">@(isEdit ? T["Modifiez le contenu, le classement et les réponses."] : T["Créez une question et configurez ses réponses."])</p>
+        </div>
+        <a asp-area="Admin" asp-controller="Question" asp-action="Index" class="admin-secondary admin-form-back-link">← <span>@T["Retour aux questions"]</span></a>
+    </header>
+
+    <form asp-area="Admin" asp-controller="Question" asp-action="Save" method="post" class="admin-form question-type-form" id="questionForm" data-original-type="@((int)Model.QuestionType)"
+          data-confirm-type-change="@T["JS.QuestionTypeChange"]" data-remove="@T["Retirer"]" data-correct="@T["Correcte"]"
+          data-answer-fr="@T["Réponse (français)"]" data-answer-en="@T["Answer (English)"]" data-answer-placeholder-fr="@T["Texte de réponse"]" data-answer-placeholder-en="@T["Answer text"]"
+          data-source="@T["Source"]" data-destination="@T["Destination"]" data-item="@T["Item"]" data-group="@T["Groupe"]" data-language-en="@T["Anglais"]" data-source-example="@T["Controller"]" data-destination-example="@T["Handles HTTP requests"]" data-group-example="@T["Backend"]"
+          data-type-single="@T.EnumLabel(QuestionType.SingleChoice)" data-type-multiple="@T.EnumLabel(QuestionType.MultiChoice)" data-type-true-false="@T.EnumLabel(QuestionType.TrueFalse)" data-type-short="@T.EnumLabel(QuestionType.ShortAnswer)" data-type-long="@T.EnumLabel(QuestionType.LongAnswer)" data-type-blank="@T.EnumLabel(QuestionType.FillInBlank)" data-type-match="@T.EnumLabel(QuestionType.DragAndDrop)" data-type-group="@T.EnumLabel(QuestionType.DragAndDrop2)"
+          data-validation-add-two="@T["JS.AddTwoChoices"]" data-validation-exactly-one="@T["Question.SelectExactlyOneCorrect"]" data-validation-select-one="@T["JS.SelectAtLeastOneCorrect"]" data-validation-answer-required="@T["Question.ExpectedAnswerRequired"]" data-validation-blank-required="@T["Question.BlankTextRequired"]" data-validation-two-pairs="@T["JS.AddTwoPairs"]" data-validation-two-items="@T["JS.AddTwoItems"]" data-validation-two-groups="@T["Question.AddTwoDistinctGroups"]">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="admin-form-validation-summary" role="alert"></div>
+
+        <div class="admin-form-layout">
+          <div class="admin-form-main">
+        <section class="admin-card admin-form-section question-form-section">
+            <header class="admin-form-section-header"><span class="admin-form-section-icon admin-icon-blue" aria-hidden="true">?</span><span><h2>@T["Informations générales"]</h2><p>@T["Définissez le contenu et le classement de la question."]</p></span></header>
+            <div class="admin-form-grid">
+                <div class="admin-form-field">
+                    <label asp-for="ExamId">@T["Examen"]</label>
+                    <select asp-for="ExamId" class="form-select">
+                        <option value="">@T["Sélectionner"]</option>
+                        @foreach (var exam in Model.Exams)
+                        {
+                            <option value="@exam.Id" selected="@(Model.ExamId == exam.Id)">@exam.Name</option>
+                        }
+                    </select><span asp-validation-for="ExamId" class="admin-field-validation"></span>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="SkillId">@T["Compétence"]</label>
+                    <select asp-for="SkillId" class="form-select">
+                        <option value="">@T["Général"]</option>
+                        @foreach (var skill in Model.Skills)
+                        {
+                            <option value="@skill.Id" selected="@(Model.SkillId == skill.Id)">@skill.Name</option>
+                        }
+                    </select><span asp-validation-for="SkillId" class="admin-field-validation"></span>
+                </div>
+                <div class="admin-form-field admin-field-full">
+                    <label asp-for="Description">@T["Question (français)"]</label>
+                    <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="admin-field-validation"></span>
+                    <small class="admin-form-help">@T["Formulez clairement ce qui est demandé au candidat."]</small>
+                </div>
+                <div class="admin-form-field admin-field-full">
+                    <label asp-for="EnglishDescription">@T["Question (English)"]</label>
+                    <textarea asp-for="EnglishDescription" class="form-control" rows="4" lang="en"></textarea>
+                    <span asp-validation-for="EnglishDescription" class="admin-field-validation"></span>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="QuestionType">@T["Type"]</label>
+                    <select asp-for="QuestionType" class="form-select" id="QuestionType">
+                        @foreach (var type in Enum.GetValues<QuestionType>())
+                        {
+                            var typeLabel = T.EnumLabel(type);
+                            <option value="@((int)type)">@typeLabel</option>
+                        }
+                    </select>
+                </div>
+                <div class="admin-form-field">
+                    <label asp-for="Status">@T["Statut"]</label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Draft">@T.EnumLabel(Status.Draft)</option>
+                        <option value="Published">@T.EnumLabel(Status.Published)</option>
+                        <option value="Archived">@T.EnumLabel(Status.Archived)</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section" data-type-panel="SingleChoice">
+            <div class="section-head">
+                <div>
+                    <h2>@T["Choix unique"]</h2>
+                    <p>@T["Ajoutez au moins deux choix et sélectionnez exactement une bonne réponse."]</p>
+                </div>
+                <button type="button" class="admin-secondary" data-add-choice>@T["Ajouter choix"]</button>
+            </div>
+            <div class="choice-list-modern" data-choice-list data-correct-mode="single">
+                @for (var i = 0; i < Model.Choices.Count; i++)
+                {
+                    <div class="choice-row-modern">
+                        <input type="hidden" name="Choices[@i].Id" value="@Model.Choices[i].Id" />
+                        <label>@T["Réponse (français)"] <input name="Choices[@i].ChoiceText" value="@Model.Choices[i].ChoiceText" placeholder="@T["Texte de réponse"]" /></label>
+                        <label>@T["Answer (English)"] <input name="Choices[@i].EnglishChoiceText" value="@Model.Choices[i].EnglishChoiceText" lang="en" placeholder="@T["Answer text"]" /></label>
+                        <label class="radio-card"><input type="radio" name="singleCorrectChoice" data-choice-correct-radio checked="@Model.Choices[i].IsCorrect" /> @T["Correcte"]</label>
+                        <input type="hidden" name="Choices[@i].IsCorrect" value="@Model.Choices[i].IsCorrect.ToString().ToLowerInvariant()" data-choice-correct />
+                        <button type="button" class="remove-choice" data-remove-row>@T["Retirer"]</button>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section" data-type-panel="MultiChoice">
+            <div class="section-head">
+                <div>
+                    <h2>@T["Choix multiples"]</h2>
+                    <p>@T["Ajoutez au moins deux choix et cochez une ou plusieurs bonnes réponses."]</p>
+                </div>
+                <button type="button" class="admin-secondary" data-add-choice>@T["Ajouter choix"]</button>
+            </div>
+            <div class="choice-list-modern" data-choice-list data-correct-mode="multi">
+                @for (var i = 0; i < Model.Choices.Count; i++)
+                {
+                    <div class="choice-row-modern">
+                        <input type="hidden" name="Choices[@i].Id" value="@Model.Choices[i].Id" />
+                        <label>@T["Réponse (français)"] <input name="Choices[@i].ChoiceText" value="@Model.Choices[i].ChoiceText" placeholder="@T["Texte de réponse"]" /></label>
+                        <label>@T["Answer (English)"] <input name="Choices[@i].EnglishChoiceText" value="@Model.Choices[i].EnglishChoiceText" lang="en" placeholder="@T["Answer text"]" /></label>
+                        <label class="checkline"><input type="checkbox" name="Choices[@i].IsCorrect" value="true" checked="@Model.Choices[i].IsCorrect" /> @T["Correcte"]</label>
+                        <input type="hidden" name="Choices[@i].IsCorrect" value="false" />
+                        <button type="button" class="remove-choice" data-remove-row>@T["Retirer"]</button>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section" data-type-panel="TrueFalse">
+            <div class="section-head compact">
+                <h2>@T["True / False"]</h2>
+            </div>
+            @{
+                var trueChoice = Model.Choices.FirstOrDefault(c => c.EnglishChoiceText.Equals("True", StringComparison.OrdinalIgnoreCase) || c.ChoiceText.Equals("True", StringComparison.OrdinalIgnoreCase));
+                var falseChoice = Model.Choices.FirstOrDefault(c => c.EnglishChoiceText.Equals("False", StringComparison.OrdinalIgnoreCase) || c.ChoiceText.Equals("False", StringComparison.OrdinalIgnoreCase));
+                var trueChecked = trueChoice?.IsCorrect ?? !Model.Choices.Any(c => c.IsCorrect);
+                var falseChecked = falseChoice?.IsCorrect ?? false;
+            }
+            <div class="truefalse-grid">
+                <label class="tf-card">
+                    <input type="radio" name="trueFalseCorrect" value="True" checked="@trueChecked" />
+                    <span>@T["True"]</span>
+                </label>
+                <label class="tf-card">
+                    <input type="radio" name="trueFalseCorrect" value="False" checked="@falseChecked" />
+                    <span>@T["False"]</span>
+                </label>
+            </div>
+            <input type="hidden" name="Choices[0].ChoiceText" value="True" />
+            <input type="hidden" name="Choices[0].IsCorrect" value="@trueChecked.ToString().ToLowerInvariant()" data-tf-correct="True" />
+            <input type="hidden" name="Choices[1].ChoiceText" value="False" />
+            <input type="hidden" name="Choices[1].IsCorrect" value="@falseChecked.ToString().ToLowerInvariant()" data-tf-correct="False" />
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section" data-type-panel="ShortAnswer">
+            <div class="section-head compact">
+                <div>
+                    <h2>@T["Réponse courte"]</h2>
+                    <p>@T["La réponse attendue et ses variantes seront sauvegardées comme réponses correctes."]</p>
+                </div>
+            </div>
+            <label>@T["Réponse attendue"]
+                <input asp-for="ExpectedAnswer" placeholder="@T["Ex: Middleware"]" />
+            </label>
+            <label>@T["Expected answer (English)"]
+                <input asp-for="EnglishExpectedAnswer" lang="en" />
+            </label>
+            <span asp-validation-for="ExpectedAnswer" class="field-validation-error"></span>
+            <label>@T["Variantes acceptées"]
+                <textarea asp-for="AcceptedAnswers" rows="4" placeholder="@T["Une variante par ligne, ou séparée par ;"]"></textarea>
+            </label>
+            <label>@T["Accepted answers (English)"]
+                <textarea asp-for="EnglishAcceptedAnswers" rows="4" lang="en"></textarea>
+            </label>
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section" data-type-panel="LongAnswer">
+            <div class="section-head compact">
+                <div>
+                    <h2>@T["Réponse longue"]</h2>
+                    <p>@T["Utilisez l’explication comme modèle de réponse ou grille de correction."]</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section" data-type-panel="FillInBlank">
+            <div class="section-head compact">
+                <div>
+                    <h2>@T["Texte à trou"]</h2>
+                    <p>@T["Le texte à trou et les réponses acceptées seront utilisés pour la correction."]</p>
+                </div>
+            </div>
+            <label>@T["Texte avec blanc"]
+                <textarea asp-for="FillInBlank" rows="3" placeholder="@T["ASP.NET Core utilise le middleware ____ pour gérer les fichiers statiques."]"></textarea>
+            </label>
+            <label>@T["Text with blank (English)"]
+                <textarea asp-for="EnglishFillInBlank" rows="3" lang="en"></textarea>
+            </label>
+            <span asp-validation-for="FillInBlank" class="field-validation-error"></span>
+            <label>@T["Réponse correcte"]
+                <input asp-for="ExpectedAnswer" placeholder="@T["Ex: UseStaticFiles"]" />
+            </label>
+            <label>@T["Correct answer (English)"]
+                <input asp-for="EnglishExpectedAnswer" lang="en" />
+            </label>
+            <label>@T["Variantes acceptées"]
+                <textarea asp-for="AcceptedAnswers" rows="4" placeholder="@T["Une variante par ligne"]"></textarea>
+            </label>
+            <label>@T["Accepted answers (English)"]
+                <textarea asp-for="EnglishAcceptedAnswers" rows="4" lang="en"></textarea>
+            </label>
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section" data-type-panel="DragAndDrop">
+            <div class="section-head">
+                <div>
+                    <h2>@T["Paires à associer"]</h2>
+                    <p>@T["Source sera stocké dans ChoiceText, destination dans GroupBy."]</p>
+                </div>
+                <button type="button" class="admin-secondary" data-add-pair>@T["Ajouter paire"]</button>
+            </div>
+            <div class="pair-list" data-pair-list>
+                @for (var i = 0; i < Model.DragDropPairs.Count; i++)
+                {
+                    <div class="pair-row">
+                        <input type="hidden" name="DragDropPairs[@i].Id" value="@Model.DragDropPairs[i].Id" />
+                        <label>@T["Source"] <input name="DragDropPairs[@i].Source" value="@Model.DragDropPairs[i].Source" placeholder="@T["Controller"]" /></label>
+                        <label>@T["Destination"] <input name="DragDropPairs[@i].Target" value="@Model.DragDropPairs[i].Target" placeholder="@T["Handles HTTP requests"]" /></label>
+                        <label>@T["Source (English)"] <input name="DragDropPairs[@i].EnglishSource" value="@Model.DragDropPairs[i].EnglishSource" lang="en" /></label>
+                        <label>@T["Destination (English)"] <input name="DragDropPairs[@i].EnglishTarget" value="@Model.DragDropPairs[i].EnglishTarget" lang="en" /></label>
+                        <button type="button" class="remove-choice" data-remove-row>@T["Retirer"]</button>
+                    </div>
+                }
+            </div>
+            <span asp-validation-for="DragDropPairs" class="field-validation-error"></span>
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section" data-type-panel="DragAndDrop2">
+            <div class="section-head">
+                <div>
+                    <h2>@T["Classement par groupe"]</h2>
+                    <p>@T["Item sera stocké dans ChoiceText, groupe/catégorie dans GroupBy."]</p>
+                </div>
+                <button type="button" class="admin-secondary" data-add-grouped>@T["Ajouter item"]</button>
+            </div>
+            <div class="grouped-list" data-grouped-list>
+                @for (var i = 0; i < Model.GroupedChoices.Count; i++)
+                {
+                    <div class="pair-row">
+                        <input type="hidden" name="GroupedChoices[@i].Id" value="@Model.GroupedChoices[i].Id" />
+                        <label>@T["Item"] <input name="GroupedChoices[@i].Item" value="@Model.GroupedChoices[i].Item" placeholder="@T["ASP.NET Core"]" /></label>
+                        <label>@T["Groupe"] <input name="GroupedChoices[@i].Group" value="@Model.GroupedChoices[i].Group" placeholder="@T["Backend"]" /></label>
+                        <label>@T["Item (English)"] <input name="GroupedChoices[@i].EnglishItem" value="@Model.GroupedChoices[i].EnglishItem" lang="en" /></label>
+                        <label>@T["Group (English)"] <input name="GroupedChoices[@i].EnglishGroup" value="@Model.GroupedChoices[i].EnglishGroup" lang="en" /></label>
+                        <button type="button" class="remove-choice" data-remove-row>@T["Retirer"]</button>
+                    </div>
+                }
+            </div>
+            <span asp-validation-for="GroupedChoices" class="field-validation-error"></span>
+        </section>
+
+        <section class="admin-card admin-form-section question-form-section">
+            <header class="admin-form-section-header"><span class="admin-form-section-icon admin-icon-violet" aria-hidden="true">✓</span><span><h2>@T["Correction"]</h2><p>@T["Ajoutez une explication ou des critères utiles à la correction."]</p></span></header>
+            <div class="admin-form-field">
+                <label asp-for="Explication">@T["Explication / critères (français)"]</label>
+                <textarea asp-for="Explication" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Explication" class="admin-field-validation"></span>
+            </div>
+            <div class="admin-form-field">
+                <label asp-for="EnglishExplication">@T["Explanation (English)"]</label>
+                <textarea asp-for="EnglishExplication" class="form-control" rows="4" lang="en"></textarea>
+                <span asp-validation-for="EnglishExplication" class="admin-field-validation"></span>
+            </div>
+        </section>
+
+        <span asp-validation-for="Choices" class="admin-field-validation"></span>
+          </div>
+          <aside class="admin-form-aside" aria-label="@T["Résumé de la question"]">
+            <section class="admin-card admin-form-section admin-preview-card" aria-labelledby="question-preview-title">
+                <header class="admin-form-section-header admin-preview-header"><span class="admin-form-section-icon admin-icon-blue" aria-hidden="true">◉</span><h2 id="question-preview-title">@T["Aperçu et classement"]</h2><span class="question-type-badge" id="questionTypeBadge">@questionTypeLabel</span></header>
+                <div class="admin-context-summary">
+                    <strong>@(selectedExam?.Name ?? T["Examen non sélectionné"].Value)</strong><span>@T["Examen"]</span>
+                    <strong>@(selectedSkill?.Name ?? T["Général"].Value)</strong><span>@T["Compétence"]</span>
+                    <strong>@Model.Choices.Count</strong><span>@T["Réponses enregistrées"]</span>
+                </div>
+                <p class="admin-context-copy">@T["Le type choisi détermine les champs de réponse affichés. Vérifiez la correction avant d’enregistrer."]</p>
+            </section>
+            <section class="admin-card admin-form-section admin-context-card admin-context-tips">
+                <header class="admin-form-section-header"><span class="admin-form-section-icon admin-icon-green" aria-hidden="true">✓</span><h2>@T["Conseils"]</h2></header>
+                <ul class="admin-form-tips"><li>@T["Associez une compétence pour faciliter le classement."]</li><li>@T["Relisez les choix et les bonnes réponses."]</li><li>@T["Les réponses dépendent du type sélectionné."]</li></ul>
+            </section>
+          </aside>
+        </div>
+
+        <div class="admin-form-actions">
+            <a asp-area="Admin" asp-controller="Question" asp-action="Index" class="admin-secondary">@T["Annuler"]</a>
+            <button type="submit" class="admin-primary admin-primary-action admin-form-save-button">@T["Enregistrer"]</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/admin/exams-question-form.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,41 @@
+@model Certiva.Models.AdminLoginViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = T["Administration — Connexion"];
+    ViewData["Robots"] = "noindex,nofollow";
+    var culture = LocalizedPublicRoutes.CultureFromPath(Context.Request.Path.Value);
+}
+
+<section class="admin-login-page" aria-labelledby="admin-login-title">
+    <div class="admin-login-card">
+        <a class="admin-login-brand" href="/@culture" aria-label="Certiva — PRACTICE • LEARN • CERTIFY">
+            <img class="certiva-login-logo" src="~/images/branding/certiva-logo.png" width="2172" height="724" alt="Certiva — PRACTICE • LEARN • CERTIFY" />
+            <span><small>@T["Administration"]</small></span>
+        </a>
+        <h1 id="admin-login-title">@T["Connexion administrateur"]</h1>
+        <p>@T["Connectez-vous pour accéder à l'espace d'administration."]</p>
+
+        <form action="/@culture/login" method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="ReturnUrl" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="admin-login-validation" role="alert"></div>
+            <div class="admin-login-field">
+                <label asp-for="Email">@T["Email"]</label>
+                <input asp-for="Email" type="email" autocomplete="username" autofocus />
+                <span asp-validation-for="Email"></span>
+            </div>
+            <div class="admin-login-field">
+                <label asp-for="Password">@T["Mot de passe"]</label>
+                <input asp-for="Password" autocomplete="current-password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+            <button class="admin-login-submit" type="submit">@T["Se connecter"]</button>
+        </form>
+
+        <a class="admin-login-back" href="/@culture">← @T["Retour au site public"]</a>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

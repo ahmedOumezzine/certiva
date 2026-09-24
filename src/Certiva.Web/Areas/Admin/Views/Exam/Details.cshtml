@@ -1,0 +1,200 @@
+@model ExamEditViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = $"{Model.Name} · {T["Examen"]}";
+    var statusLabel = T.EnumLabel(Model.Status);
+    var statusClass = Model.Status switch
+    {
+        Status.Published => "admin-detail-status-published",
+        Status.Archived => "admin-detail-status-archived",
+        _ => "admin-detail-status-draft"
+    };
+    var questionsTotal = Model.QuestionTypeCounts.Sum(item => item.Count);
+    var circumference = 2 * Math.PI * 42;
+    var isReady = Model.Status == Status.Published && questionsTotal > 0;
+    var publicUrl = Url.RouteUrl("PublicExamDetails", new { slug = Model.Slug }, Context.Request.Scheme)
+        ?? Url.Action("Details", "Home", new { slug = Model.Slug }, Context.Request.Scheme)
+        ?? string.Empty;
+    string QuestionTypeLabel(QuestionType type) => T.EnumLabel(type);
+    string FormatUtc(DateTime? value) => value.HasValue
+        ? value.Value.ToString("g", CultureInfo.CurrentCulture) + " UTC"
+        : "—";
+}
+@section Breadcrumb {
+    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Exam" asp-action="Index">@T["Examens"]</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+}
+
+<div class="exam-admin admin-page admin-detail-page">
+    <section class="admin-detail-hero" id="admin-exam-overview" aria-labelledby="admin-detail-title">
+        <div class="admin-detail-identity">
+            <span class="admin-detail-exam-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H5V3z" /><path d="M14 3v6h5M8 13h8M8 17h6" /></svg></span>
+            <div class="admin-detail-identity-copy">
+                <span class="admin-detail-status @statusClass"><span aria-hidden="true"></span>@statusLabel</span>
+                <h1 id="admin-detail-title">@Model.Name</h1>
+                <p class="admin-detail-slug">@Model.Slug</p>
+                @if (!string.IsNullOrWhiteSpace(Model.Description))
+                {
+                    <p class="admin-detail-description">@Model.Description</p>
+                }
+                <div class="admin-detail-meta" aria-label="@T["Résumé de l’examen"]">
+                    <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h8M4 12h16M4 18h12" /><path d="M16 4h4v4" /></svg><strong>@T["Code"] :</strong> @Model.Code</span>
+                    <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h4" /></svg>@Model.QuestionsCount @T["Questions"].Value.ToLowerInvariant()</span>
+                    <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>@(Model.DurationMinutes is > 0 ? $"{Model.DurationMinutes} {T["minutes"].Value}" : T["Non limitée"])</span>
+                    <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8m-4-4v4M5 3h14v7a7 7 0 0 1-14 0V3Z" /></svg>@T["Seuil :"] @Model.PassingPercentage%</span>
+                </div>
+            </div>
+        </div>
+        <div class="admin-detail-hero-aside">
+            <div class="admin-detail-hero-actions">
+                <a asp-area="Admin" asp-controller="Exam" asp-action="Edit" asp-route-id="@Model.Id" class="admin-primary admin-primary-action">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L19.8 7.7a2.1 2.1 0 0 0-3-3L4 16.5Z" /><path d="m14.8 6.7 3 3" /></svg>@T["Modifier"]
+                </a>
+                <form asp-area="Admin" asp-controller="Exam" asp-action="Delete" method="post" onsubmit="return confirm('@T["Archiver ou supprimer cet examen ?"]');">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="admin-detail-danger-button" aria-label="Supprimer ou archiver @Model.Name">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></svg>@T["Supprimer"]
+                    </button>
+                </form>
+            </div>
+            <dl class="admin-detail-date-card">
+                <div><dt>@T["Statut"]</dt><dd><span class="admin-detail-status-dot @statusClass" aria-hidden="true"></span>@statusLabel</dd></div>
+                <div><dt>@T["Créé le"]</dt><dd><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="15" rx="2" /><path d="M8 3v6m8-6v6M4 11h16" /></svg>@FormatUtc(Model.CreatedOnUtc)</dd></div>
+                <div><dt>@T["Dernière modification"]</dt><dd><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="15" rx="2" /><path d="M8 3v6m8-6v6M4 11h16" /></svg>@FormatUtc(Model.LastModifiedOnUtc)</dd></div>
+            </dl>
+        </div>
+    </section>
+
+    <nav class="admin-detail-tabs" aria-label="@T["Navigation de l’examen"]">
+        <a class="is-active" href="#admin-exam-overview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h8" /></svg>@T["Aperçu"]</a>
+        <a asp-area="Admin" asp-controller="Skill" asp-action="Index" asp-route-examId="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg>@T["Compétences"] <span>@Model.SkillsCount</span></a>
+        <a asp-area="Admin" asp-controller="Question" asp-action="Index" asp-route-examId="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" /></svg>@T["Questions"] <span>@Model.QuestionsCount</span></a>
+        <a href="#admin-question-distribution"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9m8 11V4m8 16v-7" /><path d="M2 21h20" /></svg>@T["Statistiques"]</a>
+        <a asp-area="Admin" asp-controller="Exam" asp-action="Edit" asp-route-id="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="m19 13 2 1-2 4-2-1a8 8 0 0 1-2 1l-.3 2h-5L9 18a8 8 0 0 1-2-1l-2 1-2-4 2-1a8 8 0 0 1 0-2l-2-1 2-4 2 1a8 8 0 0 1 2-1l.3-2h5L15 6a8 8 0 0 1 2 1l2-1 2 4-2 1a8 8 0 0 1 0 2Z" /></svg>@T["Paramètres"]</a>
+    </nav>
+
+    <div class="admin-detail-layout">
+        <div class="admin-detail-main">
+            <section class="admin-card admin-detail-section" aria-labelledby="admin-description-title">
+                <header class="admin-detail-section-header"><span class="admin-detail-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H5V3z" /><path d="M14 3v6h5M8 13h8M8 17h8" /></svg></span><h2 id="admin-description-title">@T["Description"]</h2></header>
+                <p class="admin-detail-full-description">@(string.IsNullOrWhiteSpace(Model.Description) ? T["Aucune description n’a été renseignée pour cet examen."] : Model.Description)</p>
+                <div class="admin-detail-info-box @(Model.Status == Status.Published ? "is-published" : Model.Status == Status.Archived ? "is-archived" : "is-draft")" role="status">
+                    <span aria-hidden="true">ⓘ</span>
+                    <p>@(Model.Status switch
+                    {
+                        Status.Published => T["Cet examen est publié et disponible pour les utilisateurs."],
+                        Status.Archived => T["Cet examen est archivé et n’est pas visible dans le catalogue public."],
+                        _ => T["Cet examen est en brouillon et n’est pas visible publiquement."]
+                    })</p>
+                </div>
+
+                <div class="admin-detail-divider"></div>
+                <header class="admin-detail-section-header admin-detail-subsection-header"><span class="admin-detail-section-icon is-neutral" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /><circle cx="8" cy="6" r="1" /><circle cx="15" cy="12" r="1" /></svg></span><h2>@T["Informations générales"]</h2></header>
+                <dl class="admin-detail-information-list">
+                    <div><dt><span aria-hidden="true">⌘</span>@T["Code"]</dt><dd>@Model.Code</dd></div>
+                    <div><dt><span aria-hidden="true">↗</span>@T["Slug"]</dt><dd>@Model.Slug</dd></div>
+                    <div><dt><span aria-hidden="true">◷</span>@T["Durée"]</dt><dd>@(Model.DurationMinutes is > 0 ? $"{Model.DurationMinutes} {T["minutes"].Value}" : T["Non limitée"])</dd></div>
+                    <div><dt><span aria-hidden="true">☷</span>@T["Nombre de questions"]</dt><dd>@Model.QuestionsCount</dd></div>
+                    <div><dt><span aria-hidden="true">♜</span>@T["Seuil de réussite"]</dt><dd>@Model.PassingPercentage%</dd></div>
+                    <div><dt><span aria-hidden="true">●</span>@T["Statut"]</dt><dd><span class="admin-detail-status-dot @statusClass" aria-hidden="true"></span>@statusLabel</dd></div>
+                    <div><dt><span aria-hidden="true">▦</span>@T["Créé le"]</dt><dd>@FormatUtc(Model.CreatedOnUtc)</dd></div>
+                    <div><dt><span aria-hidden="true">▦</span>@T["Dernière modification"]</dt><dd>@FormatUtc(Model.LastModifiedOnUtc)</dd></div>
+                </dl>
+                <a asp-area="Admin" asp-controller="Exam" asp-action="Edit" asp-route-id="@Model.Id" class="admin-detail-edit-information"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L19.8 7.7a2.1 2.1 0 0 0-3-3L4 16.5Z" /><path d="m14.8 6.7 3 3" /></svg>@T["Modifier ces informations"]</a>
+            </section>
+        </div>
+
+        <aside class="admin-detail-sidebar" aria-label="@T["Données et actions de l’examen"]">
+            <section class="admin-card admin-detail-section" id="admin-question-distribution" aria-labelledby="admin-distribution-title">
+                <header class="admin-detail-section-header"><span class="admin-detail-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2" /><path d="M8 9h8M8 13h4" /></svg></span><h2 id="admin-distribution-title">@T["Répartition des questions"]</h2></header>
+                @if (questionsTotal == 0)
+                {
+                    <div class="admin-detail-empty-chart"><span aria-hidden="true">◌</span><strong>@T["Aucune question publiée"]</strong><p>@T["La répartition s’affichera dès que des questions seront publiées."]</p></div>
+                }
+                else
+                {
+                    <div class="admin-detail-chart-layout">
+                        <div class="admin-detail-donut" role="img" aria-label="@T["Répartition des questions publiées par type", questionsTotal]">
+                            <svg viewBox="0 0 120 120" aria-hidden="true">
+                                <circle class="admin-detail-donut-track" cx="60" cy="60" r="42" />
+                                @{ var chartOffset = 0d; }
+                                @for (var i = 0; i < Model.QuestionTypeCounts.Count; i++)
+                                {
+                                    var item = Model.QuestionTypeCounts[i];
+                                    var segmentLength = circumference * item.Count / questionsTotal;
+                                    var remainder = circumference - segmentLength;
+                                    var dashArray = $"{segmentLength.ToString("0.##", CultureInfo.InvariantCulture)} {remainder.ToString("0.##", CultureInfo.InvariantCulture)}";
+                                    var dashOffset = (-chartOffset).ToString("0.##", CultureInfo.InvariantCulture);
+                                    <circle class="admin-detail-donut-segment admin-detail-donut-color-@(i % 5)" cx="60" cy="60" r="42" stroke-dasharray="@dashArray" stroke-dashoffset="@dashOffset" transform="rotate(-90 60 60)" />
+                                    chartOffset += segmentLength;
+                                }
+                            </svg>
+                            <div><strong>@questionsTotal</strong><span>@T["questions"]</span></div>
+                        </div>
+                        <ul class="admin-detail-chart-legend">
+                            @for (var i = 0; i < Model.QuestionTypeCounts.Count; i++)
+                            {
+                                var item = Model.QuestionTypeCounts[i];
+                                var percentage = (int)Math.Round(item.Count * 100d / questionsTotal);
+                                <li><span class="admin-detail-legend-dot admin-detail-donut-color-@(i % 5)" aria-hidden="true"></span><span>@QuestionTypeLabel(item.Type)</span><strong>@item.Count <small>(@percentage%)</small></strong></li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </section>
+
+            <section class="admin-card admin-detail-section" aria-labelledby="admin-quick-actions-title">
+                <header class="admin-detail-section-header"><span class="admin-detail-section-icon is-violet" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 10-13h-7z" /></svg></span><h2 id="admin-quick-actions-title">@T["Actions rapides"]</h2></header>
+                <div class="admin-detail-quick-actions">
+                    <a class="is-primary" asp-area="Admin" asp-controller="Exam" asp-action="Edit" asp-route-id="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L19.8 7.7a2.1 2.1 0 0 0-3-3L4 16.5Z" /></svg>@T["Modifier l’examen"]</a>
+                    <a asp-area="Admin" asp-controller="Skill" asp-action="Index" asp-route-examId="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg>@T["Gérer les compétences"]</a>
+                    <a asp-area="Admin" asp-controller="Question" asp-action="Index" asp-route-examId="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" /></svg>@T["Gérer les questions"]</a>
+                </div>
+            </section>
+
+            <section class="admin-card admin-detail-section" aria-labelledby="admin-public-link-title">
+                <header class="admin-detail-section-header"><span class="admin-detail-section-icon is-neutral" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.1 0l3-3A5 5 0 0 0 13 2.9l-1.7 1.7M14 11a5 5 0 0 0-7.1 0l-3 3A5 5 0 0 0 11 21.1l1.7-1.7" /></svg></span><h2 id="admin-public-link-title">@T["Lien public"]</h2></header>
+                <div class="admin-public-link-control">
+                    <a href="@publicUrl" target="_blank" rel="noopener noreferrer">@publicUrl</a>
+                    <button type="button" data-copy-public-link="@publicUrl" aria-label="@T["Copier le lien public"]"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" /></svg></button>
+                </div>
+                <p class="admin-public-link-feedback" aria-live="polite" data-copy-feedback></p>
+                <p class="admin-public-link-help">@T["Lien vers la page publique de l’examen."]</p>
+                <a class="admin-public-link-open" href="@publicUrl" target="_blank" rel="noopener noreferrer">@T["Voir côté public"] <span aria-hidden="true">↗</span></a>
+            </section>
+        </aside>
+    </div>
+
+    <section class="admin-status-banner @(isReady ? "is-ready" : "is-not-ready")" role="status">
+        <span class="admin-status-banner-icon" aria-hidden="true">@(isReady ? "✓" : "!")</span>
+        <div>
+            <h2>@(isReady ? T["Examen prêt"] : T["Configuration à vérifier"])</h2>
+            <p>@(isReady ? T["Cet examen est publié et contient des questions utilisables par les candidats."] : Model.Status == Status.Published ? T["Cet examen est publié mais ne contient aucune question publiée."] : Model.Status == Status.Archived ? T["Cet examen est archivé et n’est pas accessible aux candidats."] : T["Cet examen est en brouillon. Publiez-le après avoir complété sa configuration."])</p>
+        </div>
+        @if (isReady)
+        {
+            <a asp-area="" asp-controller="Home" asp-action="Details" asp-route-slug="@Model.Slug" class="admin-status-banner-link">@T["Voir côté public"] <span aria-hidden="true">↗</span></a>
+        }
+        else
+        {
+            <a asp-area="Admin" asp-controller="Exam" asp-action="Edit" asp-route-id="@Model.Id" class="admin-status-banner-link">@T["Vérifier les paramètres"]</a>
+        }
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('click', async (event) => {
+            const button = event.target.closest('[data-copy-public-link]');
+            if (!button) return;
+            const feedback = document.querySelector('[data-copy-feedback]');
+            try {
+                await navigator.clipboard.writeText(button.dataset.copyPublicLink);
+                feedback.textContent = '@T["Lien copié"]';
+            } catch {
+                feedback.textContent = '@T["Impossible de copier automatiquement. Sélectionnez le lien pour le copier."]';
+            }
+        });
+    </script>
+}

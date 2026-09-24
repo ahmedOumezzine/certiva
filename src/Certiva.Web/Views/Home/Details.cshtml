@@ -1,0 +1,222 @@
+@using Certiva.Domain.Enums
+@using System.Globalization
+@model Certiva.Models.Exams.ExamDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+    ViewData["FullTitle"] = true;
+    ViewData["MetaDescription"] = Model.Description;
+    string TypeLabel(QuestionType type) => T.EnumLabel(type);
+    var culture = LocalizedPublicRoutes.CultureFromPath(Context.Request.Path.Value);
+    var startRoute = LocalizedPublicRoutes.Start(culture);
+    var totalTypeCount = Math.Max(1, Model.QuestionTypes.Sum(x => x.Count));
+    var chartOffset = 0d;
+}
+
+<div class="exam-detail-page">
+    <nav class="exam-detail-breadcrumb" aria-label="@T["public.detail.breadcrumb"]">
+        <a href="/@culture">@T["Accueil"]</a><span aria-hidden="true">›</span>
+        <a href="@(culture == "en" ? "/en/exams" : "/fr/examens")#exams-title">@T["Examens"]</a><span aria-hidden="true">›</span>
+        <span aria-current="page">@Model.Name</span>
+    </nav>
+
+    <section class="exam-detail-hero" aria-labelledby="exam-title">
+        <div class="exam-detail-hero-copy">
+            <div class="exam-detail-heading-row">
+                <span class="exam-detail-hero-icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><path d="M15 5h14l9 9v28H15z"/><path d="M29 5v10h9M21 23h12M21 29h12M21 35h8"/><path d="M10 11H7v32h25"/></svg>
+                </span>
+                <div>
+                    <span class="exam-detail-status"><i></i>@T.EnumLabel(Model.Status)</span>
+                    <h1 id="exam-title">@Model.Name</h1>
+                </div>
+            </div>
+            <p class="exam-detail-lead">@Model.Description</p>
+
+            <div class="exam-detail-meta" aria-label="@T["public.detail.mainInfo"]">
+                <span><b aria-hidden="true">◆</b> @T["public.detail.code"] : @Model.Code</span>
+                <span><b aria-hidden="true">▤</b> @Model.QuestionsCount @T["public.detail.questions"]</span>
+                <span><b aria-hidden="true">◷</b> @(Model.DurationMinutes.HasValue ? $"{Model.DurationMinutes} min" : T["public.detail.noLimit"].Value)</span>
+                <span><b aria-hidden="true">★</b> @T["public.detail.requiredScore"] : @Model.PassingPercentage%</span>
+            </div>
+
+            @if (Model.Skills.Count > 0)
+            {
+                <div class="exam-detail-tags" aria-label="@T["public.detail.evaluatedSkills"]">
+                    @foreach (var skill in Model.Skills.Take(5))
+                    {
+                        <a href="#skill-@skill.Id">@skill.Name</a>
+                    }
+                    @if (Model.Skills.Count > 5)
+                    {
+                        <span>+@(Model.Skills.Count - 5)</span>
+                    }
+                </div>
+            }
+
+            <div class="exam-detail-actions">
+                @if (Model.CanStart)
+                {
+                    <a asp-route="@startRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@Model.Slug" class="exam-detail-button exam-detail-button-primary"><span aria-hidden="true">▶</span> @T["Commencer l’examen"]</a>
+                    <a asp-route="@startRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@Model.Slug" asp-route-random="true" class="exam-detail-button exam-detail-button-secondary"><span aria-hidden="true">⤨</span> @T["Mode aléatoire"]</a>
+                }
+                else
+                {
+                    <p class="exam-detail-unavailable">@T["public.detail.notReady"]</p>
+                }
+            </div>
+        </div>
+        <div class="exam-detail-hero-art" aria-hidden="true">
+            <div class="exam-art-orbit"></div>
+            <div class="exam-art-document"><span></span><span></span><span></span><span></span><b>@Model.Code</b></div>
+            <div class="exam-art-badge"><strong>@Model.QuestionsCount</strong><small>@T["public.detail.questions"]</small></div>
+            <div class="exam-art-check">✓</div>
+        </div>
+    </section>
+
+    <nav class="exam-detail-tabs" aria-label="@T["public.detail.tabs"]">
+        <a href="#overview"><span aria-hidden="true">▤</span>@T["public.detail.preview"]</a>
+        <a href="#skills"><span aria-hidden="true">✦</span>@T["public.detail.evaluatedSkills"]</a>
+        <a href="#questions"><span aria-hidden="true">☷</span>@T["public.detail.questionList"]</a>
+        <a href="#information"><span aria-hidden="true">ⓘ</span>@T["public.detail.information"]</a>
+    </nav>
+
+    <div class="exam-detail-layout">
+        <main class="exam-detail-main">
+            <section class="exam-detail-card" id="overview" aria-labelledby="description-title">
+                <h2 id="description-title"><span class="exam-detail-section-icon">▤</span>@T["public.detail.description"]</h2>
+                <p class="exam-detail-description">@Model.Description</p>
+                <div class="exam-detail-note"><span aria-hidden="true">ⓘ</span><p>@T["public.detail.guidance"]</p></div>
+            </section>
+
+            <section class="exam-detail-card" id="skills" aria-labelledby="skills-title">
+                <h2 id="skills-title"><span class="exam-detail-section-icon">◎</span>@T["public.detail.evaluatedSkills"]</h2>
+                @if (Model.Skills.Count == 0)
+                {
+                    <p class="exam-detail-muted">@T["public.detail.noSkills"]</p>
+                }
+                else
+                {
+                    <div class="exam-detail-skill-list">
+                        @for (var i = 0; i < Model.Skills.Count; i++)
+                        {
+                            var skill = Model.Skills[i];
+                            <article class="exam-detail-skill" id="skill-@skill.Id">
+                                <span class="exam-detail-skill-number">@(i + 1)</span>
+                                <div class="exam-detail-skill-copy"><h3>@skill.Name</h3><p>@skill.Description</p></div>
+                                <div class="exam-detail-skill-progress">
+                                    <div><span>@skill.QuestionsCount @T["public.detail.questions"]</span><strong>@skill.Pourcentage%</strong></div>
+                                    <div class="exam-detail-meter" role="progressbar" aria-label="@T["public.detail.weighting", skill.Name]" aria-valuemin="0" aria-valuemax="100" aria-valuenow="@Math.Clamp(skill.Pourcentage, 0, 100)"><span style="width:@Math.Clamp(skill.Pourcentage, 0, 100)%"></span></div>
+                                </div>
+                                @if (Model.CanStart)
+                                {
+                                    <a asp-route="@startRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@Model.Slug" asp-route-skillId="@skill.Id" class="exam-detail-practice">@T["S’entraîner sur cette compétence"] <span aria-hidden="true">→</span></a>
+                                }
+                            </article>
+                        }
+                    </div>
+                }
+            </section>
+
+            <section class="exam-detail-card" id="questions" aria-labelledby="questions-title">
+                <h2 id="questions-title"><span class="exam-detail-section-icon">☷</span>@T["public.detail.questionList"] <small>@Model.Questions.Count</small></h2>
+                @if (Model.Questions.Count == 0)
+                {
+                    <p class="exam-detail-muted">@T["public.detail.noPublishedQuestions"]</p>
+                }
+                else
+                {
+                    <ol class="exam-detail-question-list">
+                        @foreach (var question in Model.Questions)
+                        {
+                            <li>
+                                <span class="exam-detail-question-number">@question.Number</span>
+                                <p>@question.Text</p>
+                                <span class="exam-detail-question-meta">@TypeLabel(question.Type) <i>·</i> @question.SkillName</span>
+                            </li>
+                        }
+                    </ol>
+                }
+            </section>
+
+            <section class="exam-detail-card" id="information" aria-labelledby="information-title">
+                <h2 id="information-title"><span class="exam-detail-section-icon">▣</span>@T["public.detail.examDetails"]</h2>
+                <dl class="exam-detail-info-list">
+                    <div><dt>@T["public.detail.code"]</dt><dd>@Model.Code</dd></div>
+                    <div><dt>@T["public.detail.questionCount"]</dt><dd>@Model.QuestionsCount</dd></div>
+                    <div><dt>@T["public.detail.duration"]</dt><dd>@(Model.DurationMinutes.HasValue ? $"{Model.DurationMinutes} {T["public.detail.minutes"].Value}" : T["public.detail.noLimit"].Value)</dd></div>
+                    <div><dt>@T["public.detail.requiredScore"]</dt><dd>@Model.PassingPercentage%</dd></div>
+                    <div><dt>@T["public.detail.status"]</dt><dd><span class="exam-detail-status-inline">@T.EnumLabel(Model.Status)</span></dd></div>
+                    @if (Model.LastUpdatedUtc.HasValue)
+                    {
+                        <div><dt>@T["public.detail.lastUpdated"]</dt><dd><time datetime="@Model.LastUpdatedUtc.Value.ToString("O")">@Model.LastUpdatedUtc.Value.ToLocalTime().ToString("d", CultureInfo.CurrentCulture)</time></dd></div>
+                    }
+                </dl>
+            </section>
+        </main>
+
+        <aside class="exam-detail-sidebar">
+            <section class="exam-detail-card exam-detail-distribution" aria-labelledby="distribution-title">
+                <h2 id="distribution-title"><span class="exam-detail-section-icon">◴</span>@T["public.detail.distribution"]</h2>
+                <div class="exam-detail-chart-wrap">
+                    <div class="exam-detail-donut" role="img" aria-label="@T["public.detail.distributionAria", Model.QuestionTypes.Sum(x => x.Count)]">
+                        <svg viewBox="0 0 42 42" aria-hidden="true">
+                            <circle class="exam-donut-track" cx="21" cy="21" r="15.9155"></circle>
+                            @foreach (var item in Model.QuestionTypes)
+                            {
+                                var segment = item.Count * 100d / totalTypeCount;
+                                <circle class="exam-donut-segment" cx="21" cy="21" r="15.9155" style="stroke-dasharray:@(segment.ToString("0.##", CultureInfo.InvariantCulture)) 100;stroke-dashoffset:-@(chartOffset.ToString("0.##", CultureInfo.InvariantCulture))"></circle>
+                                chartOffset += segment;
+                            }
+                        </svg>
+                        <span><strong>@Model.QuestionsCount</strong><small>@T["public.detail.questions"]</small></span>
+                    </div>
+                    <ul class="exam-detail-legend">
+                        @foreach (var item in Model.QuestionTypes)
+                        {
+                            <li><span>@TypeLabel(item.Type)</span><strong>@item.Count</strong></li>
+                        }
+                    </ul>
+                </div>
+            </section>
+
+            <section class="exam-detail-card exam-detail-cta">
+                <h2><span aria-hidden="true">✦</span>@T["public.detail.ready"]</h2>
+                <p>@T["public.detail.startText"]</p>
+                @if (Model.CanStart)
+                {
+                    <a asp-route="@startRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@Model.Slug" class="exam-detail-button exam-detail-button-primary">▶&nbsp; @T["Commencer l’examen"]</a>
+                    <a asp-route="@startRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@Model.Slug" asp-route-random="true" class="exam-detail-button exam-detail-button-secondary">⤨&nbsp; @T["Mode aléatoire"]</a>
+                }
+                else
+                {
+                    <p class="exam-detail-unavailable">@T["public.detail.unavailable"]</p>
+                }
+            </section>
+
+            <section class="exam-detail-card exam-detail-tips">
+                <h2><span aria-hidden="true">✧</span>@T["public.detail.tips"]</h2>
+                <ul>
+                    <li>@T["public.detail.readCarefully"]</li>
+                    @if (Model.DurationMinutes.HasValue)
+                    {
+                        <li>@T["public.detail.manageTime", Model.DurationMinutes]</li>
+                    }
+                    else
+                    {
+                        <li>@T["public.detail.takeTime"]</li>
+                    }
+                    @if (Model.QuestionTypes.Any(x => x.Type == QuestionType.MultiChoice))
+                    {
+                        <li>@T["public.detail.multiAnswers"]</li>
+                    }
+                    <li>@T["public.detail.navigateReview"]</li>
+                </ul>
+            </section>
+        </aside>
+    </div>
+
+    <section class="exam-detail-bottom-cta">
+        <div><span aria-hidden="true">▥</span><div><h2>@T["public.detail.footerTitle"]</h2><p>@T["public.detail.footerText"]</p></div></div>
+        <a href="@(culture == "en" ? "/en/exams" : "/fr/examens")#exams-title">@T["Voir tous les examens"] <span aria-hidden="true">→</span></a>
+    </section>
+</div>

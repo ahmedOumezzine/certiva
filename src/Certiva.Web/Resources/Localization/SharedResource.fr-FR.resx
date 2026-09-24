@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Accueil" xml:space="preserve"><value>Accueil</value></data>
+  <data name="Examens" xml:space="preserve"><value>Examens</value></data>
+  <data name="Administration" xml:space="preserve"><value>Administration</value></data>
+  <data name="Déconnexion" xml:space="preserve"><value>Déconnexion</value></data>
+  <data name="Fermer la navigation" xml:space="preserve"><value>Fermer la navigation</value></data>
+  <data name="Ouvrir la navigation" xml:space="preserve"><value>Ouvrir la navigation</value></data>
+  <data name="Navigation d’administration" xml:space="preserve"><value>Navigation d’administration</value></data>
+  <data name="Gestion des examens" xml:space="preserve"><value>Gestion des examens</value></data>
+  <data name="Compétences" xml:space="preserve"><value>Compétences</value></data>
+  <data name="Questions" xml:space="preserve"><value>Questions</value></data>
+  <data name="Suivi" xml:space="preserve"><value>Suivi</value></data>
+  <data name="Tentatives" xml:space="preserve"><value>Tentatives</value></data>
+  <data name="Rapports" xml:space="preserve"><value>Rapports</value></data>
+  <data name="Paramètres" xml:space="preserve"><value>Paramètres</value></data>
+  <data name="Utilisateurs" xml:space="preserve"><value>Utilisateurs</value></data>
+  <data name="Bientôt" xml:space="preserve"><value>Bientôt</value></data>
+  <data name="Retour au site public" xml:space="preserve"><value>Retour au site public</value></data>
+  <data name="Rechercher un examen, une question, une compétence…" xml:space="preserve"><value>Rechercher un examen, une question, une compétence…</value></data>
+  <data name="Recherche globale bientôt disponible" xml:space="preserve"><value>Recherche globale bientôt disponible</value></data>
+  <data name="Administrateur" xml:space="preserve"><value>Administrateur</value></data>
+  <data name="APPRENDRE • PROGRESSER • RÉUSSIR" xml:space="preserve"><value>APPRENDRE • PROGRESSER • RÉUSSIR</value></data>
+  <data name="Préparez vos certifications" xml:space="preserve"><value>Préparez vos certifications</value></data>
+  <data name="avec des simulations réalistes" xml:space="preserve"><value>avec des simulations réalistes</value></data>
+  <data name="Accédez à des examens de qualité, conçus pour vous entraîner dans des conditions proches de la réalité." xml:space="preserve"><value>Accédez à des examens de qualité, conçus pour vous entraîner dans des conditions proches de la réalité.</value></data>
+  <data name="Aucun examen trouvé" xml:space="preserve"><value>Aucun examen trouvé</value></data>
+  <data name="Essayez une autre recherche ou retirez le filtre de compétence." xml:space="preserve"><value>Essayez une autre recherche ou retirez le filtre de compétence.</value></data>
+  <data name="Effacer les filtres" xml:space="preserve"><value>Effacer les filtres</value></data>
+  <data name="Publié" xml:space="preserve"><value>Publié</value></data>
+  <data name="QuestionCountLabel" xml:space="preserve"><value>questions</value></data>
+  <data name="Non limité" xml:space="preserve"><value>Non limité</value></data>
+  <data name="Votre réussite, notre mission" xml:space="preserve"><value>Votre réussite, notre mission</value></data>
+  <data name="Connexion administrateur" xml:space="preserve"><value>Connexion administrateur</value></data>
+  <data name="Connectez-vous pour accéder à l'espace d'administration." xml:space="preserve"><value>Connectez-vous pour accéder à l'espace d'administration.</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Mot de passe" xml:space="preserve"><value>Mot de passe</value></data>
+  <data name="Se connecter" xml:space="preserve"><value>Se connecter</value></data>
+  <data name="Email ou mot de passe invalide, ou compte non autorisé." xml:space="preserve"><value>Email ou mot de passe invalide, ou compte non autorisé.</value></data>
+  <data name="Cette tentative est expirée ou déjà terminée." xml:space="preserve"><value>Cette tentative est expirée ou déjà terminée.</value></data>
+  <data name="La réponse envoyée ne correspond pas à cette question." xml:space="preserve"><value>La réponse envoyée ne correspond pas à cette question.</value></data>
+  <data name="Navigation principale" xml:space="preserve"><value>Navigation principale</value></data>
+  <data name="Ouvrir le menu" xml:space="preserve"><value>Ouvrir le menu</value></data>
+  <data name="Langue" xml:space="preserve"><value>Langue</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Tableau de bord</value></data>
+  <data name="Se déconnecter" xml:space="preserve"><value>Se déconnecter</value></data>
+  <data name="Fil d’Ariane" xml:space="preserve"><value>Fil d’Ariane</value></data>
+  <data name="Administration — Connexion" xml:space="preserve"><value>Administration — Connexion</value></data>
+  <data name="Illustration d’un ordinateur avec une simulation d’examen" xml:space="preserve"><value>Illustration d’un ordinateur avec une simulation d’examen</value></data>
+  <data name="Examens et simulations de certification" xml:space="preserve"><value>Examens et simulations de certification</value></data>
+  <data name="Parcourez les examens publiés, filtrez par compétence et entraînez-vous dans des conditions proches de la réalité." xml:space="preserve"><value>Parcourez les examens publiés, filtrez par compétence et entraînez-vous dans des conditions proches de la réalité.</value></data>
+  <data name="Rechercher dans les examens" xml:space="preserve"><value>Rechercher dans les examens</value></data>
+  <data name="Rechercher un examen" xml:space="preserve"><value>Rechercher un examen</value></data>
+  <data name="Rechercher un examen, un code..." xml:space="preserve"><value>Rechercher un examen, un code...</value></data>
+  <data name="Filtrer par compétence" xml:space="preserve"><value>Filtrer par compétence</value></data>
+  <data name="Toutes les compétences" xml:space="preserve"><value>Toutes les compétences</value></data>
+  <data name="Rechercher" xml:space="preserve"><value>Rechercher</value></data>
+  <data name="Nos examens" xml:space="preserve"><value>Nos examens</value></data>
+  <data name="Explorez notre catalogue d’examens et trouvez celui qui correspond à vos objectifs." xml:space="preserve"><value>Explorez notre catalogue d’examens et trouvez celui qui correspond à vos objectifs.</value></data>
+  <data name="Voir les détails" xml:space="preserve"><value>Voir les détails</value></data>
+  <data name="Commencer" xml:space="preserve"><value>Commencer</value></data>
+  <data name="Indisponible" xml:space="preserve"><value>Indisponible</value></data>
+  <data name="questionsLabel" xml:space="preserve"><value>questions</value></data>
+  <data name="ThresholdLabel" xml:space="preserve"><value>Seuil</value></data>
+  <data name="NoLimit" xml:space="preserve"><value>Non limité</value></data>
+  <data name="skill" xml:space="preserve"><value>compétence</value></data>
+  <data name="skills" xml:space="preserve"><value>compétences</value></data>
+  <data name="available" xml:space="preserve"><value>disponible</value></data>
+  <data name="availablePlural" xml:space="preserve"><value>disponibles</value></data>
+  <data name="exams" xml:space="preserve"><value>examens</value></data>
+  <data name="BrowseTitle" xml:space="preserve"><value>Explorez notre catalogue d’examens et trouvez celui qui correspond à vos objectifs.</value></data>
+  <data name="StartExam" xml:space="preserve"><value>Commencer l’examen</value></data>
+  <data name="RandomMode" xml:space="preserve"><value>Mode aléatoire</value></data>
+  <data name="NoDescription" xml:space="preserve"><value>Aucune description n’a été renseignée pour cet examen.</value></data>
+  <data name="js.saving" xml:space="preserve"><value>Enregistrement…</value></data>
+  <data name="js.offline" xml:space="preserve"><value>Hors ligne — réponse conservée ici</value></data>
+  <data name="js.expiredAnswer" xml:space="preserve"><value>Temps écoulé — réponse non enregistrée</value></data>
+  <data name="js.saved" xml:space="preserve"><value>Enregistré</value></data>
+  <data name="js.retry" xml:space="preserve"><value>Nouvelle tentative…</value></data>
+  <data name="js.failed" xml:space="preserve"><value>Échec — réponse conservée ici</value></data>
+  <data name="js.savesFailed" xml:space="preserve"><value>Certaines réponses n’ont pas pu être enregistrées. Réessayez.</value></data>
+  <data name="js.expiring" xml:space="preserve"><value>Temps écoulé — envoi du résultat…</value></data>
+  <data name="js.answerSaved" xml:space="preserve"><value>réponse enregistrée</value></data>
+  <data name="js.savingAnswer" xml:space="preserve"><value>enregistrement en cours</value></data>
+  <data name="js.answerFailed" xml:space="preserve"><value>réponse non enregistrée</value></data>
+  <data name="js.unanswered" xml:space="preserve"><value>non répondue</value></data>
+  <data name="js.reviewMarked" xml:space="preserve"><value>Marquée pour révision</value></data>
+  <data name="js.markReview" xml:space="preserve"><value>Marquer pour révision</value></data>
+  <data name="js.confirmSubmit" xml:space="preserve"><value>Terminer l’examen et calculer le résultat ?</value></data>
+  <data name="js.remaining" xml:space="preserve"><value>Temps restant : {0} minutes et {1} secondes</value></data>
+  <data name="js.question" xml:space="preserve"><value>Question {0}, {1}{2}</value></data>
+  <data name="js.reviewSuffix" xml:space="preserve"><value>, marquée pour révision</value></data>
+  <data name="js.of" xml:space="preserve"><value>sur</value></data>
+  <data name="js.answerCorrect" xml:space="preserve"><value>réponse enregistrée</value></data>
+  <data name="js.reviewYes" xml:space="preserve"><value>Marquée pour révision</value></data>
+  <data name="js.reviewNo" xml:space="preserve"><value>Marquer pour révision</value></data>
+  <data name="examen" xml:space="preserve"><value>examen</value></data>
+  <data name="LoginEmailRequired" xml:space="preserve"><value>Saisissez votre email.</value></data>
+  <data name="ValidEmailRequired" xml:space="preserve"><value>Saisissez une adresse email valide.</value></data>
+  <data name="LoginPasswordRequired" xml:space="preserve"><value>Saisissez votre mot de passe.</value></data>
+  <data name="GuestEmailTooLong" xml:space="preserve"><value>L’adresse email ne peut pas dépasser 256 caractères.</value></data>
+  <data name="Simulation" xml:space="preserve"><value>Simulation</value></data>
+  <data name="minutes" xml:space="preserve"><value>minutes</value></data>
+  <data name="Quitter l’examen" xml:space="preserve"><value>Quitter l’examen</value></data>
+  <data name="Temps restant" xml:space="preserve"><value>Temps restant</value></data>
+  <data name="Aucune question disponible" xml:space="preserve"><value>Aucune question disponible</value></data>
+  <data name="Cette tentative ne contient pas de question accessible." xml:space="preserve"><value>Cette tentative ne contient pas de question accessible.</value></data>
+  <data name="Retour aux détails" xml:space="preserve"><value>Retour aux détails</value></data>
+  <data name="Progression et navigation des questions" xml:space="preserve"><value>Progression et navigation des questions</value></data>
+  <data name="Progression" xml:space="preserve"><value>Progression</value></data>
+  <data name="Progression dans l’examen" xml:space="preserve"><value>Progression dans l’examen</value></data>
+  <data name="Aller à une question" xml:space="preserve"><value>Aller à une question</value></data>
+  <data name="Question {0}" xml:space="preserve"><value>Question {0}</value></data>
+  <data name="Légende" xml:space="preserve"><value>Légende</value></data>
+  <data name="Question actuelle" xml:space="preserve"><value>Question actuelle</value></data>
+  <data name="Réponse enregistrée" xml:space="preserve"><value>Réponse enregistrée</value></data>
+  <data name="Enregistrement en cours" xml:space="preserve"><value>Enregistrement en cours</value></data>
+  <data name="Réponse non enregistrée" xml:space="preserve"><value>Réponse non enregistrée</value></data>
+  <data name="Marquée pour révision" xml:space="preserve"><value>Marquée pour révision</value></data>
+  <data name="Non répondue" xml:space="preserve"><value>Non répondue</value></data>
+  <data name="Question" xml:space="preserve"><value>Question</value></data>
+  <data name="Marquer pour révision" xml:space="preserve"><value>Marquer pour révision</value></data>
+  <data name="Plusieurs réponses peuvent être correctes." xml:space="preserve"><value>Plusieurs réponses peuvent être correctes.</value></data>
+  <data name="Saisissez votre réponse dans le champ ci-dessous." xml:space="preserve"><value>Saisissez votre réponse dans le champ ci-dessous.</value></data>
+  <data name="Choisissez la réponse qui vous semble correcte." xml:space="preserve"><value>Choisissez la réponse qui vous semble correcte.</value></data>
+  <data name="Votre réponse" xml:space="preserve"><value>Votre réponse</value></data>
+  <data name="Saisissez votre réponse" xml:space="preserve"><value>Saisissez votre réponse</value></data>
+  <data name="Conseil" xml:space="preserve"><value>Conseil</value></data>
+  <data name="Prenez le temps de lire attentivement la question." xml:space="preserve"><value>Prenez le temps de lire attentivement la question.</value></data>
+  <data name="Précédent" xml:space="preserve"><value>Précédent</value></data>
+  <data name="Suivant" xml:space="preserve"><value>Suivant</value></data>
+  <data name="Page" xml:space="preserve"><value>Page</value></data>
+  <data name="Résultats" xml:space="preserve"><value>Résultats</value></data>
+  <data name="Résultats par page" xml:space="preserve"><value>Résultats par page</value></data>
+  <data name="Pagination" xml:space="preserve"><value>Pagination</value></data>
+  <data name="Rechercher une compétence" xml:space="preserve"><value>Rechercher une compétence</value></data>
+  <data name="Rechercher une compétence…" xml:space="preserve"><value>Rechercher une compétence…</value></data>
+  <data name="Liste des questions" xml:space="preserve"><value>Liste des questions</value></data>
+  <data name="Terminer l’examen" xml:space="preserve"><value>Terminer l’examen</value></data>
+  <data name="Terminer l’examen ?" xml:space="preserve"><value>Terminer l’examen ?</value></data>
+  <data name="Vérifiez votre progression avant d’envoyer vos réponses." xml:space="preserve"><value>Vérifiez votre progression avant d’envoyer vos réponses.</value></data>
+  <data name="Répondues" xml:space="preserve"><value>Répondues</value></data>
+  <data name="Sans réponse" xml:space="preserve"><value>Sans réponse</value></data>
+  <data name="À revoir" xml:space="preserve"><value>À revoir</value></data>
+  <data name="Continuer l’examen" xml:space="preserve"><value>Continuer l’examen</value></data>
+  <data name="Draft" xml:space="preserve"><value>Brouillon</value></data>
+  <data name="Published" xml:space="preserve"><value>Publié</value></data>
+  <data name="Archived" xml:space="preserve"><value>Archivé</value></data>
+  <data name="InProgress" xml:space="preserve"><value>En cours</value></data>
+  <data name="Completed" xml:space="preserve"><value>Terminée</value></data>
+  <data name="Expired" xml:space="preserve"><value>Expirée</value></data>
+  <data name="SingleChoice" xml:space="preserve"><value>Choix unique</value></data>
+  <data name="MultiChoice" xml:space="preserve"><value>Choix multiples</value></data>
+  <data name="TrueFalse" xml:space="preserve"><value>Vrai / Faux</value></data>
+  <data name="ShortAnswer" xml:space="preserve"><value>Réponse courte</value></data>
+  <data name="LongAnswer" xml:space="preserve"><value>Réponse longue</value></data>
+  <data name="FillInBlank" xml:space="preserve"><value>Texte à trous</value></data>
+  <data name="DragAndDrop" xml:space="preserve"><value>Association</value></data>
+  <data name="DragAndDrop2" xml:space="preserve"><value>Classement par groupe</value></data>
+  <data name="Avant de commencer" xml:space="preserve"><value>Avant de commencer</value></data>
+  <data name="EXAMEN SANS COMPTE" xml:space="preserve"><value>EXAMEN SANS COMPTE</value></data>
+  <data name="Cet email sera associé à votre tentative." xml:space="preserve"><value>Cet email sera associé à votre tentative.</value></data>
+  <data name="your@email.com" xml:space="preserve"><value>votre@email.com</value></data>
+  <data name="Continuer" xml:space="preserve"><value>Continuer</value></data>
+  <data name="Retour aux détails de l’examen" xml:space="preserve"><value>Retour aux détails de l’examen</value></data>
+  <data name="English exam translations are not available yet; exam content is shown in French." xml:space="preserve"><value>Les traductions anglaises des examens ne sont pas encore disponibles ; leur contenu est affiché en français.</value></data>
+  <data name="La langue est conservée pendant une tentative." xml:space="preserve"><value>La langue est conservée pendant une tentative.</value></data>
+  <data name="Recommencer l’examen" xml:space="preserve"><value>Recommencer l’examen</value></data>
+  <data name="Voir tous les examens" xml:space="preserve"><value>Voir tous les examens</value></data>
+  <data name="Commencer l’examen" xml:space="preserve"><value>Commencer l’examen</value></data>
+  <data name="Mode aléatoire" xml:space="preserve"><value>Mode aléatoire</value></data>
+  <data name="S’entraîner sur cette compétence" xml:space="preserve"><value>S’entraîner sur cette compétence</value></data>
+  <data name="Rechercher un examen…" xml:space="preserve"><value>Rechercher un examen…</value></data>
+  <data name="Slug (English)" xml:space="preserve"><value>Slug (anglais)</value></data>
+  <data name="Toutes" xml:space="preserve"><value>Toutes</value></data>
+  <data name="Durée" xml:space="preserve"><value>Durée</value></data>
+  <data name="Gérez les examens, leur publication et leur contenu." xml:space="preserve"><value>Gérez les examens, leur publication et leur contenu.</value></data>
+  <data name="Incorrectes" xml:space="preserve"><value>Incorrectes</value></data>
+  <data name="Gérer" xml:space="preserve"><value>Gérer</value></data>
+  <data name="Archivés" xml:space="preserve"><value>Archivés</value></data>
+  <data name="Informations contextuelles" xml:space="preserve"><value>Informations contextuelles</value></data>
+  <data name="Cet aperçu reprend les informations principales visibles dans le catalogue des examens." xml:space="preserve"><value>Cet aperçu reprend les informations principales visibles dans le catalogue des examens.</value></data>
+  <data name="Vue d’ensemble" xml:space="preserve"><value>Vue d’ensemble</value></data>
+  <data name="Supprimer" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Explication" xml:space="preserve"><value>Explication</value></data>
+  <data name="Actions rapides" xml:space="preserve"><value>Actions rapides</value></data>
+  <data name="Créer une question" xml:space="preserve"><value>Créer une question</value></data>
+  <data name="Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Aucune question" xml:space="preserve"><value>Aucune question</value></data>
+  <data name="Ajouter une compétence" xml:space="preserve"><value>Ajouter une compétence</value></data>
+  <data name="Description (français)" xml:space="preserve"><value>Description (français)</value></data>
+  <data name="Associez des compétences à cet examen pour faciliter la classification." xml:space="preserve"><value>Associez des compétences à cet examen pour faciliter la classification.</value></data>
+  <data name="Détail" xml:space="preserve"><value>Détail</value></data>
+  <data name="Identifiant utilisé dans l’URL." xml:space="preserve"><value>Identifiant utilisé dans l’URL.</value></data>
+  <data name="Contrôlez la visibilité et le contenu de l’examen." xml:space="preserve"><value>Contrôlez la visibilité et le contenu de l’examen.</value></data>
+  <data name="Après l’enregistrement, vous pourrez classer les questions de l’examen dans cette compétence." xml:space="preserve"><value>Après l’enregistrement, vous pourrez classer les questions de l’examen dans cette compétence.</value></data>
+  <data name="Les questions enregistrées apparaîtront ici." xml:space="preserve"><value>Les questions enregistrées apparaîtront ici.</value></data>
+  <data name="Consultez les sessions et résultats des candidats." xml:space="preserve"><value>Consultez les sessions et résultats des candidats.</value></data>
+  <data name="Tous les examens" xml:space="preserve"><value>Tous les examens</value></data>
+  <data name="Bonjour, Admin" xml:space="preserve"><value>Bonjour, Admin</value></data>
+  <data name="Brouillons" xml:space="preserve"><value>Brouillons</value></data>
+  <data name="Rechercher un examen par nom ou code" xml:space="preserve"><value>Rechercher un examen par nom ou code</value></data>
+  <data name="ID tentative" xml:space="preserve"><value>ID tentative</value></data>
+  <data name="Appliquer les filtres" xml:space="preserve"><value>Appliquer les filtres</value></data>
+  <data name="Statut" xml:space="preserve"><value>Statut</value></data>
+  <data name="La somme des pourcentages d’un examen ne doit pas dépasser 100." xml:space="preserve"><value>La somme des pourcentages d’un examen ne doit pas dépasser 100.</value></data>
+  <data name="Statut des examens" xml:space="preserve"><value>Statut des examens</value></data>
+  <data name="Contexte" xml:space="preserve"><value>Contexte</value></data>
+  <data name="Date de fin" xml:space="preserve"><value>Date de fin</value></data>
+  <data name="Aucun examen ne correspond à ces filtres. Essayez de les modifier." xml:space="preserve"><value>Aucun examen ne correspond à ces filtres. Essayez de les modifier.</value></data>
+  <data name="Voici un aperçu de votre plateforme d’examens." xml:space="preserve"><value>Voici un aperçu de votre plateforme d’examens.</value></data>
+  <data name="Répartition actuelle" xml:space="preserve"><value>Répartition actuelle</value></data>
+  <data name="Filtrer par statut" xml:space="preserve"><value>Filtrer par statut</value></data>
+  <data name="GESTION DU CATALOGUE" xml:space="preserve"><value>GESTION DU CATALOGUE</value></data>
+  <data name="Une brève description de l’examen, visible dans le catalogue." xml:space="preserve"><value>Une brève description de l’examen, visible dans le catalogue.</value></data>
+  <data name="au total" xml:space="preserve"><value>au total</value></data>
+  <data name="Durée (secondes)" xml:space="preserve"><value>Durée (secondes)</value></data>
+  <data name="Enregistrer" xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="Affichage de" xml:space="preserve"><value>Affichage de</value></data>
+  <data name="Aucune réponse enregistrée" xml:space="preserve"><value>Aucune réponse enregistrée</value></data>
+  <data name="Aucune compétence associée" xml:space="preserve"><value>Aucune compétence associée</value></data>
+  <data name="La compétence doit être liée à un examen." xml:space="preserve"><value>La compétence doit être liée à un examen.</value></data>
+  <data name="Aperçu de l’examen" xml:space="preserve"><value>Aperçu de l’examen</value></data>
+  <data name="Publiés" xml:space="preserve"><value>Publiés</value></data>
+  <data name="Résultat" xml:space="preserve"><value>Résultat</value></data>
+  <data name="Examens brouillons" xml:space="preserve"><value>Examens brouillons</value></data>
+  <data name="Aucune question trouvée" xml:space="preserve"><value>Aucune question trouvée</value></data>
+  <data name="Aucun examen" xml:space="preserve"><value>Aucun examen</value></data>
+  <data name="Durée en minutes" xml:space="preserve"><value>Durée en minutes</value></data>
+  <data name="Les derniers examens créés sur la plateforme." xml:space="preserve"><value>Les derniers examens créés sur la plateforme.</value></data>
+  <data name="Nom" xml:space="preserve"><value>Nom</value></data>
+  <data name="Questions par compétence" xml:space="preserve"><value>Questions par compétence</value></data>
+  <data name="Aucune tentative" xml:space="preserve"><value>Aucune tentative</value></data>
+  <data name="Candidat" xml:space="preserve"><value>Candidat</value></data>
+  <data name="Créer un examen" xml:space="preserve"><value>Créer un examen</value></data>
+  <data name="Total examens" xml:space="preserve"><value>Total examens</value></data>
+  <data name="sur" xml:space="preserve"><value>sur</value></data>
+  <data name="Nouvelle compétence" xml:space="preserve"><value>Nouvelle compétence</value></data>
+  <data name="Voir le catalogue public" xml:space="preserve"><value>Voir le catalogue public</value></data>
+  <data name="Bon à savoir" xml:space="preserve"><value>Bon à savoir</value></data>
+  <data name="Sélectionner un examen" xml:space="preserve"><value>Sélectionner un examen</value></data>
+  <data name="Tout développer" xml:space="preserve"><value>Tout développer</value></data>
+  <data name="Terminé (UTC)" xml:space="preserve"><value>Terminé (UTC)</value></data>
+  <data name="Compétences avec questions associées" xml:space="preserve"><value>Compétences avec questions associées</value></data>
+  <data name="Pondération actuelle" xml:space="preserve"><value>Pondération actuelle</value></data>
+  <data name="Nom (français)" xml:space="preserve"><value>Nom (français)</value></data>
+  <data name="Temps passé" xml:space="preserve"><value>Temps passé</value></data>
+  <data name="Rechercher une question" xml:space="preserve"><value>Rechercher une question</value></data>
+  <data name="Annuler" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Laissez vide si aucune limite de temps." xml:space="preserve"><value>Laissez vide si aucune limite de temps.</value></data>
+  <data name="Informations générales" xml:space="preserve"><value>Informations générales</value></data>
+  <data name="Aperçu" xml:space="preserve"><value>Aperçu</value></data>
+  <data name="Aucune question ne correspond à ces filtres. Essayez de les modifier." xml:space="preserve"><value>Aucune question ne correspond à ces filtres. Essayez de les modifier.</value></data>
+  <data name="Aucune question pour ce filtre" xml:space="preserve"><value>Aucune question pour ce filtre</value></data>
+  <data name="STRUCTURE DES EXAMENS" xml:space="preserve"><value>STRUCTURE DES EXAMENS</value></data>
+  <data name="Choisissez un autre filtre pour afficher les réponses." xml:space="preserve"><value>Choisissez un autre filtre pour afficher les réponses.</value></data>
+  <data name="Compétences associées" xml:space="preserve"><value>Compétences associées</value></data>
+  <data name="Tous les types" xml:space="preserve"><value>Tous les types</value></data>
+  <data name="Détermine si l’examen est visible dans le catalogue." xml:space="preserve"><value>Détermine si l’examen est visible dans le catalogue.</value></data>
+  <data name="Terminée le" xml:space="preserve"><value>Terminée le</value></data>
+  <data name="Créer un nouvel examen" xml:space="preserve"><value>Créer un nouvel examen</value></data>
+  <data name="Le slug doit être unique." xml:space="preserve"><value>Le slug doit être unique.</value></data>
+  <data name="Aucune compétence trouvée" xml:space="preserve"><value>Aucune compétence trouvée</value></data>
+  <data name="Aucune compétence n’est associée à cet examen pour le moment." xml:space="preserve"><value>Aucune compétence n’est associée à cet examen pour le moment.</value></data>
+  <data name="Aucune tentative ne correspond à ce filtre." xml:space="preserve"><value>Aucune tentative ne correspond à ce filtre.</value></data>
+  <data name="Créer une compétence" xml:space="preserve"><value>Créer une compétence</value></data>
+  <data name="Choix" xml:space="preserve"><value>Choix</value></data>
+  <data name="Code" xml:space="preserve"><value>Code</value></data>
+  <data name="Début (UTC)" xml:space="preserve"><value>Début (UTC)</value></data>
+  <data name="Seuil de réussite" xml:space="preserve"><value>Seuil de réussite</value></data>
+  <data name="Bonne réponse" xml:space="preserve"><value>Bonne réponse</value></data>
+  <data name="Examens publiés" xml:space="preserve"><value>Examens publiés</value></data>
+  <data name="Score par compétence" xml:space="preserve"><value>Score par compétence</value></data>
+  <data name="Archiver" xml:space="preserve"><value>Archiver</value></data>
+  <data name="Début" xml:space="preserve"><value>Début</value></data>
+  <data name="Nombre de questions" xml:space="preserve"><value>Nombre de questions</value></data>
+  <data name="Ajoutez quelques mots pour préciser le sujet couvert." xml:space="preserve"><value>Ajoutez quelques mots pour préciser le sujet couvert.</value></data>
+  <data name="Aucune donnée disponible" xml:space="preserve"><value>Aucune donnée disponible</value></data>
+  <data name="Règles d’évaluation" xml:space="preserve"><value>Règles d’évaluation</value></data>
+  <data name="Filtrer par type de question" xml:space="preserve"><value>Filtrer par type de question</value></data>
+  <data name="Utilisez un code court." xml:space="preserve"><value>Utilisez un code court.</value></data>
+  <data name="La pondération est exprimée en pourcentage." xml:space="preserve"><value>La pondération est exprimée en pourcentage.</value></data>
+  <data name="Créé le" xml:space="preserve"><value>Créé le</value></data>
+  <data name="La compétence sera classée sous cet examen." xml:space="preserve"><value>La compétence sera classée sous cet examen.</value></data>
+  <data name="SUIVI DES EXAMENS" xml:space="preserve"><value>SUIVI DES EXAMENS</value></data>
+  <data name="Filtrer par examen" xml:space="preserve"><value>Filtrer par examen</value></data>
+  <data name="Rattachez la compétence et définissez son importance." xml:space="preserve"><value>Rattachez la compétence et définissez son importance.</value></data>
+  <data name="Voir côté public" xml:space="preserve"><value>Voir côté public</value></data>
+  <data name="Ajoutez votre première question pour compléter la banque d’examens." xml:space="preserve"><value>Ajoutez votre première question pour compléter la banque d’examens.</value></data>
+  <data name="Conseils" xml:space="preserve"><value>Conseils</value></data>
+  <data name="Créez votre premier examen pour commencer à organiser votre catalogue." xml:space="preserve"><value>Créez votre premier examen pour commencer à organiser votre catalogue.</value></data>
+  <data name="Les questions pourront ensuite être associées ici." xml:space="preserve"><value>Les questions pourront ensuite être associées ici.</value></data>
+  <data name="bonnes réponses" xml:space="preserve"><value>bonnes réponses</value></data>
+  <data name="Tous statuts" xml:space="preserve"><value>Tous statuts</value></data>
+  <data name="Pourcentage minimum de bonnes réponses pour réussir." xml:space="preserve"><value>Pourcentage minimum de bonnes réponses pour réussir.</value></data>
+  <data name="BANQUE DE QUESTIONS" xml:space="preserve"><value>BANQUE DE QUESTIONS</value></data>
+  <data name="Recherchez et gérez les questions de vos examens." xml:space="preserve"><value>Recherchez et gérez les questions de vos examens.</value></data>
+  <data name="Brouillon" xml:space="preserve"><value>Brouillon</value></data>
+  <data name="Voir" xml:space="preserve"><value>Voir</value></data>
+  <data name="Examen associé" xml:space="preserve"><value>Examen associé</value></data>
+  <data name="Date de début" xml:space="preserve"><value>Date de début</value></data>
+  <data name="Détail de la tentative" xml:space="preserve"><value>Détail de la tentative</value></data>
+  <data name="Accès direct aux tâches courantes" xml:space="preserve"><value>Accès direct aux tâches courantes</value></data>
+  <data name="Détails techniques" xml:space="preserve"><value>Détails techniques</value></data>
+  <data name="Utilisateur" xml:space="preserve"><value>Utilisateur</value></data>
+  <data name="Choisissez un nom clair." xml:space="preserve"><value>Choisissez un nom clair.</value></data>
+  <data name="Organisez les domaines évalués et leur pondération." xml:space="preserve"><value>Organisez les domaines évalués et leur pondération.</value></data>
+  <data name="Voir tous" xml:space="preserve"><value>Voir tous</value></data>
+  <data name="Examens récents" xml:space="preserve"><value>Examens récents</value></data>
+  <data name="Appliquer le filtre" xml:space="preserve"><value>Appliquer le filtre</value></data>
+  <data name="Nom affiché dans le catalogue des examens." xml:space="preserve"><value>Nom affiché dans le catalogue des examens.</value></data>
+  <data name="Name (English)" xml:space="preserve"><value>Nom (anglais)</value></data>
+  <data name="Voir les questions associées →" xml:space="preserve"><value>Voir les questions associées →</value></data>
+  <data name="À retenir" xml:space="preserve"><value>À retenir</value></data>
+  <data name="Description (English)" xml:space="preserve"><value>Description (anglais)</value></data>
+  <data name="Slug" xml:space="preserve"><value>Slug</value></data>
+  <data name="Rechercher une question…" xml:space="preserve"><value>Rechercher une question…</value></data>
+  <data name="Tous les statuts" xml:space="preserve"><value>Tous les statuts</value></data>
+  <data name="Configurez les règles de passage de l’examen." xml:space="preserve"><value>Configurez les règles de passage de l’examen.</value></data>
+  <data name="Informations sur l’examen" xml:space="preserve"><value>Informations sur l’examen</value></data>
+  <data name="Voir l’examen" xml:space="preserve"><value>Voir l’examen</value></data>
+  <data name="Guest" xml:space="preserve"><value>Invité</value></data>
+  <data name="Paramètres de publication" xml:space="preserve"><value>Paramètres de publication</value></data>
+  <data name="Choisissez un nom clair, reconnaissable dans l’administration." xml:space="preserve"><value>Choisissez un nom clair, reconnaissable dans l’administration.</value></data>
+  <data name="Correctes" xml:space="preserve"><value>Correctes</value></data>
+  <data name="Association et pondération" xml:space="preserve"><value>Association et pondération</value></data>
+  <data name="Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Questions et réponses" xml:space="preserve"><value>Questions et réponses</value></data>
+  <data name="Définissez le nom et la description de la compétence." xml:space="preserve"><value>Définissez le nom et la description de la compétence.</value></data>
+  <data name="Aucun examen pour le moment. Créez votre premier examen pour commencer." xml:space="preserve"><value>Aucun examen pour le moment. Créez votre premier examen pour commencer.</value></data>
+  <data name="Archivé" xml:space="preserve"><value>Archivé</value></data>
+  <data name="Aucune compétence" xml:space="preserve"><value>Aucune compétence</value></data>
+  <data name="Pourcentage" xml:space="preserve"><value>Pourcentage</value></data>
+  <data name="Résumé par compétence" xml:space="preserve"><value>Résumé par compétence</value></data>
+  <data name="Nouvel examen" xml:space="preserve"><value>Nouvel examen</value></data>
+  <data name="Le seuil doit respecter les limites autorisées." xml:space="preserve"><value>Le seuil doit respecter les limites autorisées.</value></data>
+  <data name="Créez une compétence pour structurer les domaines évalués." xml:space="preserve"><value>Créez une compétence pour structurer les domaines évalués.</value></data>
+  <data name="Vous pourrez ajouter les compétences et les questions après la création." xml:space="preserve"><value>Vous pourrez ajouter les compétences et les questions après la création.</value></data>
+  <data name="Aucune question dans cette tentative" xml:space="preserve"><value>Aucune question dans cette tentative</value></data>
+  <data name="Retour aux examens" xml:space="preserve"><value>Retour aux examens</value></data>
+  <data name="Modifier" xml:space="preserve"><value>Modifier</value></data>
+  <data name="Nouvelle question" xml:space="preserve"><value>Nouvelle question</value></data>
+  <data name="Filtrer" xml:space="preserve"><value>Filtrer</value></data>
+  <data name="Voir l’examen côté public" xml:space="preserve"><value>Voir l’examen côté public</value></data>
+  <data name="Ajouter une question" xml:space="preserve"><value>Ajouter une question</value></data>
+  <data name="Titre" xml:space="preserve"><value>Titre</value></data>
+  <data name="Slug (français)" xml:space="preserve"><value>Slug (français)</value></data>
+  <data name="Correction" xml:space="preserve"><value>Correction</value></data>
+  <data name="Modifier ces informations" xml:space="preserve"><value>Modifier ces informations</value></data>
+  <data name="Texte avec blanc" xml:space="preserve"><value>Texte avec blanc</value></data>
+  <data name="Associez une compétence pour faciliter le classement." xml:space="preserve"><value>Associez une compétence pour faciliter le classement.</value></data>
+  <data name="Lien public" xml:space="preserve"><value>Lien public</value></data>
+  <data name="Réponse (français)" xml:space="preserve"><value>Réponse (français)</value></data>
+  <data name="Gérer les questions" xml:space="preserve"><value>Gérer les questions</value></data>
+  <data name="Réponse longue" xml:space="preserve"><value>Réponse longue</value></data>
+  <data name="Explication / critères (français)" xml:space="preserve"><value>Explication / critères (français)</value></data>
+  <data name="Lien vers la page publique de l’examen." xml:space="preserve"><value>Lien vers la page publique de l’examen.</value></data>
+  <data name="Sélectionner" xml:space="preserve"><value>Sélectionner</value></data>
+  <data name="Répartition des questions" xml:space="preserve"><value>Répartition des questions</value></data>
+  <data name="Expected answer (English)" xml:space="preserve"><value>Réponse attendue (anglais)</value></data>
+  <data name="Text with blank (English)" xml:space="preserve"><value>Texte à trou (anglais)</value></data>
+  <data name="False" xml:space="preserve"><value>Faux</value></data>
+  <data name="Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Les réponses dépendent du type sélectionné." xml:space="preserve"><value>Les réponses dépendent du type sélectionné.</value></data>
+  <data name="Texte à trou" xml:space="preserve"><value>Texte à trou</value></data>
+  <data name="Item" xml:space="preserve"><value>Item</value></data>
+  <data name="Retour aux questions" xml:space="preserve"><value>Retour aux questions</value></data>
+  <data name="Compétence" xml:space="preserve"><value>Compétence</value></data>
+  <data name="La répartition s’affichera dès que des questions seront publiées." xml:space="preserve"><value>La répartition s’affichera dès que des questions seront publiées.</value></data>
+  <data name="Nombre total de questions dans cet examen." xml:space="preserve"><value>Nombre total de questions dans cet examen.</value></data>
+  <data name="Statistiques" xml:space="preserve"><value>Statistiques</value></data>
+  <data name="Answer (English)" xml:space="preserve"><value>Réponse (anglais)</value></data>
+  <data name="Seuil de réussite (%)" xml:space="preserve"><value>Seuil de réussite (%)</value></data>
+  <data name="Code unique de l’examen (ex. ENIM, AWS)." xml:space="preserve"><value>Code unique de l’examen (ex. ENIM, AWS).</value></data>
+  <data name="La réponse attendue et ses variantes seront sauvegardées comme réponses correctes." xml:space="preserve"><value>La réponse attendue et ses variantes seront sauvegardées comme réponses correctes.</value></data>
+  <data name="Ajouter paire" xml:space="preserve"><value>Ajouter paire</value></data>
+  <data name="Accepted answers (English)" xml:space="preserve"><value>Variantes acceptées (anglais)</value></data>
+  <data name="Aucune question publiée" xml:space="preserve"><value>Aucune question publiée</value></data>
+  <data name="True" xml:space="preserve"><value>Vrai</value></data>
+  <data name="Ajoutez au moins deux choix et sélectionnez exactement une bonne réponse." xml:space="preserve"><value>Ajoutez au moins deux choix et sélectionnez exactement une bonne réponse.</value></data>
+  <data name="Item (English)" xml:space="preserve"><value>Élément (anglais)</value></data>
+  <data name="Retirer" xml:space="preserve"><value>Retirer</value></data>
+  <data name="Source (English)" xml:space="preserve"><value>Source (anglais)</value></data>
+  <data name="Destination" xml:space="preserve"><value>Destination</value></data>
+  <data name="Destination (English)" xml:space="preserve"><value>Destination (anglais)</value></data>
+  <data name="Groupe" xml:space="preserve"><value>Groupe</value></data>
+  <data name="Aperçu et classement" xml:space="preserve"><value>Aperçu et classement</value></data>
+  <data name="Explication:" xml:space="preserve"><value>Explication:</value></data>
+  <data name="Relisez les choix et les bonnes réponses." xml:space="preserve"><value>Relisez les choix et les bonnes réponses.</value></data>
+  <data name="Réponse correcte" xml:space="preserve"><value>Réponse correcte</value></data>
+  <data name="True / False" xml:space="preserve"><value>True / False</value></data>
+  <data name="Question (français)" xml:space="preserve"><value>Question (français)</value></data>
+  <data name="Gérer les compétences" xml:space="preserve"><value>Gérer les compétences</value></data>
+  <data name="Vérifier les paramètres" xml:space="preserve"><value>Vérifier les paramètres</value></data>
+  <data name="Ajoutez une explication ou des critères utiles à la correction." xml:space="preserve"><value>Ajoutez une explication ou des critères utiles à la correction.</value></data>
+  <data name="Définissez le contenu et le classement de la question." xml:space="preserve"><value>Définissez le contenu et le classement de la question.</value></data>
+  <data name="Modifier l’examen" xml:space="preserve"><value>Modifier l’examen</value></data>
+  <data name="Exam Simulator" xml:space="preserve"><value>Exam Simulator</value></data>
+  <data name="Correcte" xml:space="preserve"><value>Correcte</value></data>
+  <data name="Réponses enregistrées" xml:space="preserve"><value>Réponses enregistrées</value></data>
+  <data name="Choix unique" xml:space="preserve"><value>Choix unique</value></data>
+  <data name="Le texte à trou et les réponses acceptées seront utilisés pour la correction." xml:space="preserve"><value>Le texte à trou et les réponses acceptées seront utilisés pour la correction.</value></data>
+  <data name="General" xml:space="preserve"><value>General</value></data>
+  <data name="Le type choisi détermine les champs de réponse affichés. Vérifiez la correction avant d’enregistrer." xml:space="preserve"><value>Le type choisi détermine les champs de réponse affichés. Vérifiez la correction avant d’enregistrer.</value></data>
+  <data name="Cet examen est en brouillon et n’est pas visible publiquement." xml:space="preserve"><value>Cet examen est en brouillon et n’est pas visible publiquement.</value></data>
+  <data name="Ajouter choix" xml:space="preserve"><value>Ajouter choix</value></data>
+  <data name="Réponse courte" xml:space="preserve"><value>Réponse courte</value></data>
+  <data name="Source" xml:space="preserve"><value>Source</value></data>
+  <data name="Question (English)" xml:space="preserve"><value>Question (anglais)</value></data>
+  <data name="Informations principales de l’examen dans le catalogue." xml:space="preserve"><value>Informations principales de l’examen dans le catalogue.</value></data>
+  <data name="Paires à associer" xml:space="preserve"><value>Paires à associer</value></data>
+  <data name="Utilisez l’explication comme modèle de réponse ou grille de correction." xml:space="preserve"><value>Utilisez l’explication comme modèle de réponse ou grille de correction.</value></data>
+  <data name="Ajouter item" xml:space="preserve"><value>Ajouter item</value></data>
+  <data name="Classement par groupe" xml:space="preserve"><value>Classement par groupe</value></data>
+  <data name="Formulez clairement ce qui est demandé au candidat." xml:space="preserve"><value>Formulez clairement ce qui est demandé au candidat.</value></data>
+  <data name="Choix multiples" xml:space="preserve"><value>Choix multiples</value></data>
+  <data name="Item sera stocké dans ChoiceText, groupe/catégorie dans GroupBy." xml:space="preserve"><value>Item sera stocké dans ChoiceText, groupe/catégorie dans GroupBy.</value></data>
+  <data name="Correct answer (English)" xml:space="preserve"><value>Réponse correcte (anglais)</value></data>
+  <data name="Dernière modification" xml:space="preserve"><value>Dernière modification</value></data>
+  <data name="Réponse attendue" xml:space="preserve"><value>Réponse attendue</value></data>
+  <data name="Explanation (English)" xml:space="preserve"><value>Explication (anglais)</value></data>
+  <data name="Ajoutez au moins deux choix et cochez une ou plusieurs bonnes réponses." xml:space="preserve"><value>Ajoutez au moins deux choix et cochez une ou plusieurs bonnes réponses.</value></data>
+  <data name="Variantes acceptées" xml:space="preserve"><value>Variantes acceptées</value></data>
+  <data name="Source sera stocké dans ChoiceText, destination dans GroupBy." xml:space="preserve"><value>Source sera stocké dans ChoiceText, destination dans GroupBy.</value></data>
+  <data name="Group (English)" xml:space="preserve"><value>Groupe (anglais)</value></data>
+  <data name="Exam.SlugInUse" xml:space="preserve"><value>Ce slug est déjà utilisé.</value></data>
+  <data name="Exam.CodeInUse" xml:space="preserve"><value>Ce code est déjà utilisé.</value></data>
+  <data name="Exam.EnglishSlugInUse" xml:space="preserve"><value>This English URL slug is already in use.</value></data>
+  <data name="Admin.ExistingExamRequired" xml:space="preserve"><value>Sélectionnez un examen existant.</value></data>
+  <data name="Skill.WeightTotalExceeded" xml:space="preserve"><value>Le total des pourcentages de cet examen dépasse 100%.</value></data>
+  <data name="Question.SkillMustBelongToExam" xml:space="preserve"><value>La compétence doit appartenir à l’examen sélectionné.</value></data>
+  <data name="Question.SingleChoiceMinOptions" xml:space="preserve"><value>Une question à choix unique exige au moins 2 choix.</value></data>
+  <data name="Question.SelectExactlyOneCorrect" xml:space="preserve"><value>Sélectionnez exactement une bonne réponse.</value></data>
+  <data name="Question.MultiChoiceMinOptions" xml:space="preserve"><value>Une question à choix multiples exige au moins 2 choix.</value></data>
+  <data name="Question.SelectOneOrMoreCorrect" xml:space="preserve"><value>Sélectionnez au moins une bonne réponse.</value></data>
+  <data name="Question.TrueFalseExactlyTwo" xml:space="preserve"><value>Une question True/False doit avoir exactement deux choix.</value></data>
+  <data name="Question.SelectTrueOrFalse" xml:space="preserve"><value>Sélectionnez True ou False comme bonne réponse.</value></data>
+  <data name="Question.ExpectedAnswerRequired" xml:space="preserve"><value>La réponse attendue est obligatoire.</value></data>
+  <data name="Question.GradingCriteriaRequired" xml:space="preserve"><value>Ajoutez des critères de correction ou un modèle de réponse.</value></data>
+  <data name="Question.BlankTextRequired" xml:space="preserve"><value>Le texte à trou est obligatoire.</value></data>
+  <data name="Question.CorrectAnswerRequired" xml:space="preserve"><value>La réponse correcte est obligatoire.</value></data>
+  <data name="Question.AddTwoMatchingPairs" xml:space="preserve"><value>Ajoutez au moins 2 paires source/destination.</value></data>
+  <data name="Question.MatchingPairIncomplete" xml:space="preserve"><value>Chaque paire doit avoir une source et une destination.</value></data>
+  <data name="Question.AddTwoGroupedItems" xml:space="preserve"><value>Ajoutez au moins 2 éléments à classer.</value></data>
+  <data name="Question.GroupedItemIncomplete" xml:space="preserve"><value>Chaque élément doit avoir un item et un groupe.</value></data>
+  <data name="Question.AddTwoDistinctGroups" xml:space="preserve"><value>Ajoutez au moins 2 groupes différents.</value></data>
+  <data name="Question.AddAtLeastOneAnswer" xml:space="preserve"><value>Ajoutez au moins une réponse.</value></data>
+  <data name="Question.MarkCorrectAnswer" xml:space="preserve"><value>Marquez au moins une réponse correcte.</value></data>
+  <data name="Question.OnlyOneCorrectAnswer" xml:space="preserve"><value>Une question à choix unique ne peut avoir qu’une seule bonne réponse.</value></data>
+  <data name="Exam.SaveFailed" xml:space="preserve"><value>L’examen n’a pas pu être enregistré. Il a peut-être été supprimé.</value></data>
+  <data name="Exam.Saved" xml:space="preserve"><value>Examen enregistré.</value></data>
+  <data name="Exam.DeletedOrArchived" xml:space="preserve"><value>L’examen a été archivé ou supprimé s’il était vide.</value></data>
+  <data name="Exam.NotFound" xml:space="preserve"><value>L’examen est introuvable.</value></data>
+  <data name="Skill.SaveFailed" xml:space="preserve"><value>La compétence n’a pas pu être enregistrée. Elle a peut-être été supprimée.</value></data>
+  <data name="Skill.Saved" xml:space="preserve"><value>Compétence enregistrée.</value></data>
+  <data name="Skill.Deleted" xml:space="preserve"><value>Compétence supprimée.</value></data>
+  <data name="Skill.DeleteBlocked" xml:space="preserve"><value>La compétence est introuvable ou reste utilisée par des questions.</value></data>
+  <data name="Question.SaveFailed" xml:space="preserve"><value>La question n’a pas pu être enregistrée. Elle a peut-être été supprimée.</value></data>
+  <data name="Question.Saved" xml:space="preserve"><value>Question enregistrée.</value></data>
+  <data name="Question.Deleted" xml:space="preserve"><value>Question supprimée.</value></data>
+  <data name="Question.NotFound" xml:space="preserve"><value>La question est introuvable.</value></data>
+  <data name="JS.QuestionTypeChange" xml:space="preserve"><value>Changer le type peut ignorer certaines réponses existantes lors de l’enregistrement. Continuer ?</value></data>
+  <data name="JS.AddTwoChoices" xml:space="preserve"><value>Ajoutez au moins 2 choix.</value></data>
+  <data name="JS.SelectAtLeastOneCorrect" xml:space="preserve"><value>Sélectionnez au moins une bonne réponse.</value></data>
+  <data name="JS.AddTwoPairs" xml:space="preserve"><value>Ajoutez au moins 2 paires.</value></data>
+  <data name="JS.AddTwoItems" xml:space="preserve"><value>Ajoutez au moins 2 éléments.</value></data>
+  <data name="Tout réduire" xml:space="preserve"><value>Tout réduire</value></data>
+  <data name="Identifiant copié" xml:space="preserve"><value>Identifiant copié</value></data>
+  <data name="Impossible de copier automatiquement." xml:space="preserve"><value>Impossible de copier automatiquement.</value></data>
+  <data name="Archiver cet examen ?" xml:space="preserve"><value>Archiver cet examen ?</value></data>
+  <data name="Archiver ou supprimer cet examen ?" xml:space="preserve"><value>Archiver ou supprimer cet examen ?</value></data>
+  <data name="Supprimer cette compétence ?" xml:space="preserve"><value>Supprimer cette compétence ?</value></data>
+  <data name="Supprimer cette question ?" xml:space="preserve"><value>Supprimer cette question ?</value></data>
+  <data name="Lien copié" xml:space="preserve"><value>Lien copié</value></data>
+  <data name="Impossible de copier automatiquement. Sélectionnez le lien pour le copier." xml:space="preserve"><value>Impossible de copier automatiquement. Sélectionnez le lien pour le copier.</value></data>
+  <data name="Previous" xml:space="preserve"><value>Précédent</value></data>
+  <data name="Next" xml:space="preserve"><value>Suivant</value></data>
+  <data name="Général" xml:space="preserve"><value>Général</value></data>
+  <data name="Modifier la question" xml:space="preserve"><value>Modifier la question</value></data>
+  <data name="Modifiez les informations et paramètres de publication de l’examen." xml:space="preserve"><value>Modifiez les informations et paramètres de publication de l’examen.</value></data>
+  <data name="Ajoutez un nouvel examen au catalogue." xml:space="preserve"><value>Ajoutez un nouvel examen au catalogue.</value></data>
+  <data name="Modifiez le contenu, le classement et les réponses." xml:space="preserve"><value>Modifiez le contenu, le classement et les réponses.</value></data>
+  <data name="Créez une question et configurez ses réponses." xml:space="preserve"><value>Créez une question et configurez ses réponses.</value></data>
+  <data name="Modifier la compétence" xml:space="preserve"><value>Modifier la compétence</value></data>
+  <data name="Modifiez les informations et la pondération de cette compétence." xml:space="preserve"><value>Modifiez les informations et la pondération de cette compétence.</value></data>
+  <data name="Ajoutez une compétence et associez-la à un examen." xml:space="preserve"><value>Ajoutez une compétence et associez-la à un examen.</value></data>
+  <data name="En cours" xml:space="preserve"><value>En cours</value></data>
+  <data name="Terminée" xml:space="preserve"><value>Terminée</value></data>
+  <data name="Expirée" xml:space="preserve"><value>Expirée</value></data>
+  <data name="Réussite" xml:space="preserve"><value>Réussite</value></data>
+  <data name="Échec" xml:space="preserve"><value>Échec</value></data>
+  <data name="Non calculé" xml:space="preserve"><value>Non calculé</value></data>
+  <data name="Non limitée" xml:space="preserve"><value>Non limitée</value></data>
+  <data name="En attente" xml:space="preserve"><value>En attente</value></data>
+  <data name="Incorrecte" xml:space="preserve"><value>Incorrecte</value></data>
+  <data name="Aucune réponse de référence n’est disponible dans le snapshot." xml:space="preserve"><value>Aucune réponse de référence n’est disponible dans le snapshot.</value></data>
+  <data name="Créée le" xml:space="preserve"><value>Créée le</value></data>
+  <data name="Afficher le détail" xml:space="preserve"><value>Afficher le détail</value></data>
+  <data name="Page précédente" xml:space="preserve"><value>Page précédente</value></data>
+  <data name="Page suivante" xml:space="preserve"><value>Page suivante</value></data>
+  <data name="Answer text" xml:space="preserve"><value>Texte en anglais</value></data>
+  <data name="Aperçu de la question" xml:space="preserve"><value>Aperçu de la question</value></data>
+  <data name="Correction évaluée selon les critères indiqués dans l’explication." xml:space="preserve"><value>Correction évaluée selon les critères indiqués dans l’explication.</value></data>
+  <data name="Explication :" xml:space="preserve"><value>Explication :</value></data>
+  <data name="Texte de réponse" xml:space="preserve"><value>Texte de réponse</value></data>
+  <data name="Réponses de l’examen" xml:space="preserve"><value>Réponses de l’examen</value></data>
+  <data name="Résultats de la tentative" xml:space="preserve"><value>Résultats de la tentative</value></data>
+  <data name="Sections du rapport" xml:space="preserve"><value>Sections du rapport</value></data>
+  <data name="Filtrer les questions selon le résultat" xml:space="preserve"><value>Filtrer les questions selon le résultat</value></data>
+  <data name="Pagination des questions" xml:space="preserve"><value>Pagination des questions</value></data>
+  <data name="Résumé de la tentative" xml:space="preserve"><value>Résumé de la tentative</value></data>
+  <data name="Copier l’identifiant de la tentative" xml:space="preserve"><value>Copier l’identifiant de la tentative</value></data>
+  <data name="Liste des tentatives" xml:space="preserve"><value>Liste des tentatives</value></data>
+  <data name="Pagination des tentatives" xml:space="preserve"><value>Pagination des tentatives</value></data>
+  <data name="Indicateurs de la plateforme" xml:space="preserve"><value>Indicateurs de la plateforme</value></data>
+  <data name="Statistiques et actions" xml:space="preserve"><value>Statistiques et actions</value></data>
+  <data name="Résumé de l’examen" xml:space="preserve"><value>Résumé de l’examen</value></data>
+  <data name="Navigation de l’examen" xml:space="preserve"><value>Navigation de l’examen</value></data>
+  <data name="Données et actions de l’examen" xml:space="preserve"><value>Données et actions de l’examen</value></data>
+  <data name="Copier le lien public" xml:space="preserve"><value>Copier le lien public</value></data>
+  <data name="Ex. 60" xml:space="preserve"><value>Ex. 60</value></data>
+  <data name="Ex: Middleware" xml:space="preserve"><value>Ex. : Middleware</value></data>
+  <data name="Une variante par ligne, ou séparée par ;" xml:space="preserve"><value>Une variante par ligne, ou séparée par ;</value></data>
+  <data name="ASP.NET Core utilise le middleware ____ pour gérer les fichiers statiques." xml:space="preserve"><value>ASP.NET Core utilise le middleware ____ pour gérer les fichiers statiques.</value></data>
+  <data name="Ex: UseStaticFiles" xml:space="preserve"><value>Ex. : UseStaticFiles</value></data>
+  <data name="Une variante par ligne" xml:space="preserve"><value>Une variante par ligne</value></data>
+  <data name="Controller" xml:space="preserve"><value>Contrôleur</value></data>
+  <data name="Handles HTTP requests" xml:space="preserve"><value>Traite les requêtes HTTP</value></data>
+  <data name="ASP.NET Core" xml:space="preserve"><value>ASP.NET Core</value></data>
+  <data name="Backend" xml:space="preserve"><value>Back-end</value></data>
+  <data name="Résumé de la question" xml:space="preserve"><value>Résumé de la question</value></data>
+  <data name="Liste des examens" xml:space="preserve"><value>Liste des examens</value></data>
+  <data name="Archiver l’examen" xml:space="preserve"><value>Archiver l’examen</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Liste des compétences" xml:space="preserve"><value>Liste des compétences</value></data>
+  <data name="Fermer" xml:space="preserve"><value>Fermer</value></data>
+  <data name="Publish.NameRequired" xml:space="preserve"><value>Le nom de l’examen est obligatoire.</value></data>
+  <data name="Publish.DescriptionRequired" xml:space="preserve"><value>La description de l’examen est obligatoire.</value></data>
+  <data name="Publish.CodeRequired" xml:space="preserve"><value>Le code de l’examen est obligatoire.</value></data>
+  <data name="Publish.SlugRequired" xml:space="preserve"><value>Le slug de l’examen est obligatoire.</value></data>
+  <data name="Publish.DurationRange" xml:space="preserve"><value>La durée doit être comprise entre 1 et 1440 minutes.</value></data>
+  <data name="Publish.PassingRange" xml:space="preserve"><value>Le seuil de réussite doit être compris entre 0 et 100%.</value></data>
+  <data name="Publish.QuestionRequired" xml:space="preserve"><value>Publiez au moins une question utilisable avant de publier l’examen.</value></data>
+  <data name="Publish.QuestionWrongExam" xml:space="preserve"><value>« {0} » n’est pas rattachée à cet examen.</value></data>
+  <data name="Publish.QuestionDescriptionRequired" xml:space="preserve"><value>Chaque question publiée doit avoir un énoncé.</value></data>
+  <data name="Publish.UnsupportedType" xml:space="preserve"><value>« {0} » utilise le type {1}, non pris en charge pour les examens notés.</value></data>
+  <data name="Publish.SkillWrongExam" xml:space="preserve"><value>La compétence de « {0} » n’appartient pas à cet examen.</value></data>
+  <data name="Publish.ChoiceTextRequired" xml:space="preserve"><value>Tous les choix de « {0} » doivent avoir un texte.</value></data>
+  <data name="Publish.TwoChoicesRequired" xml:space="preserve"><value>« {0} » doit avoir au moins deux choix.</value></data>
+  <data name="Publish.ExactlyOneCorrectRequired" xml:space="preserve"><value>« {0} » doit avoir exactement une bonne réponse.</value></data>
+  <data name="Publish.CorrectRequired" xml:space="preserve"><value>« {0} » doit avoir au moins une bonne réponse.</value></data>
+  <data name="Publish.TrueFalseChoicesRequired" xml:space="preserve"><value>« {0} » doit contenir exactement les choix True et False.</value></data>
+  <data name="Publish.ExpectedAnswerRequired" xml:space="preserve"><value>« {0} » doit avoir une réponse attendue.</value></data>
+  <data name="Retour aux compétences" xml:space="preserve"><value>Retour aux compétences</value></data>
+  <data name="Score" xml:space="preserve"><value>Score</value></data>
+  <data name="Tentatives d’examen" xml:space="preserve"><value>Tentatives d’examen</value></data>
+  <data name="Réussi" xml:space="preserve"><value>Réussi</value></data>
+  <data name="Non réussi" xml:space="preserve"><value>Non réussi</value></data>
+  <data name="Aucune limite" xml:space="preserve"><value>Aucune limite</value></data>
+  <data name="Examen prêt" xml:space="preserve"><value>Examen prêt</value></data>
+  <data name="Configuration à vérifier" xml:space="preserve"><value>Configuration à vérifier</value></data>
+  <data name="Aucune description n’a été renseignée pour cet examen." xml:space="preserve"><value>Aucune description n’a été renseignée pour cet examen.</value></data>
+  <data name="Cet examen est publié et disponible pour les utilisateurs." xml:space="preserve"><value>Cet examen est publié et disponible pour les utilisateurs.</value></data>
+  <data name="Cet examen est archivé et n’est pas visible dans le catalogue public." xml:space="preserve"><value>Cet examen est archivé et n’est pas visible dans le catalogue public.</value></data>
+  <data name="Cet examen est publié et contient des questions utilisables par les candidats." xml:space="preserve"><value>Cet examen est publié et contient des questions utilisables par les candidats.</value></data>
+  <data name="Cet examen est publié mais ne contient aucune question publiée." xml:space="preserve"><value>Cet examen est publié mais ne contient aucune question publiée.</value></data>
+  <data name="Cet examen est archivé et n’est pas accessible aux candidats." xml:space="preserve"><value>Cet examen est archivé et n’est pas accessible aux candidats.</value></data>
+  <data name="Cet examen est en brouillon. Publiez-le après avoir complété sa configuration." xml:space="preserve"><value>Cet examen est en brouillon. Publiez-le après avoir complété sa configuration.</value></data>
+  <data name="Examen non sélectionné" xml:space="preserve"><value>Examen non sélectionné</value></data>
+  <data name="Modifier les informations et la pondération de cette compétence." xml:space="preserve"><value>Modifier les informations et la pondération de cette compétence.</value></data>
+  <data name="Seuil :" xml:space="preserve"><value>Seuil :</value></data>
+  <data name="Anglais" xml:space="preserve"><value>Anglais</value></data>
+  <data name="The {0} field is required." xml:space="preserve"><value>Le champ {0} est obligatoire.</value></data>
+  <data name="The field {0} must be a string with a maximum length of {1}." xml:space="preserve"><value>Le champ {0} doit contenir au maximum {1} caractères.</value></data>
+  <data name="The field {0} must be a string with a minimum length of {1}." xml:space="preserve"><value>Le champ {0} doit contenir au minimum {1} caractères.</value></data>
+  <data name="The field {0} must be between {1} and {2}." xml:space="preserve"><value>Le champ {0} doit être compris entre {1} et {2}.</value></data>
+  <data name="The field {0} must be a number." xml:space="preserve"><value>Le champ {0} doit contenir au maximum {1} caractères.</value></data>
+  <data name="The value '{0}' is not valid for {1}." xml:space="preserve"><value>La valeur « {0} » n’est pas valide pour {1}.</value></data>
+  <data name="The field {0} must match the regular expression '{1}'." xml:space="preserve"><value>Le champ {0} ne respecte pas le format attendu.</value></data>
+  <data name="The field {0} must be a string or array type with a maximum length of '{1}'." xml:space="preserve"><value>Le champ {0} doit contenir au maximum {1} caractères.</value></data>
+  <data name="Admin.AttemptPlural" xml:space="preserve"><value>tentatives</value></data>
+  <data name="Admin.AttemptSingular" xml:space="preserve"><value>tentative</value></data>
+  <data name="Admin.ExamStatusChartDescription" xml:space="preserve"><value>Examens publiés : {0}, brouillons : {1}, archivés : {2}</value></data>
+  <data name="Admin.LinkedSkillSingular" xml:space="preserve"><value>compétence associée à cet examen</value></data>
+  <data name="Admin.LinkedSkillPlural" xml:space="preserve"><value>compétences associées à cet examen</value></data>
+  <data name="Admin.ExamSingular" xml:space="preserve"><value>examen</value></data>
+  <data name="Admin.ExamPlural" xml:space="preserve"><value>examens</value></data>
+  <data name="Admin.QuestionSingular" xml:space="preserve"><value>question</value></data>
+  <data name="Admin.QuestionPlural" xml:space="preserve"><value>questions</value></data>
+  <data name="Admin.SkillSingular" xml:space="preserve"><value>compétence</value></data>
+  <data name="Admin.SkillPlural" xml:space="preserve"><value>compétences</value></data>
+  <data name="Anonymous user" xml:space="preserve"><value>Utilisateur anonyme</value></data>
+  <data name="Identified user" xml:space="preserve"><value>Utilisateur identifié</value></data>
+  <data name="Publish.QuestionWithoutPrompt" xml:space="preserve"><value>Question sans énoncé</value></data>
+  <data name="Répartition des questions publiées par type" xml:space="preserve"><value>Répartition des questions publiées par type : {0}</value></data>
+  <data name="public.detail.breadcrumb" xml:space="preserve"><value>Fil d’Ariane</value></data>
+  <data name="public.detail.mainInfo" xml:space="preserve"><value>Informations principales</value></data>
+  <data name="public.detail.questions" xml:space="preserve"><value>questions</value></data>
+  <data name="public.detail.noLimit" xml:space="preserve"><value>Sans limite</value></data>
+  <data name="public.detail.requiredScore" xml:space="preserve"><value>Seuil de réussite</value></data>
+  <data name="public.detail.evaluatedSkills" xml:space="preserve"><value>Compétences évaluées</value></data>
+  <data name="public.detail.notReady" xml:space="preserve"><value>Cet examen n’est pas encore prêt à être commencé.</value></data>
+  <data name="public.detail.tabs" xml:space="preserve"><value>Sections de l’examen</value></data>
+  <data name="public.detail.preview" xml:space="preserve"><value>Aperçu</value></data>
+  <data name="public.detail.questionList" xml:space="preserve"><value>Liste des questions</value></data>
+  <data name="public.detail.information" xml:space="preserve"><value>Informations</value></data>
+  <data name="public.detail.guidance" xml:space="preserve"><value>Ce parcours vous aide à évaluer votre niveau. Prenez le temps de lire chaque question avant de répondre.</value></data>
+  <data name="public.detail.noSkills" xml:space="preserve"><value>Aucune compétence n’est associée à cet examen.</value></data>
+  <data name="public.detail.weighting" xml:space="preserve"><value>Pondération de {0}</value></data>
+  <data name="public.detail.noPublishedQuestions" xml:space="preserve"><value>Aucune question publiée.</value></data>
+  <data name="public.detail.examDetails" xml:space="preserve"><value>Détails de l’examen</value></data>
+  <data name="public.detail.questionCount" xml:space="preserve"><value>Nombre de questions</value></data>
+  <data name="public.detail.duration" xml:space="preserve"><value>Durée</value></data>
+  <data name="public.detail.minutes" xml:space="preserve"><value>minutes</value></data>
+  <data name="public.detail.status" xml:space="preserve"><value>Statut</value></data>
+  <data name="public.detail.lastUpdated" xml:space="preserve"><value>Dernière mise à jour</value></data>
+  <data name="public.detail.distribution" xml:space="preserve"><value>Répartition des questions</value></data>
+  <data name="public.detail.distributionAria" xml:space="preserve"><value>Répartition des {0} questions par type</value></data>
+  <data name="public.detail.ready" xml:space="preserve"><value>Prêt à commencer ?</value></data>
+  <data name="public.detail.startText" xml:space="preserve"><value>Lancez l’examen et testez vos connaissances.</value></data>
+  <data name="public.detail.unavailable" xml:space="preserve"><value>Cet examen n’est pas disponible pour le moment.</value></data>
+  <data name="public.detail.tips" xml:space="preserve"><value>Conseils</value></data>
+  <data name="public.detail.readCarefully" xml:space="preserve"><value>Lisez attentivement chaque question.</value></data>
+  <data name="public.detail.manageTime" xml:space="preserve"><value>Gérez votre temps : vous disposez de {0} minutes.</value></data>
+  <data name="public.detail.takeTime" xml:space="preserve"><value>Prenez le temps de réfléchir à chaque réponse.</value></data>
+  <data name="public.detail.multiAnswers" xml:space="preserve"><value>Certaines questions peuvent avoir plusieurs bonnes réponses.</value></data>
+  <data name="public.detail.navigateReview" xml:space="preserve"><value>Vous pouvez naviguer entre les questions et les marquer pour révision avant de terminer.</value></data>
+  <data name="public.detail.footerTitle" xml:space="preserve"><value>Entraînez-vous. Progressez. Réussissez.</value></data>
+  <data name="public.detail.footerText" xml:space="preserve"><value>Découvrez les examens disponibles et continuez votre progression.</value></data>
+  <data name="public.result.breadcrumb" xml:space="preserve"><value>Résultat</value></data>
+  <data name="public.result.scoreAria" xml:space="preserve"><value>Score : {0} pour cent; {1} sur {2} bonnes réponses</value></data>
+  <data name="public.result.correctAnswers" xml:space="preserve"><value>bonnes réponses</value></data>
+  <data name="public.result.passed" xml:space="preserve"><value>Examen réussi</value></data>
+  <data name="public.result.failed" xml:space="preserve"><value>Examen non réussi</value></data>
+  <data name="public.result.congratulations" xml:space="preserve"><value>Félicitations, vous avez atteint le seuil de réussite.</value></data>
+  <data name="public.result.retryAdvice" xml:space="preserve"><value>À retravailler. Vous êtes en dessous du seuil requis de {0}%.</value></data>
+  <data name="public.result.questions" xml:space="preserve"><value>questions</value></data>
+  <data name="public.result.time" xml:space="preserve"><value>Temps</value></data>
+  <data name="public.result.threshold" xml:space="preserve"><value>Seuil</value></data>
+  <data name="public.result.failedAdvice" xml:space="preserve"><value>Chaque tentative est une occasion d’apprendre. Analysez vos réponses et entraînez-vous sur les compétences à renforcer.</value></data>
+  <data name="public.result.passedAdvice" xml:space="preserve"><value>Votre progression continue. Consultez les corrections pour consolider vos acquis.</value></data>
+  <data name="public.result.summaryAria" xml:space="preserve"><value>Résumé de votre résultat</value></data>
+  <data name="public.result.correct" xml:space="preserve"><value>Correctes</value></data>
+  <data name="public.result.incorrect" xml:space="preserve"><value>Incorrectes</value></data>
+  <data name="public.result.timeSpent" xml:space="preserve"><value>Temps passé</value></data>
+  <data name="public.result.attemptDuration" xml:space="preserve"><value>durée de la tentative</value></data>
+  <data name="public.result.passingScore" xml:space="preserve"><value>Seuil de réussite</value></data>
+  <data name="public.result.thresholdReached" xml:space="preserve"><value>Seuil atteint</value></data>
+  <data name="public.result.thresholdMissed" xml:space="preserve"><value>Seuil non atteint</value></data>
+  <data name="public.result.questionReview" xml:space="preserve"><value>Correction des questions</value></data>
+  <data name="public.result.reviewDescription" xml:space="preserve"><value>Vos réponses, les réponses attendues et les explications.</value></data>
+  <data name="public.result.filterQuestions" xml:space="preserve"><value>Filtrer les questions</value></data>
+  <data name="public.result.all" xml:space="preserve"><value>Toutes</value></data>
+  <data name="public.result.emptyTitle" xml:space="preserve"><value>Aucune question à afficher</value></data>
+  <data name="public.result.emptyText" xml:space="preserve"><value>Le détail de cette tentative n’est pas disponible.</value></data>
+  <data name="public.result.answerCorrect" xml:space="preserve"><value>Correcte</value></data>
+  <data name="public.result.answerIncorrect" xml:space="preserve"><value>Incorrecte</value></data>
+  <data name="public.result.yourAnswer" xml:space="preserve"><value>Votre réponse</value></data>
+  <data name="public.result.noAnswer" xml:space="preserve"><value>Aucune réponse enregistrée</value></data>
+  <data name="public.result.referenceAnswer" xml:space="preserve"><value>Bonne réponse</value></data>
+  <data name="public.result.noReference" xml:space="preserve"><value>La réponse de référence n’est pas disponible pour cette question.</value></data>
+  <data name="public.result.explanation" xml:space="preserve"><value>Explication</value></data>
+  <data name="public.result.pointsEarned" xml:space="preserve"><value>Points obtenus</value></data>
+  <data name="public.result.noFilterMatches" xml:space="preserve"><value>Aucune question ne correspond à ce filtre.</value></data>
+  <data name="public.result.attemptSummary" xml:space="preserve"><value>Synthèse de la tentative</value></data>
+  <data name="public.result.scoreBySkill" xml:space="preserve"><value>Score par compétence</value></data>
+  <data name="public.result.noSkillDetails" xml:space="preserve"><value>Aucune compétence détaillée pour cette tentative.</value></data>
+  <data name="public.result.priorityImprove" xml:space="preserve"><value>À renforcer en priorité</value></data>
+  <data name="public.result.needsImprovement" xml:space="preserve"><value>À améliorer</value></data>
+  <data name="public.result.onTrack" xml:space="preserve"><value>En bonne voie</value></data>
+  <data name="public.result.mastered" xml:space="preserve"><value>Maîtrisé</value></data>
+  <data name="public.result.correctOfTotal" xml:space="preserve"><value>{0} / {1} correctes · {2}</value></data>
+  <data name="public.result.nextSteps" xml:space="preserve"><value>Que faire ensuite ?</value></data>
+  <data name="public.result.nextStepsText" xml:space="preserve"><value>Continuez à progresser avec ces actions :</value></data>
+  <data name="public.result.details" xml:space="preserve"><value>Détails du résultat</value></data>
+  <data name="public.result.score" xml:space="preserve"><value>Score</value></data>
+  <data name="public.result.status" xml:space="preserve"><value>Statut</value></data>
+  <data name="public.result.passedShort" xml:space="preserve"><value>Réussi</value></data>
+  <data name="public.result.failedShort" xml:space="preserve"><value>Non réussi</value></data>
+  <data name="public.detail.code" xml:space="preserve"><value>Code</value></data>
+  <data name="public.detail.description" xml:space="preserve"><value>Description</value></data>
+  <data name="public.fallbackNotice" xml:space="preserve"><value>Certains contenus restent en français, car leur traduction anglaise n’est pas disponible.</value></data>
+  <data name="Marquer la question {0} pour révision" xml:space="preserve"><value>Marquer la question {0} pour révision</value></data>
+  <data name="seo.home.description" xml:space="preserve"><value>Préparez vos certifications avec Certiva : explorez des examens pratiques publiés et entraînez-vous dans des conditions réalistes.</value></data>
+  <data name="seo.home.title" xml:space="preserve"><value>Certiva — Préparez vos certifications avec des examens pratiques</value></data>
+  <data name="seo.home.page" xml:space="preserve"><value>Examens de certification — page {0}</value></data>
+  <data name="seo.details.title" xml:space="preserve"><value>{0} — Examen pratique</value></data>
+  <data name="seo.details.type" xml:space="preserve"><value>Examen pratique</value></data>
+  <data name="seo.result.title" xml:space="preserve"><value>Résultat — {0}</value></data>
+  <data name="seo.result.description" xml:space="preserve"><value>Résultat de votre tentative pour {0} : {1}% et {2} réponses correctes sur {3}.</value></data>
+  <data name="{0} {1} {2}" xml:space="preserve"><value>{0} {1} {2}</value></data>
+</root>

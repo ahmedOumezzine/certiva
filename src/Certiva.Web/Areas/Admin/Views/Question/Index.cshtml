@@ -1,0 +1,123 @@
+@model QuestionIndexViewModel
+@{
+    ViewData["Title"] = T["Questions"];
+}
+@section Breadcrumb { <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">@T["Exam Simulator"]</a></li><li class="breadcrumb-item active">@T["Questions"]</li> }
+
+<div class="exam-admin admin-page admin-list-page question-list-page">
+    <div class="admin-title-row admin-page-header">
+        <div><span class="admin-eyebrow admin-page-eyebrow">@T["BANQUE DE QUESTIONS"]</span><h1 class="admin-page-title">@T["Questions"]</h1><p class="admin-page-subtitle">@T["Recherchez et gérez les questions de vos examens."]</p></div>
+        <a asp-area="Admin" asp-controller="Question" asp-action="Create" asp-route-examId="@Model.ExamId" class="admin-primary admin-primary-action"><span aria-hidden="true">＋</span> @T["Nouvelle question"]</a>
+    </div>
+    @await Html.PartialAsync("_Alerts")
+    <form class="admin-filter-card exam-filter-card question-filter-card admin-paged-filter-card" method="get" asp-area="Admin" asp-controller="Question" asp-action="Index">
+        <label class="exam-search-field admin-filter-control question-search-control">
+            <span class="visually-hidden">@T["Rechercher une question"]</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>
+            <input name="search" value="@Model.Search" placeholder="@T["Rechercher une question…"]" />
+        </label>
+        <label class="exam-status-field admin-filter-control">
+            <span class="visually-hidden">@T["Filtrer par examen"]</span>
+            <select name="examId">
+                <option value="">@T["Tous les examens"]</option>
+                @foreach (var exam in Model.Exams)
+                {
+                    <option value="@exam.Id" selected="@(Model.ExamId == exam.Id)">@exam.Name</option>
+                }
+            </select>
+        </label>
+        <label class="exam-status-field admin-filter-control">
+            <span>@T["Résultats par page"]</span>
+            <select name="pageSize">
+                <option value="25" selected="@(Model.Pagination.PageSize == 25)">25</option>
+                <option value="50" selected="@(Model.Pagination.PageSize == 50)">50</option>
+                <option value="100" selected="@(Model.Pagination.PageSize == 100)">100</option>
+            </select>
+        </label>
+        @if (Model.Status.HasValue)
+        {
+            <input type="hidden" name="status" value="@Model.Status" />
+        }
+        <label class="exam-status-field admin-filter-control">
+            <span class="visually-hidden">@T["Filtrer par compétence"]</span>
+            <select name="skillId">
+                <option value="">@T["Toutes les compétences"]</option>
+                @foreach (var skill in Model.Skills)
+                {
+                    <option value="@skill.Id" selected="@(Model.SkillId == skill.Id)">@skill.Name</option>
+                }
+            </select>
+        </label>
+        <label class="exam-status-field admin-filter-control">
+            <span class="visually-hidden">@T["Filtrer par type de question"]</span>
+            <select name="questionType">
+                <option value="">@T["Tous les types"]</option>
+                @foreach (var type in Enum.GetValues<QuestionType>())
+                {
+                    <option value="@type" selected="@(Model.QuestionType == type)">@type</option>
+                }
+            </select>
+        </label>
+        <button type="submit" class="admin-primary admin-filter-submit exam-filter-submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6.5 7.5v5l-3 1v-6z" /></svg><span>@T["Filtrer"]</span>
+        </button>
+    </form>
+    <section class="admin-card admin-table-card exam-table-card question-table-card" aria-label="@T["Liste des questions"]">
+        @if (Model.Questions.Any())
+        {
+            <div class="exam-table-scroll">
+                <table class="admin-table admin-list-table question-list-table">
+                    <thead>
+                        <tr><th scope="col">@T["Question"]</th><th scope="col">@T["Examen"]</th><th scope="col">@T["Compétence"]</th><th scope="col">@T["Type"]</th><th scope="col">@T["Statut"]</th><th scope="col" class="question-count-heading">@T["Choix"]</th><th scope="col" class="question-actions-heading">@T["Actions"]</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var q in Model.Questions)
+                    {
+                        var questionTypeLabel = T.EnumLabel(q.QuestionType);
+                        <tr>
+                            <td class="question-text-cell"><span class="question-list-text" title="@q.Description">@q.Description</span></td>
+                            <td class="question-related-cell">@q.ExamName</td>
+                            <td class="question-related-cell">@(q.SkillName == "General" ? T["Général"] : q.SkillName)</td>
+                            <td><span class="admin-type-pill">@questionTypeLabel</span></td>
+                            <td><span class="badge-soft admin-badge status-@q.Status.ToString().ToLowerInvariant() @(q.Status == Status.Published ? "admin-badge-success" : q.Status == Status.Draft ? "admin-badge-warning" : "admin-badge-muted")">@T.EnumLabel(q.Status)</span></td>
+                            <td class="question-count-cell">@q.ChoicesCount</td>
+                            <td>
+                                <div class="exam-row-actions admin-actions">
+                                    <a class="exam-row-action admin-action-btn" asp-area="Admin" asp-controller="Question" asp-action="Details" asp-route-id="@q.Id" aria-label="@T["Aperçu"] @T["Question"]" title="@T["Aperçu"]">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg><span>@T["Aperçu"]</span>
+                                    </a>
+                                    <a class="exam-row-action admin-action-btn admin-action-btn-primary" asp-area="Admin" asp-controller="Question" asp-action="Edit" asp-route-id="@q.Id" aria-label="Modifier la question : @q.Description" title="@T["Modifier"]">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L19.8 7.7a2.1 2.1 0 0 0-3-3L4 16.5Z" /><path d="m14.8 6.7 3 3" /></svg><span>@T["Modifier"]</span>
+                                    </a>
+                                    <form asp-area="Admin" asp-controller="Question" asp-action="Delete" method="post" onsubmit="return confirm('@T["Supprimer cette question ?"]');">
+                                        <input type="hidden" name="id" value="@q.Id" />
+                                        <button class="exam-row-action admin-action-btn admin-action-btn-danger exam-archive-action" type="submit" aria-label="Supprimer la question : @q.Description" title="@T["Supprimer"]">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></svg><span>@T["Supprimer"]</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            var hasQuestionFilters = !string.IsNullOrWhiteSpace(Model.Search) || Model.ExamId.HasValue || Model.SkillId.HasValue || Model.QuestionType.HasValue || Model.Status.HasValue;
+            <div class="admin-empty-state exam-list-empty">
+                <span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1 .9-1.9 1.3-1.9 2.8M12 17h.01" /></svg></span>
+                <h2>@(hasQuestionFilters ? T["Aucune question trouvée"] : T["Aucune question"])</h2>
+                <p>@(hasQuestionFilters ? T["Aucune question ne correspond à ces filtres. Essayez de les modifier."] : T["Ajoutez votre première question pour compléter la banque d’examens."])</p>
+                @if (!hasQuestionFilters)
+                {
+                    <a asp-area="Admin" asp-controller="Question" asp-action="Create" asp-route-examId="@Model.ExamId" class="admin-primary">@T["Créer une question"]</a>
+                }
+            </div>
+        }
+        <div class="exam-table-footer admin-list-footer">
+            @await Html.PartialAsync("_AdminPagination", Model.Pagination)
+        </div>
+    </section>
+</div>

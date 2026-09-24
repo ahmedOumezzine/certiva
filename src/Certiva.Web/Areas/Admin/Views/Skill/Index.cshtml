@@ -1,0 +1,89 @@
+@model SkillIndexViewModel
+@{
+    ViewData["Title"] = T["Compétences"];
+}
+@section Breadcrumb { <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">@T["Exam Simulator"]</a></li><li class="breadcrumb-item active">@T["Compétences"]</li> }
+
+<div class="exam-admin admin-page admin-list-page">
+    <div class="admin-title-row admin-page-header">
+        <div><span class="admin-eyebrow admin-page-eyebrow">@T["STRUCTURE DES EXAMENS"]</span><h1 class="admin-page-title">@T["Compétences"]</h1><p class="admin-page-subtitle">@T["Organisez les domaines évalués et leur pondération."]</p></div>
+        <a asp-area="Admin" asp-controller="Skill" asp-action="Create" asp-route-examId="@Model.ExamId" class="admin-primary admin-primary-action"><span aria-hidden="true">＋</span> @T["Nouvelle compétence"]</a>
+    </div>
+    @await Html.PartialAsync("_Alerts")
+    <form class="admin-filter-card exam-filter-card skill-filter-card admin-paged-filter-card" method="get" asp-area="Admin" asp-controller="Skill" asp-action="Index">
+        <label class="exam-search-field admin-filter-control">
+            <span class="visually-hidden">@T["Rechercher une compétence"]</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>
+            <input name="search" value="@Model.Search" placeholder="@T["Rechercher une compétence…"]" />
+        </label>
+        <label class="exam-status-field admin-filter-control">
+            <span class="visually-hidden">@T["Filtrer par examen"]</span>
+            <select name="examId">
+                <option value="">@T["Tous les examens"]</option>
+                @foreach (var exam in Model.Exams)
+                {
+                    <option value="@exam.Id" selected="@(Model.ExamId == exam.Id)">@exam.Name</option>
+                }
+            </select>
+        </label>
+        <label class="exam-status-field admin-filter-control">
+            <span>@T["Résultats par page"]</span>
+            <select name="pageSize">
+                <option value="25" selected="@(Model.Pagination.PageSize == 25)">25</option>
+                <option value="50" selected="@(Model.Pagination.PageSize == 50)">50</option>
+                <option value="100" selected="@(Model.Pagination.PageSize == 100)">100</option>
+            </select>
+        </label>
+        <button type="submit" class="admin-primary admin-filter-submit exam-filter-submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6.5 7.5v5l-3 1v-6z" /></svg><span>@T["Appliquer le filtre"]</span>
+        </button>
+    </form>
+    <section class="admin-card admin-table-card exam-table-card skill-table-card" aria-label="@T["Liste des compétences"]">
+        @if (Model.Skills.Any())
+        {
+            <div class="exam-table-scroll">
+                <table class="admin-table admin-list-table skill-list-table">
+                    <thead>
+                        <tr><th scope="col">@T["Nom"]</th><th scope="col">@T["Examen"]</th><th scope="col" class="skill-count-heading">@T["Pourcentage"]</th><th scope="col" class="skill-count-heading">@T["Questions"]</th><th scope="col" class="skill-actions-heading">@T["Actions"]</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var skill in Model.Skills)
+                    {
+                        <tr>
+                            <td class="skill-name-cell"><strong>@skill.Name</strong></td>
+                            <td class="skill-exam-cell">@skill.ExamName</td>
+                            <td class="skill-count-cell"><span class="admin-percentage">@skill.Pourcentage%</span></td>
+                            <td class="skill-count-cell">@skill.QuestionsCount</td>
+                            <td>
+                                <div class="skill-row-actions admin-actions">
+                                    <a class="admin-action-button admin-action-btn admin-action-btn-primary skill-row-button" asp-area="Admin" asp-controller="Skill" asp-action="Edit" asp-route-id="@skill.Id" aria-label="@T["Modifier"]" title="@T["Modifier"]">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L19.8 7.7a2.1 2.1 0 0 0-3-3L4 16.5Z" /><path d="m14.8 6.7 3 3" /></svg><span>@T["Modifier"]</span>
+                                    </a>
+                                    <form asp-area="Admin" asp-controller="Skill" asp-action="Delete" method="post" onsubmit="return confirm('@T["Supprimer cette compétence ?"]');">
+                                        <input type="hidden" name="id" value="@skill.Id" />
+                                        <button class="admin-action-button admin-action-btn admin-action-btn-danger skill-row-button skill-delete-button" type="submit" aria-label="@T["Supprimer"]" title="@T["Supprimer"]">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></svg><span>@T["Supprimer"]</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="admin-empty-state exam-list-empty">
+                <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5" /></svg></span>
+                <h2>@(Model.ExamId.HasValue && Model.ExamId != Guid.Empty ? T["Aucune compétence trouvée"] : T["Aucune compétence"])</h2>
+                <p>@(Model.ExamId.HasValue && Model.ExamId != Guid.Empty ? T["Aucune compétence n’est associée à cet examen pour le moment."] : T["Créez une compétence pour structurer les domaines évalués."])</p>
+                <a asp-area="Admin" asp-controller="Skill" asp-action="Create" asp-route-examId="@Model.ExamId" class="admin-primary">@T["Créer une compétence"]</a>
+            </div>
+        }
+        <div class="exam-table-footer admin-list-footer">
+            @await Html.PartialAsync("_AdminPagination", Model.Pagination)
+        </div>
+    </section>
+</div>

@@ -1,0 +1,65 @@
+@model AdminPaginationViewModel
+@{
+    var visiblePages = new SortedSet<int> { 1, Model.CurrentPage, Model.TotalPages };
+    if (Model.CurrentPage > 1) visiblePages.Add(Model.CurrentPage - 1);
+    if (Model.CurrentPage < Model.TotalPages) visiblePages.Add(Model.CurrentPage + 1);
+}
+<div class="admin-list-pagination" aria-label="@T["Pagination"]">
+    <span class="admin-list-pagination-summary">@T["Résultats"]: @Model.TotalItems · @T["Page"] @Model.CurrentPage / @Math.Max(Model.TotalPages, 1)</span>
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="admin-pagination" aria-label="@T["Pagination"]">
+                @{
+                    var previousValues = new Dictionary<string, string>(Model.RouteValues)
+                    {
+                        ["page"] = (Model.CurrentPage - 1).ToString()
+                    };
+                }
+                @if (Model.CurrentPage <= 1)
+                {
+                    <span class="is-disabled" aria-disabled="true">@T["Précédent"]</span>
+                }
+                else
+                {
+                    <a asp-area="Admin" asp-controller="@Model.Controller" asp-action="Index" asp-all-route-data="previousValues" aria-label="@T["Précédent"]">@T["Précédent"]</a>
+                }
+                @{
+                    var previousPage = 0;
+                }
+                @foreach (var pageNumber in visiblePages)
+                {
+                    if (pageNumber - previousPage > 1)
+                    {
+                        <span aria-hidden="true">…</span>
+                    }
+                    var pageValues = new Dictionary<string, string>(Model.RouteValues)
+                    {
+                        ["page"] = pageNumber.ToString()
+                    };
+                    @if (pageNumber == Model.CurrentPage)
+                    {
+                        <span class="is-current" aria-current="page">@pageNumber</span>
+                    }
+                    else
+                    {
+                        <a asp-area="Admin" asp-controller="@Model.Controller" asp-action="Index" asp-all-route-data="pageValues">@pageNumber</a>
+                    }
+                    previousPage = pageNumber;
+                }
+                @{
+                    var nextValues = new Dictionary<string, string>(Model.RouteValues)
+                    {
+                        ["page"] = (Model.CurrentPage + 1).ToString()
+                    };
+                }
+                @if (Model.CurrentPage >= Model.TotalPages)
+                {
+                    <span class="is-disabled" aria-disabled="true">@T["Suivant"]</span>
+                }
+                else
+                {
+                    <a asp-area="Admin" asp-controller="@Model.Controller" asp-action="Index" asp-all-route-data="nextValues" aria-label="@T["Suivant"]">@T["Suivant"]</a>
+                }
+        </nav>
+    }
+</div>

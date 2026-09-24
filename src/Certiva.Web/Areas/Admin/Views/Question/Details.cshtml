@@ -1,0 +1,43 @@
+@model QuestionDetailsViewModel
+@{
+    ViewData["Title"] = T["Aperçu de la question"];
+}
+<div class="exam-admin narrow">
+    <section class="admin-card">
+        <div class="admin-title-row">
+            <h1>@T.EnumLabel(Model.QuestionType)</h1>
+            <span class="admin-badge @(Model.Status == Certiva.Domain.Enums.Status.Published ? "admin-badge-success" : Model.Status == Certiva.Domain.Enums.Status.Draft ? "admin-badge-warning" : "admin-badge-muted")">@T.EnumLabel(Model.Status)</span>
+        </div>
+        <p>@T["examen"]: @Model.ExamName · @T["Compétence"]: @(string.IsNullOrWhiteSpace(Model.SkillName) ? T["Général"].Value : Model.SkillName)</p>
+        <p>@Model.Description</p>
+        @if (!string.IsNullOrWhiteSpace(Model.EnglishDescription))
+        {
+            <p lang="en"><small>@Model.EnglishDescription</small></p>
+        }
+        <div class="preview-choices">
+            @foreach (var choice in Model.Choices)
+            {
+                <div class="choice-preview @(choice.IsCorrect ? "correct" : "")">
+                    <span>@choice.ChoiceText</span>
+                    @if (!string.IsNullOrWhiteSpace(choice.EnglishChoiceText))
+                    {
+                        <small lang="en">@choice.EnglishChoiceText</small>
+                    }
+                    @if (choice.IsCorrect)
+                    {
+                        <strong>@T["Correcte"]</strong>
+                    }
+                </div>
+            }
+        </div>
+        @if (!string.IsNullOrWhiteSpace(Model.Explication))
+        {
+        <p><strong>@T["Explication :"]</strong> @Model.Explication</p>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.EnglishExplication))
+        {
+        <p lang="en"><strong>@T["Explication :"]</strong> @Model.EnglishExplication</p>
+        }
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="admin-primary">@T["Modifier"]</a>
+    </section>
+</div>

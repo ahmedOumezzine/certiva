@@ -1,0 +1,140 @@
+@model ExamDashboardViewModel
+@{
+    ViewData["Title"] = T["Dashboard"];
+    var statusTotal = Model.PublishedCount + Model.DraftCount + Model.ArchivedCount;
+    var publishedEnd = statusTotal == 0 ? 0 : (int)Math.Round(360m * Model.PublishedCount / statusTotal, MidpointRounding.AwayFromZero);
+    var draftEnd = statusTotal == 0 ? 0 : publishedEnd + (int)Math.Round(360m * Model.DraftCount / statusTotal, MidpointRounding.AwayFromZero);
+    var maximumSkillQuestions = Model.QuestionsBySkill.Count == 0 ? 1 : Model.QuestionsBySkill.Max(skill => skill.QuestionsCount);
+}
+
+<div class="exam-admin admin-dashboard">
+    <header class="admin-dashboard-heading">
+        <div>
+            <span class="admin-eyebrow">@T["Vue d’ensemble"]</span>
+            <h1>@T["Bonjour, Admin"] <span aria-hidden="true">👋</span></h1>
+            <p>@T["Voici un aperçu de votre plateforme d’examens."]</p>
+        </div>
+        <a asp-area="Admin" asp-controller="Exam" asp-action="Create" class="admin-primary admin-dashboard-primary">
+            <span aria-hidden="true">＋</span> @T["Nouvel examen"]
+        </a>
+    </header>
+
+    <section class="admin-kpi-grid" aria-label="@T["Indicateurs de la plateforme"]">
+        <a class="admin-kpi-card" asp-area="Admin" asp-controller="Exam" asp-action="Index">
+            <span class="admin-kpi-icon kpi-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H5V3zM14 3v6h5M8 13h8M8 17h6" /></svg></span>
+            <span class="admin-kpi-copy"><strong>@Model.ExamsCount</strong><span>@T["Total examens"]</span></span>
+            <span class="admin-kpi-link">@T["Voir tous"] <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="admin-kpi-card" asp-area="Admin" asp-controller="Exam" asp-action="Index" asp-route-status="Published">
+            <span class="admin-kpi-icon kpi-green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></svg></span>
+            <span class="admin-kpi-copy"><strong>@Model.PublishedCount</strong><span>@T["Examens publiés"]</span></span>
+            <span class="admin-kpi-link">@T["Voir tous"] <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="admin-kpi-card" asp-area="Admin" asp-controller="Exam" asp-action="Index" asp-route-status="Draft">
+            <span class="admin-kpi-icon kpi-amber" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg></span>
+            <span class="admin-kpi-copy"><strong>@Model.DraftCount</strong><span>@T["Examens brouillons"]</span></span>
+            <span class="admin-kpi-link">@T["Voir tous"] <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="admin-kpi-card" asp-area="Admin" asp-controller="Skill" asp-action="Index">
+            <span class="admin-kpi-icon kpi-violet" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg></span>
+            <span class="admin-kpi-copy"><strong>@Model.SkillsCount</strong><span>@T["Compétences"]</span></span>
+            <span class="admin-kpi-link">@T["Gérer"] <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="admin-kpi-card" asp-area="Admin" asp-controller="Question" asp-action="Index">
+            <span class="admin-kpi-icon kpi-rose" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1 .9-1.9 1.3-1.9 2.8M12 17h.01" /></svg></span>
+            <span class="admin-kpi-copy"><strong>@Model.QuestionsCount</strong><span>@T["Questions"]</span></span>
+            <span class="admin-kpi-link">@T["Gérer"] <span aria-hidden="true">→</span></span>
+        </a>
+    </section>
+
+    <section class="admin-dashboard-panels" aria-label="@T["Statistiques et actions"]">
+        <article class="admin-card admin-chart-card">
+            <div class="admin-panel-heading"><div><h2>@T["Statut des examens"]</h2><p>@T["Répartition actuelle"]</p></div></div>
+            @if (statusTotal == 0)
+            {
+                <div class="admin-chart-empty">@T["Aucune donnée disponible"]</div>
+            }
+            else
+            {
+                <div class="admin-donut-layout">
+                    <div class="admin-donut" style="--published-end:@publishedEnd;--draft-end:@draftEnd" role="img" aria-label="@T["Admin.ExamStatusChartDescription", Model.PublishedCount, Model.DraftCount, Model.ArchivedCount]">
+                        <span><strong>@statusTotal</strong><small>@T["au total"]</small></span>
+                    </div>
+                    <ul class="admin-chart-legend">
+                        <li><span class="legend-dot legend-published"></span><span>@T["Publiés"]</span><strong>@Model.PublishedCount</strong></li>
+                        <li><span class="legend-dot legend-draft"></span><span>@T["Brouillons"]</span><strong>@Model.DraftCount</strong></li>
+                        <li><span class="legend-dot legend-archived"></span><span>@T["Archivés"]</span><strong>@Model.ArchivedCount</strong></li>
+                    </ul>
+                </div>
+            }
+        </article>
+
+        <article class="admin-card admin-chart-card">
+            <div class="admin-panel-heading"><div><h2>@T["Questions par compétence"]</h2><p>@T["Compétences avec questions associées"]</p></div></div>
+            @if (Model.QuestionsBySkill.Count == 0)
+            {
+                <div class="admin-chart-empty">@T["Aucune donnée disponible"]</div>
+            }
+            else
+            {
+                <div class="admin-bar-chart @(Model.QuestionsBySkill.Count == 1 ? "is-compact" : "")" role="list">
+                    @foreach (var skill in Model.QuestionsBySkill)
+                    {
+                        var barWidth = Math.Max(5, (int)Math.Round(100d * skill.QuestionsCount / maximumSkillQuestions));
+                        <div class="admin-bar-item" role="listitem">
+                            <span class="admin-bar-name" title="@skill.SkillName">@skill.SkillName</span>
+                            <div class="admin-bar-track" aria-hidden="true"><span style="--bar-width:@barWidth%"></span></div>
+                            <strong class="admin-bar-count" aria-label="@skill.QuestionsCount questions">@skill.QuestionsCount</strong>
+                        </div>
+                    }
+                </div>
+            }
+        </article>
+
+        <article class="admin-card admin-quick-actions-card">
+            <div class="admin-panel-heading"><div><h2>@T["Actions rapides"]</h2><p>@T["Accès direct aux tâches courantes"]</p></div></div>
+            <nav class="admin-quick-actions" aria-label="@T["Actions rapides"]">
+                <a asp-area="Admin" asp-controller="Exam" asp-action="Create" class="quick-green"><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg></span>@T["Créer un nouvel examen"]</a>
+                <a asp-area="Admin" asp-controller="Skill" asp-action="Create" class="quick-blue"><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5" /></svg></span>@T["Ajouter une compétence"]</a>
+                <a asp-area="Admin" asp-controller="Question" asp-action="Create" class="quick-violet"><span aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1 .9-1.9 1.3-1.9 2.8M12 17h.01" /></svg></span>@T["Ajouter une question"]</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="quick-neutral"><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6" /></svg></span>@T["Voir le catalogue public"]</a>
+            </nav>
+        </article>
+    </section>
+
+    <section class="admin-card admin-recent-exams">
+        <div class="admin-panel-heading admin-recent-heading">
+            <div><h2>@T["Examens récents"]</h2><p>@T["Les derniers examens créés sur la plateforme."]</p></div>
+            <a asp-area="Admin" asp-controller="Exam" asp-action="Index" class="admin-text-link">@T["Voir tous"] <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="table-responsive">
+            <table class="admin-table admin-dashboard-table">
+                <thead><tr><th>@T["Nom"]</th><th>@T["Code"]</th><th>@T["Statut"]</th><th>@T["Questions"]</th><th>@T["Créé le"]</th><th><span class="visually-hidden">@T["Actions"]</span></th></tr></thead>
+                <tbody>
+                @foreach (var exam in Model.RecentExams)
+                {
+                    <tr>
+                        <td><strong class="admin-exam-name">@exam.Name</strong></td>
+                        <td><span class="admin-code">@exam.Code</span></td>
+                        <td><span class="admin-badge @(exam.Status == Certiva.Domain.Enums.Status.Published ? "admin-status-published" : exam.Status == Certiva.Domain.Enums.Status.Draft ? "admin-status-draft" : "admin-status-archived")">@T.EnumLabel(exam.Status)</span></td>
+                        <td>@exam.QuestionsCount</td>
+                        <td>@exam.CreatedOnUtc.ToString("d", System.Globalization.CultureInfo.CurrentCulture)</td>
+                        <td class="admin-row-actions">
+                            <a class="admin-action-button" asp-area="Admin" asp-controller="Exam" asp-action="Details" asp-route-id="@exam.Id" aria-label="Voir l’examen @exam.Name" title="@T["Voir l’examen"]">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg>
+                            </a>
+                            <a class="admin-action-button" asp-area="Admin" asp-controller="Exam" asp-action="Edit" asp-route-id="@exam.Id" aria-label="Modifier l’examen @exam.Name" title="@T["Modifier l’examen"]">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L19.8 7.7a2.1 2.1 0 0 0-3-3L4 16.5Z" /><path d="m14.8 6.7 3 3" /></svg>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                @if (Model.RecentExams.Count == 0)
+                {
+                    <tr><td colspan="6" class="admin-empty-state">@T["Aucun examen pour le moment. Créez votre premier examen pour commencer."]</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

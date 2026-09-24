@@ -1,0 +1,102 @@
+@model ExamIndexViewModel
+@{
+    ViewData["Title"] = T["Examens"];
+}
+@section Breadcrumb { <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">@T["Exam Simulator"]</a></li><li class="breadcrumb-item active">@T["Examens"]</li> }
+
+<div class="exam-admin admin-page admin-list-page exam-list-page">
+    <div class="admin-title-row admin-page-header">
+        <div><span class="admin-eyebrow admin-page-eyebrow">@T["GESTION DU CATALOGUE"]</span><h1 class="admin-page-title">@T["Examens"]</h1><p class="admin-page-subtitle">@T["Gérez les examens, leur publication et leur contenu."]</p></div>
+        <a asp-area="Admin" asp-controller="Exam" asp-action="Create" class="admin-primary admin-primary-action exam-create-button"><span aria-hidden="true">＋</span> @T["Nouvel examen"]</a>
+    </div>
+    @await Html.PartialAsync("_Alerts")
+    <form class="admin-filter-card exam-filter-card admin-paged-filter-card" method="get" asp-area="Admin" asp-controller="Exam" asp-action="Index">
+        <label class="exam-search-field admin-filter-control">
+            <span class="visually-hidden">@T["Rechercher un examen par nom ou code"]</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 5 5" /></svg>
+            <input name="search" value="@Model.Search" placeholder="@T["Rechercher un examen…"]" />
+        </label>
+        <label class="exam-status-field admin-filter-control">
+            <span class="visually-hidden">@T["Filtrer par statut"]</span>
+            <select name="status">
+                <option value="">@T["Tous statuts"]</option>
+                <option value="Draft" selected="@(Model.Status == Status.Draft)">@T.EnumLabel(Status.Draft)</option>
+                <option value="Published" selected="@(Model.Status == Status.Published)">@T.EnumLabel(Status.Published)</option>
+                <option value="Archived" selected="@(Model.Status == Status.Archived)">@T.EnumLabel(Status.Archived)</option>
+            </select>
+        </label>
+        <label class="exam-status-field admin-filter-control">
+            <span>@T["Résultats par page"]</span>
+            <select name="pageSize">
+                <option value="25" selected="@(Model.Pagination.PageSize == 25)">25</option>
+                <option value="50" selected="@(Model.Pagination.PageSize == 50)">50</option>
+                <option value="100" selected="@(Model.Pagination.PageSize == 100)">100</option>
+            </select>
+        </label>
+        <button type="submit" class="admin-primary admin-filter-submit exam-filter-submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6.5 7.5v5l-3 1v-6z" /></svg><span>@T["Appliquer les filtres"]</span>
+        </button>
+    </form>
+    <section class="admin-card admin-table-card exam-table-card" aria-label="@T["Liste des examens"]">
+        @if (Model.Exams.Any())
+        {
+            <div class="exam-table-scroll">
+                <table class="admin-table admin-list-table exam-list-table">
+                    <thead>
+                        <tr><th scope="col">@T["Nom"]</th><th scope="col">@T["Code"]</th><th scope="col">@T["Slug"]</th><th scope="col">@T["Statut"]</th><th scope="col" class="exam-count-heading">@T["Compétences"]</th><th scope="col" class="exam-count-heading">@T["Questions"]</th><th scope="col" class="exam-actions-heading">@T["Actions"]</th></tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var exam in Model.Exams)
+                    {
+                        <tr>
+                            <td class="exam-name-cell"><strong>@exam.Name</strong></td>
+                            <td><span class="admin-code">@exam.Code</span></td>
+                            <td><span class="exam-slug" title="@exam.Slug">@exam.Slug</span></td>
+                            <td><span class="badge-soft admin-badge status-@exam.Status.ToString().ToLowerInvariant() @(exam.Status == Status.Published ? "admin-badge-success" : exam.Status == Status.Draft ? "admin-badge-warning" : "admin-badge-muted")">@T.EnumLabel(exam.Status)</span></td>
+                            <td class="exam-count-cell">@exam.SkillsCount</td>
+                            <td class="exam-count-cell">@exam.QuestionsCount</td>
+                            <td>
+                                <div class="exam-row-actions admin-actions">
+                                    <a class="exam-row-action admin-action-btn" asp-area="Admin" asp-controller="Exam" asp-action="Details" asp-route-id="@exam.Id" aria-label="Voir l’examen @exam.Name" title="@T["Voir l’examen"]">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg><span>@T["Voir"]</span>
+                                    </a>
+                                    <a class="exam-row-action admin-action-btn admin-action-btn-primary" asp-area="Admin" asp-controller="Exam" asp-action="Edit" asp-route-id="@exam.Id" aria-label="Modifier l’examen @exam.Name" title="@T["Modifier l’examen"]">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L19.8 7.7a2.1 2.1 0 0 0-3-3L4 16.5Z" /><path d="m14.8 6.7 3 3" /></svg><span>@T["Modifier"]</span>
+                                    </a>
+                                    <a class="exam-row-action admin-action-btn" asp-area="Admin" asp-controller="Skill" asp-action="Index" asp-route-examId="@exam.Id" aria-label="@T["Gérer les compétences"]" title="@T["Compétences"]">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg><span>@T["Compétences"]</span>
+                                    </a>
+                                    <a class="exam-row-action admin-action-btn" asp-area="Admin" asp-controller="Question" asp-action="Index" asp-route-examId="@exam.Id" aria-label="@T["Gérer les questions"]" title="@T["Questions"]">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9.6 9a2.5 2.5 0 1 1 4.3 1.7c-1 .9-1.9 1.3-1.9 2.8M12 17h.01" /></svg><span>@T["Questions"]</span>
+                                    </a>
+                                    <form class="exam-archive-form" asp-area="Admin" asp-controller="Exam" asp-action="Delete" method="post" onsubmit="return confirm('@T["Archiver cet examen ?"]');">
+                                        <input type="hidden" name="id" value="@exam.Id" />
+                                        <button class="exam-row-action admin-action-btn admin-action-btn-danger exam-archive-action" type="submit" aria-label="Archiver l’examen @exam.Name" title="@T["Archiver l’examen"]">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></svg><span>@T["Archiver"]</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="admin-empty-state exam-list-empty">
+                <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H5V3z" /><path d="M14 3v6h5M8 13h8M8 17h6" /></svg></span>
+                <h2>@(string.IsNullOrWhiteSpace(Model.Search) && !Model.Status.HasValue ? T["Aucun examen"] : T["Aucun examen trouvé"])</h2>
+                <p>@(string.IsNullOrWhiteSpace(Model.Search) && !Model.Status.HasValue ? T["Créez votre premier examen pour commencer à organiser votre catalogue."] : T["Aucun examen ne correspond à ces filtres. Essayez de les modifier."])</p>
+                @if (string.IsNullOrWhiteSpace(Model.Search) && !Model.Status.HasValue)
+                {
+                    <a asp-area="Admin" asp-controller="Exam" asp-action="Create" class="admin-primary">@T["Créer un examen"]</a>
+                }
+            </div>
+        }
+        <div class="exam-table-footer admin-list-footer">
+            @await Html.PartialAsync("_AdminPagination", Model.Pagination)
+        </div>
+    </section>
+</div>

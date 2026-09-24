@@ -1,0 +1,147 @@
+@model Certiva.Models.Exams.ExamListViewModel
+@{
+    ViewData["Title"] = T["Examens et simulations de certification"];
+    ViewData["MetaDescription"] = T["Parcourez les examens publiés, filtrez par compétence et entraînez-vous dans des conditions proches de la réalité."];
+    var visibleCount = Model.TotalCount;
+    var culture = LocalizedPublicRoutes.CultureFromPath(Context.Request.Path.Value);
+    var detailsRoute = LocalizedPublicRoutes.Details(culture);
+    var catalogRoute = culture == "en" ? "public-exam-catalog-en" : "public-exam-catalog-fr";
+}
+
+<section class="public-hero" aria-labelledby="home-title">
+    <div class="public-hero-content">
+        <span class="public-eyebrow">@T["APPRENDRE • PROGRESSER • RÉUSSIR"]</span>
+        <h1 id="home-title">@T["Préparez vos certifications"] <span>@T["avec des simulations réalistes"]</span></h1>
+        <p>@T["Accédez à des examens de qualité, conçus pour vous entraîner dans des conditions proches de la réalité."]</p>
+    </div>
+    <div class="public-hero-art" role="img" aria-label="@T["Illustration d’un ordinateur avec une simulation d’examen"]">
+        <svg viewBox="0 0 520 330" aria-hidden="true" focusable="false">
+            <ellipse cx="264" cy="283" rx="198" ry="17" fill="#dbeafe" />
+            <circle cx="74" cy="95" r="14" fill="#dceafe" /><circle cx="445" cy="67" r="8" fill="#dceafe" />
+            <path d="M93 226h102v13H93z" fill="#60a5fa" /><path d="M104 211h90v15h-90z" fill="#bfdbfe" />
+            <path d="M110 197h80v14h-80z" fill="#2563eb" /><path d="M98 241h102v9H98z" fill="#93c5fd" />
+            <rect x="168" y="57" width="259" height="196" rx="18" fill="#2563eb" />
+            <rect x="179" y="68" width="237" height="170" rx="10" fill="#f8fbff" />
+            <circle cx="201" cy="82" r="3" fill="#93c5fd" /><circle cx="213" cy="82" r="3" fill="#93c5fd" />
+            <rect x="200" y="102" width="32" height="32" rx="8" fill="#dbeafe" />
+            <path d="m209 118 6 6 12-14" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <rect x="244" y="106" width="136" height="8" rx="4" fill="#bfdbfe" /><rect x="244" y="121" width="96" height="7" rx="3.5" fill="#e2e8f0" />
+            <rect x="200" y="151" width="32" height="32" rx="8" fill="#dbeafe" />
+            <path d="m209 167 6 6 12-14" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <rect x="244" y="155" width="136" height="8" rx="4" fill="#bfdbfe" /><rect x="244" y="170" width="108" height="7" rx="3.5" fill="#e2e8f0" />
+            <path d="M147 254h301l-31 20H117z" fill="#1d4ed8" /><path d="M166 254h263l-14 9H151z" fill="#93c5fd" />
+            <path d="M405 82 386 48l66 7 49 38-65-2z" fill="#1e3a8a" /><path d="m386 48 65 7 50 38-66-5z" fill="#3157a3" />
+            <path d="m450 70 36 22" stroke="#fbbf24" stroke-width="3" /><path d="m486 92-5 18h10z" fill="#fbbf24" />
+            <path d="M463 177c-2-23 4-38 17-47 12-8 21-5 19 7-2 12-14 23-36 31M463 179c1-19-6-30-19-34-12-3-18 4-11 15 6 9 16 15 30 19" fill="#34b89b" />
+            <path d="M454 178c1-13 5-26 14-39m-9 38c-5-10-10-16-18-19m21 12c7-12 15-18 24-23" fill="none" stroke="#148f7b" stroke-width="3" stroke-linecap="round" />
+            <path d="M443 183h43l-5 43h-33z" fill="#dbeafe" /><path d="M443 183h43l-2 10h-39z" fill="#bfdbfe" />
+        </svg>
+    </div>
+
+    <form class="public-search-card" method="get" asp-route="@catalogRoute" aria-label="@T["Rechercher dans les examens"]">
+        <label class="public-search-field">
+            <span class="visually-hidden">@T["Rechercher un examen"]</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 4.5 4.5" /></svg>
+            <input type="search" name="search" value="@Model.Search" placeholder="@T["Rechercher un examen, un code..."]" />
+        </label>
+        <label class="public-skill-field">
+            <span class="visually-hidden">@T["Filtrer par compétence"]</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h5" /></svg>
+            <select name="skillId">
+                <option value="">@T["Toutes les compétences"]</option>
+                @foreach (var skill in Model.Skills)
+                {
+                    <option value="@skill.Id" selected="@(Model.SkillId == skill.Id)">@skill.Name</option>
+                }
+            </select>
+        </label>
+        <button type="submit" class="public-search-button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 4.5 4.5" /></svg>
+            <span>@T["Rechercher"]</span>
+        </button>
+    </form>
+</section>
+
+<section class="public-section" aria-labelledby="exams-title">
+    <header class="public-section-header">
+        <div>
+            <div class="public-section-title-row">
+                <span class="public-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" /></svg></span>
+                <h2 id="exams-title">@T["Nos examens"]</h2>
+            </div>
+            <p>@T["Explorez notre catalogue d’examens et trouvez celui qui correspond à vos objectifs."]</p>
+        </div>
+        <span class="public-count-badge">@T["{0} {1} {2}", visibleCount, T[visibleCount == 1 ? "examen" : "exams"], T["available"]]</span>
+    </header>
+
+    @if (!Model.Exams.Any())
+    {
+        <div class="public-empty-state">
+            <span class="public-empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8" /><path d="m16 16 4.5 4.5M8 11h5" /></svg></span>
+            <h3>@T["Aucun examen trouvé"]</h3>
+            <p>@T["Essayez une autre recherche ou retirez le filtre de compétence."]</p>
+            @if (!string.IsNullOrWhiteSpace(Model.Search) || Model.SkillId.HasValue)
+            {
+                <a asp-route="@catalogRoute" class="public-outline-button">@T["Effacer les filtres"]</a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="public-exam-grid">
+            @foreach (var exam in Model.Exams)
+            {
+                <article class="public-exam-card">
+                    <header class="public-exam-card-header">
+                        <span class="public-exam-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H5V3z" /><path d="M14 3v6h5M8 13h8M8 17h6" /></svg></span>
+                        <div class="public-exam-heading">
+                            <div class="public-exam-badges"><span class="public-status-badge">@T["Publié"]</span><span class="public-code-badge">@exam.Code</span></div>
+                            <h3>@exam.Name</h3>
+                        </div>
+                    </header>
+                    <p class="public-exam-description">@exam.ShortDescription</p>
+                    @if (exam.Skills.Count > 0)
+                    {
+                        <div class="public-exam-skills" aria-label="@T["Compétences associées"]">
+                            @foreach (var skill in exam.Skills.Take(2))
+                            {
+                                <span>@skill</span>
+                            }
+                            @if (exam.Skills.Count > 2)
+                            {
+                                <span>+@(exam.Skills.Count - 2)</span>
+                            }
+                        </div>
+                    }
+                    <div class="public-exam-meta">
+                        <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h4" /></svg><span><strong>@exam.QuestionsCount</strong> @T["questionsLabel"]</span></div>
+                        <div><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg><span>@(exam.DurationMinutes is > 0 ? $"{exam.DurationMinutes} min" : T["NoLimit"].Value)</span></div>
+                        <div><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" /><path d="m12 12 7-7" /></svg><span>@T["ThresholdLabel"] : @exam.PassingPercentage%</span></div>
+                        <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg><span>@exam.Skills.Count @T[exam.Skills.Count == 1 ? "skill" : "skills"]</span></div>
+                    </div>
+                    <footer class="public-exam-card-actions">
+                        <a asp-route="@detailsRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@exam.Slug" class="public-outline-button">@T["Voir les détails"]</a>
+                        @if (exam.QuestionsCount > 0)
+                        {
+                            <a asp-route="@detailsRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@exam.Slug" class="public-primary-button">@T["Commencer"] <span aria-hidden="true">→</span></a>
+                        }
+                        else
+                        {
+                            <span class="public-disabled-button" aria-disabled="true">@T["Indisponible"]</span>
+                        }
+                    </footer>
+                </article>
+            }
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="public-pagination" aria-label="Pagination des examens">
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a class="@(i == Model.Page ? "is-active" : "")" aria-current="@(i == Model.Page ? "page" : null)" asp-route="@catalogRoute" asp-route-search="@Model.Search" asp-route-skillId="@Model.SkillId" asp-route-page="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                }
+            </nav>
+        }
+    }
+</section>

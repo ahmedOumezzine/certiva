@@ -1,0 +1,30 @@
+@model Certiva.Models.Exams.StartExamAttemptRequest
+@{
+    ViewData["Title"] = T["Avant de commencer"];
+    ViewData["Robots"] = "noindex,nofollow";
+    var culture = LocalizedPublicRoutes.CultureFromPath(Context.Request.Path.Value);
+    var detailsRoute = LocalizedPublicRoutes.Details(culture);
+}
+
+<section class="guest-start-page" aria-labelledby="guest-start-title">
+    <div class="guest-start-card">
+        <span class="guest-start-eyebrow">@T["EXAMEN SANS COMPTE"]</span>
+        <h1 id="guest-start-title">@T["Avant de commencer"]</h1>
+        <p>@T["Cet email sera associé à votre tentative."]</p>
+        <form asp-controller="Home" asp-action="StartAttempt" asp-route-culture="@culture" method="post">
+            <input asp-for="ExamSlug" type="hidden" />
+            <input asp-for="SkillId" type="hidden" />
+            <input asp-for="Random" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="guest-start-validation" role="alert"></div>
+            <label asp-for="GuestEmail">@T["Email"]</label>
+            <input asp-for="GuestEmail" type="email" autocomplete="email" placeholder="@T["your@email.com"]" autofocus />
+            <span asp-validation-for="GuestEmail" class="guest-start-field-error"></span>
+            <button type="submit">@T["Continuer"]</button>
+        </form>
+        <a asp-route="@detailsRoute" asp-route-culture="@(culture == "fr" ? "fr" : null)" asp-route-slug="@Model.ExamSlug">← @T["Retour aux détails de l’examen"]</a>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

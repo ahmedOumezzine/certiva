@@ -1,0 +1,15 @@
+@if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+{
+    var culture = LocalizedPublicRoutes.CultureFromPath(Context.Request.Path.Value);
+    <li><a class="public-nav-button public-nav-secondary" asp-area="Admin" asp-controller="Dashboard" asp-action="Index" asp-route-culture="@culture">@T["Administration"]</a></li>
+    <li>
+        <form asp-controller="Account" asp-action="Logout" asp-route-culture="@culture" method="post" class="public-logout-form">
+            <button type="submit" class="public-nav-button public-nav-secondary">@T["Déconnexion"]</button>
+        </form>
+    </li>
+}
+else
+{
+    var culture = LocalizedPublicRoutes.CultureFromPath(Context.Request.Path.Value);
+    <li><a class="public-nav-button public-nav-secondary" href="/@culture/login">@T["Administration"]</a></li>
+}

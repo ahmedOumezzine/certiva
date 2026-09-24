@@ -1,0 +1,129 @@
+@model SkillEditViewModel
+@{
+    var isEdit = Model.Id != Guid.Empty;
+    var pageTitle = isEdit ? T["Modifier la compétence"].Value : T["Créer une compétence"].Value;
+    var selectedExam = Model.Exams.FirstOrDefault(exam => exam.Id == Model.ExamId);
+    ViewData["Title"] = pageTitle;
+}
+@section Breadcrumb {
+    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Skill" asp-action="Index">@T["Compétences"]</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@pageTitle</li>
+}
+
+<div class="exam-admin admin-page admin-form-page">
+    <header class="admin-title-row admin-page-header admin-form-header">
+        <div>
+            <span class="admin-eyebrow admin-page-eyebrow">@T["GESTION DU CATALOGUE"]</span>
+            <h1 class="admin-page-title">@pageTitle</h1>
+            <p class="admin-page-subtitle">@(isEdit ? T["Modifiez les informations et la pondération de cette compétence."] : T["Ajoutez une compétence et associez-la à un examen."])</p>
+        </div>
+        <a asp-area="Admin" asp-controller="Skill" asp-action="Index" class="admin-secondary admin-form-back-link">← <span>@T["Retour aux compétences"]</span></a>
+    </header>
+
+    <form asp-area="Admin" asp-controller="Skill" asp-action="Save" method="post" class="admin-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="admin-form-validation-summary" role="alert"></div>
+
+        <div class="admin-form-layout">
+            <div class="admin-form-main">
+                <section class="admin-card admin-form-section" aria-labelledby="skill-info-title">
+                    <header class="admin-form-section-header">
+                        <span class="admin-form-section-icon admin-icon-blue" aria-hidden="true">◎</span>
+                        <span><h2 id="skill-info-title">@T["Informations générales"]</h2><p>@T["Définissez le nom et la description de la compétence."]</p></span>
+                    </header>
+                    <div class="admin-form-grid">
+                        <div class="admin-form-field admin-field-full">
+                            <label asp-for="Name">@T["Nom (français)"] <span class="admin-required" aria-hidden="true">*</span></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="admin-field-validation"></span>
+                            <small class="admin-form-help">@T["Choisissez un nom clair, reconnaissable dans l’administration."]</small>
+                        </div>
+                        <div class="admin-form-field admin-field-full">
+                            <label asp-for="Description">@T["Description (français)"]</label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="admin-field-validation"></span>
+                            <small class="admin-form-help">@T["Ajoutez quelques mots pour préciser le sujet couvert."]</small>
+                        </div>
+                        <div class="admin-form-field admin-field-full">
+                            <label asp-for="EnglishName">@T["Name (English)"]</label>
+                            <input asp-for="EnglishName" class="form-control" lang="en" />
+                            <span asp-validation-for="EnglishName" class="admin-field-validation"></span>
+                        </div>
+                        <div class="admin-form-field admin-field-full">
+                            <label asp-for="EnglishDescription">@T["Description (English)"]</label>
+                            <textarea asp-for="EnglishDescription" class="form-control" rows="4" lang="en"></textarea>
+                            <span asp-validation-for="EnglishDescription" class="admin-field-validation"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="admin-card admin-form-section" aria-labelledby="skill-settings-title">
+                    <header class="admin-form-section-header">
+                        <span class="admin-form-section-icon admin-icon-violet" aria-hidden="true">▤</span>
+                        <span><h2 id="skill-settings-title">@T["Association et pondération"]</h2><p>@T["Rattachez la compétence et définissez son importance."]</p></span>
+                    </header>
+                    <div class="admin-form-grid">
+                        <div class="admin-form-field">
+                            <label asp-for="ExamId">@T["Examen"] <span class="admin-required" aria-hidden="true">*</span></label>
+                            <select asp-for="ExamId" class="form-select">
+                                <option value="">@T["Sélectionner un examen"]</option>
+                                @foreach (var exam in Model.Exams)
+                                {
+                                    <option value="@exam.Id">@exam.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="ExamId" class="admin-field-validation"></span>
+                            <small class="admin-form-help">@T["La compétence sera classée sous cet examen."]</small>
+                        </div>
+                        <div class="admin-form-field">
+                            <label asp-for="Pourcentage">@T["Pourcentage"] <span class="admin-required" aria-hidden="true">*</span></label>
+                            <input asp-for="Pourcentage" class="form-control" type="number" min="0" max="100" />
+                            <span asp-validation-for="Pourcentage" class="admin-field-validation"></span>
+                            <small class="admin-form-help">@T["La somme des pourcentages d’un examen ne doit pas dépasser 100."]</small>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="admin-form-aside" aria-label="@T["Informations contextuelles"]">
+                <section class="admin-card admin-form-section admin-context-card" aria-labelledby="skill-context-title">
+                    <header class="admin-form-section-header">
+                        <span class="admin-form-section-icon admin-icon-blue" aria-hidden="true">◉</span>
+                        <h2 id="skill-context-title">@T["Contexte"]</h2>
+                    </header>
+                    @if (isEdit)
+                    {
+                        <div class="admin-context-summary">
+                            <strong>@(selectedExam?.Name ?? T["Examen non sélectionné"].Value)</strong>
+                            <span>@T["Examen associé"]</span>
+                            <strong>@Model.Pourcentage%</strong>
+                            <span>@T["Pondération actuelle"]</span>
+                        </div>
+                        <a asp-area="Admin" asp-controller="Question" asp-action="Index" asp-route-skillId="@Model.Id" class="admin-context-action">@T["Voir les questions associées →"]</a>
+                    }
+                    else
+                    {
+                        <p class="admin-context-copy">@T["Après l’enregistrement, vous pourrez classer les questions de l’examen dans cette compétence."]</p>
+                    }
+                </section>
+                <section class="admin-card admin-form-section admin-context-card admin-context-tips" aria-labelledby="skill-tips-title">
+                    <header class="admin-form-section-header">
+                        <span class="admin-form-section-icon admin-icon-green" aria-hidden="true">✓</span>
+                        <h2 id="skill-tips-title">@T["À retenir"]</h2>
+                    </header>
+                    <ul class="admin-form-tips">
+                        <li>@T["La compétence doit être liée à un examen."]</li>
+                        <li>@T["La pondération est exprimée en pourcentage."]</li>
+                        <li>@T["Les questions pourront ensuite être associées ici."]</li>
+                    </ul>
+                </section>
+            </aside>
+        </div>
+
+        <div class="admin-form-actions">
+            <a asp-area="Admin" asp-controller="Skill" asp-action="Index" class="admin-secondary">@T["Annuler"]</a>
+            <button type="submit" class="admin-primary admin-primary-action admin-form-save-button">@T["Enregistrer"]</button>
+        </div>
+    </form>
+</div>

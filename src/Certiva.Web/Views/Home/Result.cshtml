@@ -1,0 +1,171 @@
+@using Certiva.Domain.Enums
+@using System.Globalization
+@model Certiva.Models.Exams.ExamResultViewModel
+@{
+    var culture = CultureInfo.CurrentCulture;
+    var routeCulture = Model.Culture == "en" ? "en" : "fr";
+    var detailsRoute = LocalizedPublicRoutes.Details(routeCulture);
+    var startRoute = LocalizedPublicRoutes.Start(routeCulture);
+    ViewData["Robots"] = "noindex,nofollow";
+    string Duration()
+    {
+        var span = TimeSpan.FromSeconds(Math.Max(0, Model.DurationSeconds));
+        return span.TotalHours >= 1 ? $"{(int)span.TotalHours:00}:{span.Minutes:00}:{span.Seconds:00}" : $"{(int)span.TotalMinutes:00}:{span.Seconds:00}";
+    }
+    string TypeLabel(QuestionType type) => T.EnumLabel(type);
+    var correctPercent = Model.TotalQuestions == 0 ? 0 : (int)Math.Round(Model.CorrectAnswers * 100d / Model.TotalQuestions);
+    var incorrectPercent = Model.TotalQuestions == 0 ? 0 : 100 - correctPercent;
+    var incorrectCount = Model.Questions.Count(question => !question.IsCorrect);
+}
+
+<div class="exam-result-page">
+    <nav class="exam-result-breadcrumb" aria-label="@T["public.detail.breadcrumb"]">
+        <a href="/@routeCulture">@T["Accueil"]</a><span aria-hidden="true">›</span>
+        <a href="@(routeCulture == "en" ? "/en/exams" : "/fr/examens")#exams-title">@T["Examens"]</a><span aria-hidden="true">›</span>
+        <a asp-route="@detailsRoute" asp-route-culture="@(routeCulture == "fr" ? "fr" : null)" asp-route-slug="@Model.ExamSlug">@Model.ExamName</a><span aria-hidden="true">›</span>
+        <span aria-current="page">@T["public.result.breadcrumb"]</span>
+    </nav>
+
+    <section class="exam-result-hero @(Model.Passed ? "is-passed" : "is-failed")" aria-labelledby="exam-result-title">
+        <div class="exam-result-ring" style="--result-score: @Math.Clamp(Model.Percentage, 0, 100)%" role="img" aria-label="@T["public.result.scoreAria", Model.Percentage, Model.CorrectAnswers, Model.TotalQuestions]">
+            <div><strong>@Model.Percentage%</strong><span>@Model.CorrectAnswers / @Model.TotalQuestions<br />@T["public.result.correctAnswers"]</span></div>
+        </div>
+        <div class="exam-result-hero-main">
+            <span class="exam-result-status">@(Model.Passed ? $"✓ {T["public.result.passed"]}" : $"× {T["public.result.failed"]}")</span>
+            <h1 id="exam-result-title">@Model.ExamName</h1>
+            <p>@(Model.Passed ? T["public.result.congratulations"].Value : T["public.result.retryAdvice", Model.PassingScore].Value)</p>
+            <div class="exam-result-meta">
+                <span><b aria-hidden="true">◆</b> @Model.TotalQuestions @T["public.result.questions"]</span>
+                <span><b aria-hidden="true">◷</b> @T["public.result.time"] : @Duration()</span>
+                <span><b aria-hidden="true">★</b> @T["public.result.threshold"] : @Model.PassingScore%</span>
+            </div>
+        </div>
+        <div class="exam-result-hero-action">
+            @if (!Model.Passed)
+            {
+                <p>@T["public.result.failedAdvice"]</p>
+            }
+            else
+            {
+                <p>@T["public.result.passedAdvice"]</p>
+            }
+            <a class="exam-result-button exam-result-button-primary" asp-route="@startRoute" asp-route-culture="@(routeCulture == "fr" ? "fr" : null)" asp-route-slug="@Model.ExamSlug">↻ <span>@T["Recommencer l’examen"]</span></a>
+        </div>
+    </section>
+
+    <section class="exam-result-kpis" aria-label="@T["public.result.summaryAria"]">
+        <article><span class="exam-result-kpi-icon is-correct" aria-hidden="true">✓</span><div><span>@T["public.result.correct"]</span><strong>@Model.CorrectAnswers / @Model.TotalQuestions</strong><small>@correctPercent%</small></div></article>
+        <article><span class="exam-result-kpi-icon is-incorrect" aria-hidden="true">×</span><div><span>@T["public.result.incorrect"]</span><strong>@Model.IncorrectAnswers / @Model.TotalQuestions</strong><small>@incorrectPercent%</small></div></article>
+        <article><span class="exam-result-kpi-icon is-time" aria-hidden="true">◷</span><div><span>@T["public.result.timeSpent"]</span><strong>@Duration()</strong><small>@T["public.result.attemptDuration"]</small></div></article>
+        <article><span class="exam-result-kpi-icon is-threshold" aria-hidden="true">★</span><div><span>@T["public.result.passingScore"]</span><strong>@Model.PassingScore%</strong><small>@(Model.Passed ? T["public.result.thresholdReached"] : T["public.result.thresholdMissed"])</small></div></article>
+    </section>
+
+    <div class="exam-result-layout">
+        <section class="exam-result-questions-panel" aria-labelledby="exam-result-questions-title">
+            <header class="exam-result-section-heading">
+                <div><span class="exam-result-heading-icon" aria-hidden="true">▤</span><div><h2 id="exam-result-questions-title">@T["public.result.questionReview"]</h2><p>@T["public.result.reviewDescription"]</p></div></div>
+                <div class="exam-result-filters" role="group" aria-label="@T["public.result.filterQuestions"]">
+                    <button type="button" class="is-active" aria-pressed="true" data-result-filter="all">@T["public.result.all"] <span>@Model.Questions.Count</span></button>
+                    <button type="button" aria-pressed="false" data-result-filter="incorrect">@T["public.result.incorrect"] <span>@incorrectCount</span></button>
+                    <button type="button" aria-pressed="false" data-result-filter="correct">@T["public.result.correct"] <span>@Model.CorrectAnswers</span></button>
+                </div>
+            </header>
+
+            @if (Model.Questions.Count == 0)
+            {
+                <div class="exam-result-empty"><strong>@T["public.result.emptyTitle"]</strong><p>@T["public.result.emptyText"]</p></div>
+            }
+            else
+            {
+                <div class="exam-result-review-list" data-result-list>
+                    @for (var i = 0; i < Model.Questions.Count; i++)
+                    {
+                        var item = Model.Questions[i];
+                        var resultKey = item.IsCorrect ? "correct" : "incorrect";
+                        <details class="exam-result-review @resultKey" data-result-question data-result="@resultKey" @(i == 0 ? "open" : null)>
+                            <summary>
+                                <span class="exam-result-question-number">@(i + 1)</span>
+                                <span class="exam-result-question-prompt"><strong>@item.Description</strong><span class="exam-result-tags"><span>@item.SkillName</span><span>@TypeLabel(item.QuestionType)</span></span></span>
+                                <span class="exam-result-outcome">@(item.IsCorrect ? T["public.result.answerCorrect"] : T["public.result.answerIncorrect"])</span>
+                                <span class="exam-result-chevron" aria-hidden="true">⌄</span>
+                            </summary>
+                            <div class="exam-result-review-body">
+                                <div class="exam-result-answer-grid">
+                                    <section class="exam-result-answer @(item.IsCorrect ? "is-correct" : "is-incorrect")">
+                                        <h3><span aria-hidden="true">@(item.IsCorrect ? "✓" : "×")</span>@T["public.result.yourAnswer"]</h3>
+                                        @if (item.UserAnswers.Count > 0)
+                                        {
+                                            <ul>@foreach (var answer in item.UserAnswers) { <li>@answer</li> }</ul>
+                                        }
+                                        else
+                                        {
+                                            <p>@T["public.result.noAnswer"]</p>
+                                        }
+                                    </section>
+                                    <section class="exam-result-answer is-reference">
+                                        <h3><span aria-hidden="true">✓</span>@T["public.result.referenceAnswer"]</h3>
+                                        @if (item.CorrectAnswers.Count > 0)
+                                        {
+                                            <ul>@foreach (var answer in item.CorrectAnswers) { <li>@answer</li> }</ul>
+                                        }
+                                        else
+                                        {
+                                            <p>@T["public.result.noReference"]</p>
+                                        }
+                                    </section>
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(item.Explication))
+                                {
+                                    <div class="exam-result-explanation"><strong><span aria-hidden="true">i</span>@T["public.result.explanation"]</strong><p>@item.Explication</p></div>
+                                }
+                                <div class="exam-result-points">@T["public.result.pointsEarned"] : <strong>@item.ScoreAwarded.ToString("0.##", culture) / @item.Points.ToString("0.##", culture)</strong></div>
+                            </div>
+                        </details>
+                    }
+                </div>
+                <p class="exam-result-filter-empty" data-result-empty hidden>@T["public.result.noFilterMatches"]</p>
+            }
+        </section>
+
+        <aside class="exam-result-sidebar" aria-label="@T["public.result.attemptSummary"]">
+            <section class="exam-result-side-card" aria-labelledby="exam-result-skills-title">
+                <h2 id="exam-result-skills-title"><span aria-hidden="true">◎</span> @T["public.result.scoreBySkill"]</h2>
+                @if (Model.SkillResults.Count == 0)
+                {
+                    <p class="exam-result-muted">@T["public.result.noSkillDetails"]</p>
+                }
+                @foreach (var skill in Model.SkillResults)
+                {
+                    var level = skill.Percentage < 40 ? "is-low" : skill.Percentage < 60 ? "is-medium" : skill.Percentage < 80 ? "is-good" : "is-strong";
+                    var label = skill.Percentage < 40 ? T["public.result.priorityImprove"] : skill.Percentage < 60 ? T["public.result.needsImprovement"] : skill.Percentage < 80 ? T["public.result.onTrack"] : T["public.result.mastered"];
+                    <div class="exam-result-skill @level">
+                        <div><span>@skill.SkillName</span><strong>@skill.Percentage%</strong></div>
+                        <progress max="100" value="@skill.Percentage" aria-label="@skill.SkillName : @skill.Percentage%">@skill.Percentage%</progress>
+                        <small>@T["public.result.correctOfTotal", skill.Correct, skill.Total, label]</small>
+                    </div>
+                }
+            </section>
+            <section class="exam-result-side-card exam-result-next" aria-labelledby="exam-result-next-title">
+                <h2 id="exam-result-next-title"><span aria-hidden="true">➤</span> @T["public.result.nextSteps"]</h2>
+                <p>@T["public.result.nextStepsText"]</p>
+                <a class="exam-result-button exam-result-button-primary" asp-route="@startRoute" asp-route-culture="@(routeCulture == "fr" ? "fr" : null)" asp-route-slug="@Model.ExamSlug">↻ <span>@T["Recommencer l’examen"]</span></a>
+                <a class="exam-result-button" asp-route="@detailsRoute" asp-route-culture="@(routeCulture == "fr" ? "fr" : null)" asp-route-slug="@Model.ExamSlug">▣ <span>@T["Retour aux détails"]</span></a>
+                <a class="exam-result-button" href="@(routeCulture == "en" ? "/en/exams" : "/fr/examens")#exams-title">☷ <span>@T["Voir tous les examens"]</span></a>
+            </section>
+            <section class="exam-result-side-card exam-result-attempt-info" aria-labelledby="exam-result-info-title">
+                <h2 id="exam-result-info-title"><span aria-hidden="true">▤</span> @T["public.result.details"]</h2>
+                <dl>
+                    <div><dt>@T["public.result.questions"]</dt><dd>@Model.TotalQuestions</dd></div>
+                    <div><dt>@T["public.result.timeSpent"]</dt><dd>@Duration()</dd></div>
+                    <div><dt>@T["public.result.score"]</dt><dd>@Model.Percentage% (@Model.CorrectAnswers / @Model.TotalQuestions)</dd></div>
+                    <div><dt>@T["public.result.threshold"]</dt><dd>@Model.PassingScore%</dd></div>
+                    <div><dt>@T["public.result.status"]</dt><dd><span class="exam-result-status-pill @(Model.Passed ? "is-passed" : "is-failed")">@(Model.Passed ? T["public.result.passedShort"] : T["public.result.failedShort"])</span></dd></div>
+                </dl>
+            </section>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/exam-result.js" asp-append-version="true"></script>
+}

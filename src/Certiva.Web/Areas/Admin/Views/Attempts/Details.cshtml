@@ -1,0 +1,273 @@
+@model AttemptDetailsViewModel
+@using System.Globalization
+@{
+    var culture = CultureInfo.CurrentCulture;
+    ViewData["Title"] = T["Détail de la tentative"];
+    var statusLabel = T.EnumLabel(Model.Status);
+    var statusClass = Model.Status switch
+    {
+        ExamAttemptStatus.InProgress => "is-in-progress",
+        ExamAttemptStatus.Completed => "is-completed",
+        ExamAttemptStatus.Expired => "is-expired",
+        _ => ""
+    };
+    var correctCount = Model.Questions.Count(question => question.IsCorrect == true);
+    var incorrectCount = Model.Questions.Count(question => question.IsCorrect == false);
+    var unansweredCount = Model.Questions.Count(question => !question.HasAnswer);
+    var percentage = Model.Percentage ?? 0m;
+    var ringPercent = percentage.ToString("0.##", CultureInfo.InvariantCulture);
+    var actualEnd = Model.CompletedAtUtc ?? DateTime.UtcNow;
+    var elapsed = Math.Max(0, (int)(actualEnd - Model.StartedAtUtc).TotalSeconds);
+    var allowedMinutes = Model.ExpiresAtUtc.HasValue
+        ? Math.Max(0, (int)Math.Round((Model.ExpiresAtUtc.Value - Model.StartedAtUtc).TotalMinutes))
+        : (int?)null;
+    var scored = Model.Score.HasValue;
+    var publicUrl = Model.ExamIsPublic
+        ? Url.RouteUrl("PublicExamDetails", new { slug = Model.ExamSlug }, Context.Request.Scheme)
+        : null;
+    string TypeLabel(QuestionType type) => T.EnumLabel(type);
+    string FormatDate(DateTime? value) => value.HasValue
+        ? value.Value.ToString("g", culture) + " UTC"
+        : "—";
+    string FormatDuration(int seconds)
+    {
+        var time = TimeSpan.FromSeconds(Math.Max(0, seconds));
+        return time.TotalHours >= 1
+            ? $"{(int)time.TotalHours:00}:{time.Minutes:00}:{time.Seconds:00}"
+            : $"{(int)time.TotalMinutes:00}:{time.Seconds:00}";
+    }
+}
+@section Styles { <link rel="stylesheet" href="~/css/admin/exams.css" asp-append-version="true" /> }
+@section Breadcrumb {
+    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="Attempts" asp-action="Index">@T["Tentatives"]</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@T["Détail de la tentative"]</li>
+}
+
+<div class="exam-admin admin-page admin-attempt-detail" data-expand-all="@T["Tout développer"]" data-collapse-all="@T["Tout réduire"]" data-copy-success="@T["Identifiant copié"]" data-copy-failure="@T["Impossible de copier automatiquement."]" data-previous="@T["Previous"]" data-next="@T["Next"]">
+    <section class="admin-attempt-hero" aria-labelledby="attempt-candidate-title">
+        <div class="admin-attempt-identity">
+            <span class="admin-attempt-avatar" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2z" /></svg></span>
+            <div class="admin-attempt-identity-copy">
+                <span class="admin-attempt-status @statusClass"><span aria-hidden="true"></span>@statusLabel</span>
+                <h1 id="attempt-candidate-title">@Model.Candidate</h1>
+                @if (!string.IsNullOrWhiteSpace(Model.CandidateEmail) && !string.Equals(Model.Candidate, Model.CandidateEmail, StringComparison.OrdinalIgnoreCase))
+                {
+                    <p class="admin-attempt-email">@Model.CandidateEmail</p>
+                }
+                <a class="admin-attempt-exam-name" asp-area="Admin" asp-controller="Exam" asp-action="Details" asp-route-id="@Model.ExamId">@Model.ExamName</a>
+                <div class="admin-attempt-meta">
+                    @if (!string.IsNullOrWhiteSpace(Model.ExamCode))
+                    {
+                        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h13" /></svg>Code : @Model.ExamCode</span>
+                    }
+                <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h4" /></svg>@Model.Questions.Count @T["Questions"].Value.ToLowerInvariant()</span>
+                    <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>@(allowedMinutes.HasValue ? $"{allowedMinutes} {T["minutes"].Value}" : T["Non limité"].Value)</span>
+                    <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8m-4-4v4M5 3h14v7a7 7 0 0 1-14 0V3Z" /></svg>@T["Seuil :"] @Model.PassingPercentage%</span>
+                </div>
+            </div>
+        </div>
+        <dl class="admin-attempt-hero-summary">
+            <div><dt>@T["Utilisateur"]</dt><dd>@Model.Candidate@if (!string.IsNullOrWhiteSpace(Model.CandidateEmail) && !string.Equals(Model.Candidate, Model.CandidateEmail, StringComparison.OrdinalIgnoreCase)) { <small>@Model.CandidateEmail</small> }</dd></div>
+            <div><dt>@T["Date de début"]</dt><dd>@FormatDate(Model.StartedAtUtc)</dd></div>
+            <div><dt>@T["Date de fin"]</dt><dd>@FormatDate(Model.CompletedAtUtc)</dd></div>
+            <div><dt>@T["Durée"]</dt><dd>@FormatDuration(elapsed)</dd></div>
+            <div><dt>@T["Résultat"]</dt><dd><span class="admin-attempt-result @(Model.Passed == true ? "is-passed" : Model.Passed == false ? "is-failed" : "is-pending")">@(Model.Passed.HasValue ? (Model.Passed.Value ? T["Réussi"] : T["Non réussi"]) : T["En attente"])</span></dd></div>
+        </dl>
+    </section>
+
+    <section class="admin-attempt-kpis" aria-label="@T["Résultats de la tentative"]">
+        <article class="admin-attempt-kpi admin-attempt-score-kpi">
+            <div class="admin-attempt-score-ring" role="img" aria-label="@T["Score"] : @(Model.Percentage.HasValue ? $"{Model.Percentage:0.#}%" : T["Non calculé"])">
+                <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="admin-attempt-score-track" cx="50" cy="50" r="42" pathLength="100" /><circle class="admin-attempt-score-value" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="@ringPercent 100" transform="rotate(-90 50 50)" /></svg>
+                <strong>@(Model.Percentage.HasValue ? $"{Model.Percentage:0.#}%" : "—")</strong>
+            </div>
+            <div><span class="admin-attempt-kpi-label">@T["Score"]</span><strong class="admin-attempt-kpi-value">@(Model.Score.HasValue && Model.MaxScore.HasValue ? $"{Model.Score:0.##} / {Model.MaxScore:0.##}" : T["Non calculé"])</strong><small>@T["bonnes réponses"]</small></div>
+        </article>
+        <article class="admin-attempt-kpi">
+            <span class="admin-attempt-kpi-icon is-correct" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7" /></svg></span>
+            <div><span class="admin-attempt-kpi-label">@T["Correctes"]</span><strong class="admin-attempt-kpi-value">@(scored ? correctCount.ToString() : "—")</strong><small>@(scored && Model.Questions.Count > 0 ? $"{Math.Round(correctCount * 100d / Model.Questions.Count):0}%" : "")</small></div>
+        </article>
+        <article class="admin-attempt-kpi">
+            <span class="admin-attempt-kpi-icon is-incorrect" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 7 10 10M17 7 7 17" /></svg></span>
+            <div><span class="admin-attempt-kpi-label">@T["Incorrectes"]</span><strong class="admin-attempt-kpi-value">@(scored ? incorrectCount.ToString() : "—")</strong><small>@(scored && Model.Questions.Count > 0 ? $"{Math.Round(incorrectCount * 100d / Model.Questions.Count):0}%" : "")</small></div>
+        </article>
+        <article class="admin-attempt-kpi">
+            <span class="admin-attempt-kpi-icon is-time" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg></span>
+            <div><span class="admin-attempt-kpi-label">@T["Temps passé"]</span><strong class="admin-attempt-kpi-value">@FormatDuration(elapsed)</strong><small>@T["sur"] @(allowedMinutes.HasValue ? FormatDuration(allowedMinutes.Value * 60) : T["Aucune limite"])</small></div>
+        </article>
+    </section>
+
+    <nav class="admin-attempt-tabs" aria-label="@T["Sections du rapport"]">
+        <a class="is-active" href="#attempt-questions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" /></svg>@T["Questions"] <span>@Model.Questions.Count</span></a>
+        @if (scored && Model.SkillScores.Count > 0)
+        {
+            <a href="#admin-attempt-skills"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9m8 11V4m8 16v-7" /><path d="M2 21h20" /></svg>@T["Résumé par compétence"] <span>@Model.SkillScores.Count</span></a>
+        }
+        @if (publicUrl != null)
+        {
+            <a class="admin-attempt-public-tab" href="@publicUrl" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6m-9 3 9-9M18 13v6H4V5h6" /></svg>@T["Voir l’examen côté public"]</a>
+        }
+    </nav>
+
+    <div class="admin-attempt-layout">
+        <section class="admin-attempt-main admin-card" id="attempt-questions" aria-labelledby="attempt-questions-title">
+            <header class="admin-attempt-section-header">
+                <span class="admin-attempt-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" /></svg></span>
+                <h2 id="attempt-questions-title">@T["Questions et réponses"]</h2>
+            </header>
+            <div class="admin-attempt-question-toolbar">
+                <div class="admin-attempt-filters" role="group" aria-label="@T["Filtrer les questions selon le résultat"]">
+                    <button type="button" class="is-active" aria-pressed="true" data-question-filter="all">@T["Toutes"] <span>@Model.Questions.Count</span></button>
+                    <button type="button" aria-pressed="false" data-question-filter="correct">@T["Correctes"] <span>@correctCount</span></button>
+                    <button type="button" aria-pressed="false" data-question-filter="incorrect">@T["Incorrectes"] <span>@incorrectCount</span></button>
+                </div>
+                <button type="button" class="admin-attempt-expand-all" data-toggle-all-questions>@T["Tout développer"]</button>
+            </div>
+
+            @if (Model.Questions.Count == 0)
+            {
+                <div class="admin-attempt-empty"><strong>@T["Aucune question dans cette tentative"]</strong><p>@T["Les questions enregistrées apparaîtront ici."]</p></div>
+            }
+            else
+            {
+                <div class="admin-attempt-question-list" data-question-list>
+                    @foreach (var question in Model.Questions)
+                    {
+                        var resultKey = question.IsCorrect == true ? "correct" : question.IsCorrect == false ? "incorrect" : !question.HasAnswer ? "unanswered" : "pending";
+                        var resultLabel = resultKey switch
+                        {
+                            "correct" => T["Correcte"].Value,
+                            "incorrect" => T["Incorrecte"].Value,
+                            "unanswered" => T["Non répondue"].Value,
+                            _ => T["Réponse enregistrée"].Value
+                        };
+                        <details class="admin-attempt-question" data-question-item data-question-result="@resultKey">
+                            <summary class="admin-attempt-question-header">
+                                <span class="admin-attempt-question-number @resultKey">@question.Order</span>
+                                <span class="admin-attempt-question-prompt">
+                                    <strong>@question.QuestionText</strong>
+                                    <span class="admin-attempt-question-tags">
+                                        @if (!string.IsNullOrWhiteSpace(question.SkillName)) { <span>@question.SkillName</span> }
+                                        <span>@TypeLabel(question.QuestionType)</span>
+                                    </span>
+                                </span>
+                                <span class="admin-attempt-question-outcome @resultKey">@resultLabel</span>
+                                <span class="admin-attempt-question-points">@(scored ? question.ScoreAwarded.ToString("0.##", culture) : "—") / @question.Points.ToString("0.##", culture) pt</span>
+                                <svg class="admin-attempt-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                            </summary>
+                            <div class="admin-attempt-question-detail">
+                                @if (!question.HasAnswer)
+                                {
+                                    <div class="admin-attempt-no-answer">@T["Aucune réponse enregistrée"]</div>
+                                }
+                                else
+                                {
+                                    <div class="admin-attempt-answer-grid">
+                                        <section class="admin-attempt-answer admin-attempt-user-answer @(question.IsCorrect == true ? "is-correct" : question.IsCorrect == false ? "is-incorrect" : "is-pending")">
+                                            <h3><span aria-hidden="true">@(question.IsCorrect == true ? "✓" : question.IsCorrect == false ? "×" : "•")</span>@T["Votre réponse"]</h3>
+                                            @if (!string.IsNullOrWhiteSpace(question.TextAnswer))
+                                            {
+                                                <p>@question.TextAnswer</p>
+                                            }
+                                            else if (question.Choices.Any(choice => choice.WasSelected))
+                                            {
+                                                <ul>@foreach (var choice in question.Choices.Where(choice => choice.WasSelected)) { <li>@choice.Text</li> }</ul>
+                                            }
+                                            else
+                                            {
+                                                <p>@T["Aucune réponse enregistrée"]</p>
+                                            }
+                                        </section>
+                                        <section class="admin-attempt-answer admin-attempt-correct-answer">
+                                            <h3><span aria-hidden="true">✓</span>@T["Bonne réponse"]</h3>
+                                            @if (question.Choices.Any(choice => choice.IsCorrect))
+                                            {
+                                                <ul>@foreach (var choice in question.Choices.Where(choice => choice.IsCorrect)) { <li>@choice.Text</li> }</ul>
+                                            }
+                                            else if (question.QuestionType == QuestionType.LongAnswer && !string.IsNullOrWhiteSpace(question.Explanation))
+                                            {
+                                                <p>@T["Correction évaluée selon les critères indiqués dans l’explication."]</p>
+                                            }
+                                            else
+                                            {
+                                                <p>@T["Aucune réponse de référence n’est disponible dans le snapshot."]</p>
+                                            }
+                                        </section>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(question.Explanation))
+                                {
+                                    <div class="admin-attempt-explanation"><strong>@T["Explication"]</strong><p>@question.Explanation</p></div>
+                                }
+                                <div class="admin-attempt-question-foot">
+                                    <span>@T["Type"] : @TypeLabel(question.QuestionType)</span>
+                                    @if (!string.IsNullOrWhiteSpace(question.SkillName)) { <span>@T["Compétence"] : @question.SkillName</span> }
+                                    <strong>@T["Score"] : @(scored ? question.ScoreAwarded.ToString("0.##", culture) : "—") / @question.Points.ToString("0.##", culture) pt</strong>
+                                </div>
+                            </div>
+                        </details>
+                    }
+                </div>
+                <div class="admin-attempt-empty admin-attempt-filter-empty" data-question-filter-empty hidden><strong>@T["Aucune question pour ce filtre"]</strong><p>@T["Choisissez un autre filtre pour afficher les réponses."]</p></div>
+                <nav class="admin-attempt-pagination" data-question-pagination aria-label="@T["Pagination des questions"]" hidden></nav>
+            }
+        </section>
+
+        <aside class="admin-attempt-sidebar" aria-label="@T["Résumé de la tentative"]">
+            @if (scored && Model.SkillScores.Count > 0)
+            {
+                <section class="admin-card admin-attempt-side-card" id="admin-attempt-skills" aria-labelledby="admin-attempt-skills-title">
+                    <header class="admin-attempt-section-header"><span class="admin-attempt-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V9m8 11V4m8 16v-7" /><path d="M2 21h20" /></svg></span><h2 id="admin-attempt-skills-title">@T["Score par compétence"]</h2></header>
+                    <div class="admin-attempt-skill-list">
+                        @foreach (var skill in Model.SkillScores)
+                        {
+                            <div class="admin-attempt-skill-score">
+                                <div><span>@skill.SkillName</span><strong>@skill.Percentage%</strong></div>
+                                <progress class="admin-attempt-skill-track" aria-label="Score de @skill.SkillName" max="100" value="@skill.Percentage">@skill.Percentage%</progress>
+                            </div>
+                        }
+                    </div>
+                </section>
+            }
+
+            <section class="admin-card admin-attempt-side-card" aria-labelledby="admin-attempt-exam-title">
+                <header class="admin-attempt-section-header"><span class="admin-attempt-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H5V3z" /><path d="M14 3v6h5M8 13h8M8 17h6" /></svg></span><h2 id="admin-attempt-exam-title">@T["Informations sur l’examen"]</h2></header>
+                <dl class="admin-attempt-information">
+                    <div><dt>@T["Titre"]</dt><dd>@Model.ExamName</dd></div>
+                    <div><dt>@T["Code"]</dt><dd>@(string.IsNullOrWhiteSpace(Model.ExamCode) ? "—" : Model.ExamCode)</dd></div>
+                    <div><dt>@T["Durée"]</dt><dd>@(allowedMinutes.HasValue ? $"{allowedMinutes} {T["minutes"].Value}" : T["Non limitée"])</dd></div>
+                    <div><dt>@T["Nombre de questions"]</dt><dd>@Model.Questions.Count</dd></div>
+                    <div><dt>@T["Seuil de réussite"]</dt><dd>@Model.PassingPercentage%</dd></div>
+                </dl>
+            </section>
+
+            <section class="admin-card admin-attempt-side-card" aria-labelledby="admin-attempt-actions-title">
+                <header class="admin-attempt-section-header"><span class="admin-attempt-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 4h6v6m-9 3 9-9M18 13v6H4V5h6" /></svg></span><h2 id="admin-attempt-actions-title">@T["Actions rapides"]</h2></header>
+                <div class="admin-attempt-actions">
+                    <a asp-area="Admin" asp-controller="Exam" asp-action="Details" asp-route-id="@Model.ExamId"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg>@T["Voir l’examen"]</a>
+                    @if (publicUrl != null)
+                    {
+                        <a href="@publicUrl" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6m-9 3 9-9M18 13v6H4V5h6" /></svg>@T["Voir côté public"]</a>
+                    }
+                </div>
+            </section>
+
+            <section class="admin-card admin-attempt-side-card" aria-labelledby="admin-attempt-technical-title">
+                <header class="admin-attempt-section-header"><span class="admin-attempt-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5" /></svg></span><h2 id="admin-attempt-technical-title">@T["Détails techniques"]</h2></header>
+                <dl class="admin-attempt-information admin-attempt-technical">
+                    <div><dt>@T["ID tentative"]</dt><dd><span class="admin-attempt-id" title="@Model.Id">@Model.Id</span><button type="button" data-copy-attempt-id="@Model.Id" aria-label="@T["Copier l’identifiant de la tentative"]"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3" /></svg></button></dd></div>
+                    <div><dt>@T["Créée le"]</dt><dd>@FormatDate(Model.CreatedOnUtc)</dd></div>
+                    <div><dt>@T["Début"]</dt><dd>@FormatDate(Model.StartedAtUtc)</dd></div>
+                    <div><dt>@T["Terminée le"]</dt><dd>@FormatDate(Model.CompletedAtUtc)</dd></div>
+                    <div><dt>@T["Durée (secondes)"]</dt><dd>@elapsed</dd></div>
+                    <div><dt>@T["Statut"]</dt><dd>@statusLabel</dd></div>
+                </dl>
+                <p class="admin-attempt-copy-feedback" aria-live="polite" data-attempt-copy-feedback></p>
+            </section>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin/attempt-details.js" asp-append-version="true"></script>
+}
