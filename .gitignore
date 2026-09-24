@@ -14,9 +14,9 @@
 secrets*.json
 **/secrets.json
 **/appsettings.Development.json
+**/appsettings.Production.json
 **/appsettings.Local.json
 **/appsettings.*.Local.json
-**/appsettings.Production.json
 **/logs/
 *.log
 **/TestResults/

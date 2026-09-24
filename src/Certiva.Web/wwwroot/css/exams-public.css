@@ -64,7 +64,7 @@ body.public-body a { color: inherit; }
 .public-section-icon, .public-empty-icon { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border-radius: 10px; color: var(--public-blue); background: #e8f1ff; }
 .public-section-icon svg, .public-empty-icon svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .public-section-header h2 { margin: 0; color: #172d4e; font-size: 22px; font-weight: 760; letter-spacing: -.025em; }
-.public-section-header p { margin: 7px 0 0 46px; color: #71839b; font-size: 12px; }
+.public-section-header p { margin: 7px 0 0 46px; color: #52657d; font-size: 12px; }
 .public-count-badge { flex: 0 0 auto; border: 1px solid #dce8fb; border-radius: 999px; padding: 8px 13px; color: #285ca7; background: #f2f7ff; font-size: 11px; font-weight: 700; }
 .public-exam-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .public-exam-card { display: flex; min-width: 0; flex-direction: column; border: 1px solid #e4ebf4; border-radius: var(--public-radius); padding: 20px 21px 17px; background: var(--public-surface); box-shadow: 0 7px 20px rgba(24,54,92,.035); transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
@@ -80,7 +80,7 @@ body.public-body a { color: inherit; }
 .public-status-badge::before { width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: #10a879; content: ""; }
 .public-code-badge { color: #536a88; background: #f0f4f9; }
 .public-exam-heading h3 { margin: 0; color: #1a3153; font-size: 17px; font-weight: 740; letter-spacing: -.02em; overflow-wrap: anywhere; }
-.public-exam-description { min-height: 40px; margin: 13px 0 11px; color: #6c7f99; font-size: 12px; line-height: 1.6; }
+.public-exam-description { min-height: 40px; margin: 13px 0 11px; color: #52657d; font-size: 12px; line-height: 1.6; }
 .public-exam-skills { display: flex; min-height: 27px; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
 .public-exam-skills span { display: inline-flex; min-height: 22px; align-items: center; border-radius: 7px; padding: 3px 8px; color: #365d94; background: #f0f5fc; font-size: 9px; font-weight: 650; }
 .public-exam-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; border-top: 1px solid #edf1f6; border-bottom: 1px solid #edf1f6; padding: 12px 0; }
@@ -104,9 +104,9 @@ body.public-body a { color: inherit; }
 .public-empty-icon { width: 48px; height: 48px; margin-bottom: 11px; border-radius: 14px; }
 .public-empty-icon svg { width: 24px; height: 24px; }
 .public-empty-state h3 { margin: 0; color: #1a3153; font-size: 17px; font-weight: 750; }
-.public-empty-state p { margin: 7px 0 15px; color: #71839b; font-size: 12px; }
+.public-empty-state p { margin: 7px 0 15px; color: #52657d; font-size: 12px; }
 .public-footer { border-top: 1px solid #e4eaf2; background: #fff; }
-.public-footer-inner { display: flex; width: min(100% - 40px, 1320px); min-height: 64px; align-items: center; justify-content: space-between; gap: 15px; margin: 0 auto; color: #72839a; font-size: 11px; }
+.public-footer-inner { display: flex; width: min(100% - 40px, 1320px); min-height: 64px; align-items: center; justify-content: space-between; gap: 15px; margin: 0 auto; color: #52657d; font-size: 11px; }
 .public-footer-inner > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .public-footer-inner a { color: #1762d4 !important; text-decoration: none; }
 .public-footer-inner a:hover { text-decoration: underline; }

@@ -20,8 +20,6 @@ using Certiva.Domain.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Local developer settings are optional and intentionally excluded from Git.
-builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -117,7 +115,9 @@ builder.Services.AddHsts(options =>
 var app = builder.Build();
 
 await SeedAdminIdentityAsync(app.Services, app.Configuration);
-if (app.Environment.IsDevelopment() && app.Configuration.GetValue<bool>("SeedData:ExamsDemo"))
+var seedDemoData = app.Configuration.GetValue<bool>("SeedData:ExamsDemo");
+var allowProductionDemoSeed = app.Configuration.GetValue<bool>("SeedData:AllowInProduction");
+if (seedDemoData && (app.Environment.IsDevelopment() || allowProductionDemoSeed))
     await SeedDemoExamsAsync(app.Services, app.Configuration.GetValue<bool>("SeedData:ResetDemoData"));
 
 if (app.Environment.IsDevelopment())

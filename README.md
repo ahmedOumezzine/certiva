@@ -98,7 +98,7 @@ Publish the web project with the production environment enabled:
 dotnet publish src/Certiva.Web/Certiva.Web.csproj -c Release -o ./publish
 ```
 
-On the production server, configure these values outside Git and outside the published artifact:
+On the production server, configure these values in `appsettings.Production.json` or through the hosting environment. The real production file is ignored by Git; keep the published package private:
 
 ```text
 ASPNETCORE_ENVIRONMENT=Production
@@ -107,7 +107,7 @@ AdminUser__Email=<admin-email>
 AdminUser__Password=<strong-admin-password>
 ```
 
-ASP.NET Core automatically loads `appsettings.Production.json` when present, but the environment variables take precedence. `appsettings.Production.json` is ignored by Git. Demo data remains disabled in production.
+ASP.NET Core automatically loads `appsettings.Production.json` when present, but the environment variables take precedence. `appsettings.Production.json` is ignored by Git. Demo data remains disabled in production unless `SeedData:ExamsDemo=true` and `SeedData:AllowInProduction=true` are explicitly configured.
 
 ## License status
 
