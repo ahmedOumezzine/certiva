@@ -20,6 +20,9 @@ using Certiva.Domain.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Local developer settings are optional and intentionally excluded from Git.
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 

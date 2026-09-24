@@ -19,7 +19,11 @@ secrets*.json
 **/logs/
 *.log
 **/TestResults/
+**/TestResults-Coverage/
 **/test-results/
+**/coverage-results/
+coverage.cobertura.xml
+*.opencover.xml
 **/playwright-report/
 **/coverage/
 **/node_modules/
