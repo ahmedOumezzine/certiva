@@ -73,4 +73,27 @@ public sealed class ExamDemoSeederTests
 
         Assert.Equal("Texte personnalisé", existingFrenchChoice.ChoiceText);
     }
+
+    [Fact]
+    public async Task SeedAsync_ResetRemovesOnlyDemoExamsBeforeRecreatingThem()
+    {
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase($"exam-demo-reset-{Guid.NewGuid():N}")
+            .Options;
+
+        await using var db = new ApplicationDbContext(options);
+        await ExamDemoSeeder.SeedAsync(db, NullLogger.Instance);
+        db.Exams.Add(new Certiva.Domain.Exams.Exam
+        {
+            Id = Guid.NewGuid(), Name = "Real exam", Description = "Keep", Code = "REAL",
+            Slug = "real-exam", Status = Certiva.Domain.Enums.Status.Published
+        });
+        await db.SaveChangesAsync();
+
+        await ExamDemoSeeder.SeedAsync(db, NullLogger.Instance, resetDemoData: true);
+
+        Assert.Equal(6, await db.Exams.CountAsync());
+        Assert.Equal(1, await db.Exams.CountAsync(exam => exam.Code == "REAL"));
+        Assert.Equal(5, await db.Exams.CountAsync(exam => exam.Code != "REAL"));
+    }
 }

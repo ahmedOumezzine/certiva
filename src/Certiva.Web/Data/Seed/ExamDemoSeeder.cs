@@ -164,6 +164,7 @@ public static class ExamDemoSeeder
     public static async Task SeedAsync(
         ApplicationDbContext db,
         ILogger logger,
+        bool resetDemoData = false,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(db);
@@ -178,6 +179,19 @@ public static class ExamDemoSeeder
             .Include(x => x.Questions!).ThenInclude(x => x.Choices!).ThenInclude(x => x.Translations)
             .Where(x => codes.Contains(x.Code!) || slugs.Contains(x.Slug!))
             .ToListAsync(cancellationToken);
+
+        if (resetDemoData && existing.Count > 0)
+        {
+            var demoExamIds = existing.Select(exam => exam.Id).ToArray();
+            var attempts = await db.ExamAttempts
+                .Where(attempt => demoExamIds.Contains(attempt.ExamId))
+                .ToListAsync(cancellationToken);
+            db.ExamAttempts.RemoveRange(attempts);
+            db.Exams.RemoveRange(existing);
+            await db.SaveChangesAsync(cancellationToken);
+            existing = [];
+            logger.LogInformation("Demo data reset: {ExamCount} exam(s) and {AttemptCount} related attempt(s) removed.", demoExamIds.Length, attempts.Count);
+        }
         var existingByCode = existing.Where(x => x.Code != null)
             .ToDictionary(x => x.Code!, StringComparer.OrdinalIgnoreCase);
         var existingBySlug = existing.Where(x => x.Slug != null)

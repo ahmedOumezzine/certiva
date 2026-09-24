@@ -118,7 +118,7 @@ var app = builder.Build();
 
 await SeedAdminIdentityAsync(app.Services, app.Configuration);
 if (app.Environment.IsDevelopment() && app.Configuration.GetValue<bool>("SeedData:ExamsDemo"))
-    await SeedDemoExamsAsync(app.Services);
+    await SeedDemoExamsAsync(app.Services, app.Configuration.GetValue<bool>("SeedData:ResetDemoData"));
 
 if (app.Environment.IsDevelopment())
 {
@@ -442,13 +442,13 @@ static async Task SeedAdminIdentityAsync(IServiceProvider services, IConfigurati
     }
 }
 
-static async Task SeedDemoExamsAsync(IServiceProvider services)
+static async Task SeedDemoExamsAsync(IServiceProvider services, bool resetDemoData = false)
 {
     using var scope = services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
         .CreateLogger(nameof(ExamDemoSeeder));
-    await ExamDemoSeeder.SeedAsync(db, logger);
+    await ExamDemoSeeder.SeedAsync(db, logger, resetDemoData);
 }
 
 public partial class Program { }

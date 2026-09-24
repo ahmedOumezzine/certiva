@@ -49,7 +49,7 @@ dotnet restore Certiva.sln
 dotnet tool restore
 ```
 
-The checked-in `appsettings.json` contains a non-secret LocalDB example. Apply migrations only to a new, empty Certiva database. To use a different database, store its connection string in User Secrets during development:
+The checked-in `appsettings.json` contains no database secret. For local development, use `appsettings.Local.json` (ignored by Git) or User Secrets. Apply migrations only to a new, empty Certiva database. To use User Secrets:
 
 ```sh
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "<your-local-sql-server-connection-string>" --project src/Certiva.Web
@@ -92,7 +92,22 @@ npm test
 
 ## Deployment
 
-Publish the web project for the selected hosting platform and provide its SQL Server connection and Admin credentials through a secret manager. Use persistent storage and backups for the database. Machine-specific publish profiles are excluded.
+Publish the web project with the production environment enabled:
+
+```sh
+dotnet publish src/Certiva.Web/Certiva.Web.csproj -c Release -o ./publish
+```
+
+On the production server, configure these values outside Git and outside the published artifact:
+
+```text
+ASPNETCORE_ENVIRONMENT=Production
+ConnectionStrings__DefaultConnection=<production-sql-server-connection-string>
+AdminUser__Email=<admin-email>
+AdminUser__Password=<strong-admin-password>
+```
+
+ASP.NET Core automatically loads `appsettings.Production.json` when present, but the environment variables take precedence. `appsettings.Production.json` is ignored by Git. Demo data remains disabled in production.
 
 ## License status
 
