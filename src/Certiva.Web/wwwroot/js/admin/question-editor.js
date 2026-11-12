@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    const commands = [['undo','↶'],['redo','↷'],['bold','B'],['italic','I'],['underline','U'],['formatBlock','H3','H3'],['insertUnorderedList','•'],['insertOrderedList','1.'],['createLink','🔗'],['formatBlock','</>','pre'],['insertTable','▦'],['removeFormat','×']];
+    const commands = [['bold','B'],['italic','I'],['underline','U'],['formatBlock','H3','H3'],['insertUnorderedList','•'],['insertOrderedList','1.'],['createLink','🔗'],['formatBlock','</>','pre'],['insertTable','▦'],['removeFormat','×']];
     const escapeHtml = value => { const node = document.createElement('div'); node.textContent = value || ''; return node.innerHTML.replace(/\n/g, '<br>'); };
     function sync(field) {
         const content = field.closest('.rich-editor')?.querySelector('.rich-editor__content');
