@@ -28,7 +28,7 @@
         <aside class="admin-sidebar" id="adminSidebar" aria-labelledby="adminSidebarTitle">
             <div class="admin-sidebar-brand">
                 <a class="admin-brand" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                    <img id="adminSidebarTitle" class="certiva-admin-brand-image" src="~/images/branding/certiva-logo-admin.png" width="480" height="160" alt="Certiva — PRACTICE • LEARN • CERTIFY" />
+                    <img id="adminSidebarTitle" class="certiva-admin-brand-image" src="~/images/branding/certiva-logo-admin.png" asp-append-version="true" width="180" height="60" alt="Certiva — PRACTICE • LEARN • CERTIFY" style="width:180px;height:60px;object-fit:contain;" />
                     <span class="admin-brand-copy"><small>@T["Administration"]</small></span>
                 </a>
                 <button class="admin-sidebar-close" type="button" aria-label="@T["Fermer la navigation"]" data-sidebar-close>

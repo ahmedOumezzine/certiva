@@ -106,6 +106,9 @@ public class ExamEditViewModel
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? LastModifiedOnUtc { get; set; }
     public List<ExamQuestionTypeCountViewModel> QuestionTypeCounts { get; set; } = new();
+    public string ActiveTab { get; set; } = "overview";
+    public List<SkillRowViewModel> Skills { get; set; } = new();
+    public List<QuestionRowViewModel> Questions { get; set; } = new();
 }
 
 public sealed class ExamQuestionTypeCountViewModel
@@ -139,13 +142,13 @@ public class SkillEditViewModel
     [Required, StringLength(140)]
     public string Name { get; set; } = string.Empty;
 
-    [Required, StringLength(1000)]
+    [Required, StringLength(4000)]
     public string Description { get; set; } = string.Empty;
 
     [StringLength(140)]
     public string EnglishName { get; set; } = string.Empty;
 
-    [StringLength(1000)]
+    [StringLength(4000)]
     public string EnglishDescription { get; set; } = string.Empty;
 
     [Range(0, 100)]
@@ -155,6 +158,11 @@ public class SkillEditViewModel
     public Guid ExamId { get; set; }
 
     public List<ExamSelectItemViewModel> Exams { get; set; } = new();
+    public string ExamName { get; set; } = string.Empty;
+    public string ExamCode { get; set; } = string.Empty;
+    public Status ExamStatus { get; set; }
+    public int ExistingSkillCount { get; set; }
+    public int ExistingWeight { get; set; }
 }
 
 public sealed class QuestionIndexViewModel

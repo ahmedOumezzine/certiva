@@ -6,6 +6,7 @@
     <RootNamespace>Certiva</RootNamespace>
     <AssemblyName>Certiva.Web</AssemblyName>
     <UserSecretsId>Certiva.Web.LocalDevelopment</UserSecretsId>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.5" />

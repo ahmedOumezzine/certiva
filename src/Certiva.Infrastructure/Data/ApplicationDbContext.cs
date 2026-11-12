@@ -128,7 +128,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             entity.HasIndex(item => new { item.SkillId, item.Culture }).IsUnique();
             entity.Property(item => item.Culture).HasMaxLength(2).IsRequired();
             entity.Property(item => item.Name).HasMaxLength(140);
-            entity.Property(item => item.Description).HasMaxLength(1000);
+            entity.Property(item => item.Description).HasMaxLength(4000);
             entity.HasOne(item => item.Skill).WithMany(item => item.Translations)
                 .HasForeignKey(item => item.SkillId).OnDelete(DeleteBehavior.Cascade);
         });

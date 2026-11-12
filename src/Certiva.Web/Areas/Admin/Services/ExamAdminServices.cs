@@ -270,6 +270,32 @@ public sealed class ExamAdminService : IExamAdminService
                 .Select(group => new ExamQuestionTypeCountViewModel { Type = group.Key, Count = group.Count() })
                 .OrderBy(item => item.Type)
                 .ToListAsync();
+
+            model.Skills = await _db.Set<Skill>().AsNoTracking()
+                .Where(skill => skill.ExamId == id)
+                .OrderBy(skill => skill.Name).ThenBy(skill => skill.Id)
+                .Select(skill => new SkillRowViewModel
+                {
+                    Id = skill.Id,
+                    Name = skill.Name ?? string.Empty,
+                    ExamName = model.Name,
+                    Pourcentage = skill.Pourcentage ?? 0,
+                    QuestionsCount = _db.Set<Question>().Count(question => question.SkillId == skill.Id)
+                }).ToListAsync();
+
+            model.Questions = await _db.Set<Question>().AsNoTracking()
+                .Where(question => question.ExamId == id)
+                .OrderBy(question => question.CreatedOnUtc).ThenBy(question => question.Id)
+                .Select(question => new QuestionRowViewModel
+                {
+                    Id = question.Id,
+                    Description = question.Description ?? string.Empty,
+                    ExamName = model.Name,
+                    SkillName = question.Skill == null ? "General" : question.Skill.Name ?? "General",
+                    QuestionType = question.QuestionType,
+                    Status = question.Status,
+                    ChoicesCount = question.Choices == null ? 0 : question.Choices.Count
+                }).ToListAsync();
         }
 
         return model;
@@ -442,8 +468,12 @@ public sealed class SkillAdminService : ISkillAdminService
         };
     }
 
-    public async Task<SkillEditViewModel> NewSkillAsync(Guid? examId) =>
-        new() { ExamId = examId ?? Guid.Empty, Exams = await _exams.GetExamOptionsAsync() };
+    public async Task<SkillEditViewModel> NewSkillAsync(Guid? examId)
+    {
+        var model = new SkillEditViewModel { ExamId = examId ?? Guid.Empty, Exams = await _exams.GetExamOptionsAsync() };
+        await EnrichSkillContextAsync(model);
+        return model;
+    }
 
     public async Task<SkillEditViewModel?> GetSkillAsync(Guid id)
     {
@@ -459,8 +489,25 @@ public sealed class SkillAdminService : ISkillAdminService
                 ExamId = s.ExamId ?? Guid.Empty
             }).FirstOrDefaultAsync();
         if (model != null)
+        {
             model.Exams = await _exams.GetExamOptionsAsync();
+            await EnrichSkillContextAsync(model);
+        }
         return model;
+    }
+
+    private async Task EnrichSkillContextAsync(SkillEditViewModel model)
+    {
+        if (model.ExamId == Guid.Empty) return;
+        var exam = await _db.Set<Exam>().AsNoTracking().Where(item => item.Id == model.ExamId)
+            .Select(item => new { item.Name, item.Code, item.Status, SkillCount = item.Skills!.Count, Weight = item.Skills!.Where(skill => skill.Id != model.Id).Sum(skill => (int?)skill.Pourcentage) ?? 0 })
+            .FirstOrDefaultAsync();
+        if (exam == null) return;
+        model.ExamName = exam.Name ?? string.Empty;
+        model.ExamCode = exam.Code ?? string.Empty;
+        model.ExamStatus = exam.Status;
+        model.ExistingSkillCount = exam.SkillCount;
+        model.ExistingWeight = exam.Weight;
     }
 
     public async Task<bool> SaveSkillAsync(SkillEditViewModel model, ModelStateDictionaryProxy modelState)

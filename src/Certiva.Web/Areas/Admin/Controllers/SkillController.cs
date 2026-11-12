@@ -30,6 +30,18 @@ public sealed class SkillController : Controller
         return View("Edit", await _service.NewSkillAsync(examId));
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateContextual(SkillEditViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
+        var proxy = new ModelStateDictionaryProxy(ModelState.AddModelError);
+        if (!await _service.SaveSkillAsync(model, proxy) || !ModelState.IsValid)
+            return ValidationProblem(ModelState);
+        return Json(new { success = true, id = model.Id });
+    }
+
     public async Task<IActionResult> Edit(Guid id)
     {
         var model = await _service.GetSkillAsync(id);
@@ -52,18 +64,20 @@ public sealed class SkillController : Controller
             return View("Edit", await RehydrateAsync(model));
 
         TempData["Success"] = _text["Skill.Saved"].Value;
-        return RedirectToAction(nameof(Index), new { examId = model.ExamId });
+        return RedirectToAction("Details", "Exam", new { area = "Admin", id = model.ExamId, tab = "skills" });
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, Guid? examId = null)
     {
         var deleted = await _service.DeleteSkillAsync(id);
         TempData[deleted ? "Success" : "Error"] = deleted
             ? _text["Skill.Deleted"].Value
             : _text["Skill.DeleteBlocked"].Value;
-        return RedirectToAction(nameof(Index));
+        return examId.HasValue && examId.Value != Guid.Empty
+            ? RedirectToAction("Details", "Exam", new { area = "Admin", id = examId.Value, tab = "skills" })
+            : RedirectToAction(nameof(Index));
     }
 
     private async Task<SkillEditViewModel> RehydrateAsync(SkillEditViewModel model)

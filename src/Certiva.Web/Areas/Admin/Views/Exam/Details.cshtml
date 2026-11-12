@@ -10,6 +10,7 @@
         _ => "admin-detail-status-draft"
     };
     var questionsTotal = Model.QuestionTypeCounts.Sum(item => item.Count);
+    var totalWeight = Model.Skills.Sum(item => item.Pourcentage);
     var circumference = 2 * Math.PI * 42;
     var isReady = Model.Status == Status.Published && questionsTotal > 0;
     var publicUrl = Url.RouteUrl("PublicExamDetails", new { slug = Model.Slug }, Context.Request.Scheme)
@@ -67,14 +68,47 @@
     </section>
 
     <nav class="admin-detail-tabs" aria-label="@T["Navigation de l’examen"]">
-        <a class="is-active" href="#admin-exam-overview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h8" /></svg>@T["Aperçu"]</a>
-        <a asp-area="Admin" asp-controller="Skill" asp-action="Index" asp-route-examId="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg>@T["Compétences"] <span>@Model.SkillsCount</span></a>
-        <a asp-area="Admin" asp-controller="Question" asp-action="Index" asp-route-examId="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" /></svg>@T["Questions"] <span>@Model.QuestionsCount</span></a>
+        <a class="@(Model.ActiveTab == "overview" ? "is-active" : string.Empty)" asp-area="Admin" asp-controller="Exam" asp-action="Details" asp-route-id="@Model.Id" asp-route-tab="overview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM8 9h8M8 13h8" /></svg>@T["Aperçu"]</a>
+        <a class="@(Model.ActiveTab == "skills" ? "is-active" : string.Empty)" asp-area="Admin" asp-controller="Exam" asp-action="Details" asp-route-id="@Model.Id" asp-route-tab="skills" aria-current="@(Model.ActiveTab == "skills" ? "page" : null)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg>@T["Compétences"] <span>@Model.SkillsCount</span></a>
+        <a class="@(Model.ActiveTab == "questions" ? "is-active" : string.Empty)" asp-area="Admin" asp-controller="Exam" asp-action="Details" asp-route-id="@Model.Id" asp-route-tab="questions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4" /></svg>@T["Questions"] <span>@Model.QuestionsCount</span></a>
         <a href="#admin-question-distribution"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9m8 11V4m8 16v-7" /><path d="M2 21h20" /></svg>@T["Statistiques"]</a>
         <a asp-area="Admin" asp-controller="Exam" asp-action="Edit" asp-route-id="@Model.Id"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="m19 13 2 1-2 4-2-1a8 8 0 0 1-2 1l-.3 2h-5L9 18a8 8 0 0 1-2-1l-2 1-2-4 2-1a8 8 0 0 1 0-2l-2-1 2-4 2 1a8 8 0 0 1 2-1l.3-2h5L15 6a8 8 0 0 1 2 1l2-1 2 4-2 1a8 8 0 0 1 0 2Z" /></svg>@T["Paramètres"]</a>
     </nav>
 
-    <div class="admin-detail-layout">
+    @if (Model.ActiveTab == "questions")
+    {
+        <section class="admin-card admin-detail-section admin-context-skills" aria-labelledby="admin-questions-title"><header class="admin-detail-section-header"><span class="admin-detail-section-icon" aria-hidden="true">▤</span><span><h2 id="admin-questions-title">@T["Questions de l’examen"]</h2></span><a asp-area="Admin" asp-controller="Question" asp-action="Create" asp-route-examId="@Model.Id" class="admin-primary admin-primary-action">＋ @T["Nouvelle question"]</a></header>
+        @if (!Model.Questions.Any()) { <div class="admin-empty-state"><h2>@T["Aucune question"]</h2><p>@T["Ajoutez votre première question pour compléter cet examen."]</p><a asp-area="Admin" asp-controller="Question" asp-action="Create" asp-route-examId="@Model.Id" class="admin-primary">＋ @T["Créer une question"]</a></div> }
+        else { <div class="exam-table-scroll"><table class="admin-table admin-list-table question-list-table"><thead><tr><th scope="col">@T["Question"]</th><th scope="col">@T["Compétence"]</th><th scope="col">@T["Type"]</th><th scope="col">@T["Statut"]</th><th scope="col">@T["Actions"]</th></tr></thead><tbody>@foreach (var question in Model.Questions) { <tr><td class="question-text-cell">@question.Description</td><td>@question.SkillName</td><td>@T.EnumLabel(question.QuestionType)</td><td>@T.EnumLabel(question.Status)</td><td><div class="admin-actions"><a class="admin-action-button admin-action-btn admin-action-btn-primary" asp-area="Admin" asp-controller="Question" asp-action="Edit" asp-route-id="@question.Id">@T["Modifier"]</a><form asp-area="Admin" asp-controller="Question" asp-action="Delete" method="post"><input type="hidden" name="id" value="@question.Id" /><button class="admin-action-button admin-action-btn admin-action-btn-danger" type="submit">@T["Supprimer"]</button></form></div></td></tr> }</tbody></table></div> }
+        </section>
+    }
+    @if (Model.ActiveTab == "skills")
+    {
+        var currentTotalWeight = totalWeight;
+        <section class="admin-card admin-detail-section admin-context-skills" aria-labelledby="admin-skills-title">
+            <header class="admin-detail-section-header">
+                <span class="admin-detail-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5" /></svg></span>
+                <span><h2 id="admin-skills-title">@T["Compétences de l’examen"]</h2></span>
+                <button type="button" class="admin-primary admin-primary-action" data-skill-drawer-open>＋ @T["Nouvelle compétence"]</button>
+            </header>
+            @if (Model.Skills.Count == 0)
+            {
+                <div class="admin-empty-state"><h2>@T["Aucune compétence définie"]</h2><p>@T["Ajoutez les domaines évalués dans cet examen."]</p><a asp-area="Admin" asp-controller="Skill" asp-action="Create" asp-route-examId="@Model.Id" class="admin-primary">＋ @T["Ajouter la première compétence"]</a></div>
+            }
+            else
+            {
+                <div class="exam-table-scroll"><table class="admin-table admin-list-table skill-list-table"><thead><tr><th scope="col">@T["Nom"]</th><th scope="col">@T["Pourcentage"]</th><th scope="col">@T["Questions"]</th><th scope="col">@T["Actions"]</th></tr></thead><tbody>
+                @foreach (var skill in Model.Skills)
+                {
+                    <tr><td class="skill-name-cell"><strong>@skill.Name</strong></td><td><span class="admin-percentage">@skill.Pourcentage%</span></td><td class="skill-count-cell">@skill.QuestionsCount</td><td><div class="admin-actions"><a class="admin-action-button admin-action-btn admin-action-btn-primary" asp-area="Admin" asp-controller="Skill" asp-action="Edit" asp-route-id="@skill.Id">@T["Modifier"]</a><form asp-area="Admin" asp-controller="Skill" asp-action="Delete" method="post" onsubmit="return confirm('@T["Supprimer cette compétence ?"]');"><input type="hidden" name="id" value="@skill.Id" /><input type="hidden" name="examId" value="@Model.Id" /><button class="admin-action-button admin-action-btn admin-action-btn-danger" type="submit">@T["Supprimer"]</button></form></div></td></tr>
+                }
+                </tbody></table></div>
+                <div class="admin-list-footer"><strong>@T["Total pondération"] : @currentTotalWeight%</strong><span class="@(currentTotalWeight == 100 ? "admin-detail-info-box is-published" : currentTotalWeight > 100 ? "admin-detail-info-box is-archived" : "admin-detail-info-box")">@(currentTotalWeight == 100 ? T["Pondération complète"] : currentTotalWeight > 100 ? T["La pondération totale dépasse 100%."] : T["La pondération totale est inférieure à 100%."])</span></div>
+            }
+        </section>
+    }
+
+    <div id="skillCreateDrawer" class="skill-drawer" hidden aria-labelledby="skill-drawer-title"><div class="skill-drawer-backdrop" data-skill-drawer-close></div><aside class="skill-drawer-panel" role="dialog" aria-modal="true"><header class="skill-drawer-header"><div><h2 id="skill-drawer-title">＋ @T["Nouvelle compétence"]</h2><p>@T["Ajoutez un domaine évalué à cet examen."]</p><small>@Model.Name · @T["Code"] : @Model.Code</small></div><button type="button" class="skill-drawer-close" data-skill-drawer-close aria-label="@T["Fermer"]">×</button></header><form id="skillDrawerForm" asp-area="Admin" asp-controller="Skill" asp-action="CreateContextual" method="post" class="skill-drawer-form">@Html.AntiForgeryToken()<input type="hidden" name="ExamId" value="@Model.Id" /><section class="skill-drawer-section skill-language-fr"><h3>🇫🇷 @T["Informations en français"]</h3><p>@T["Saisissez le nom et la description de la compétence en français."]</p><label>@T["Nom (français)"] *<input name="Name" required maxlength="140" /></label><label>@T["Description (français)"]<textarea name="Description" maxlength="4000" rows="4"></textarea></label></section><section class="skill-drawer-section skill-language-en"><h3>🇬🇧 @T["Informations en anglais"]</h3><p>@T["Saisissez le nom et la description de la compétence en anglais."]</p><label>@T["Nom (anglais)"]<input name="EnglishName" maxlength="140" lang="en" /></label><label>@T["Description (anglais)"]<textarea name="EnglishDescription" maxlength="4000" rows="4" lang="en"></textarea></label></section><section class="skill-drawer-section"><h3>@T["Association et pondération"]</h3><label>@T["Examen"]<input value="@Model.Name (@Model.Code)" readonly /></label><label>@T["Pondération (%)"] *<input name="Pourcentage" type="number" min="0" max="100" value="0" required data-skill-weight /><small>@T["Pondération actuelle totale"] : @totalWeight%</small><strong data-skill-weight-warning hidden></strong></label></section><footer class="skill-drawer-footer"><button type="button" class="admin-secondary" data-skill-drawer-close>@T["Annuler"]</button><button type="submit" class="admin-primary">✓ @T["Enregistrer la compétence"]</button></footer><div class="skill-drawer-error" role="alert" hidden></div></form></aside></div><div class="admin-detail-layout @(Model.ActiveTab is "skills" or "questions" ? "contextual-overview-hidden" : string.Empty)">
         <div class="admin-detail-main">
             <section class="admin-card admin-detail-section" aria-labelledby="admin-description-title">
                 <header class="admin-detail-section-header"><span class="admin-detail-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H5V3z" /><path d="M14 3v6h5M8 13h8M8 17h8" /></svg></span><h2 id="admin-description-title">@T["Description"]</h2></header>
@@ -166,7 +200,7 @@
         </aside>
     </div>
 
-    <section class="admin-status-banner @(isReady ? "is-ready" : "is-not-ready")" role="status">
+    <section class="admin-status-banner @(isReady ? "is-ready" : "is-not-ready") @(Model.ActiveTab is "skills" or "questions" ? "contextual-overview-hidden" : string.Empty)" role="status">
         <span class="admin-status-banner-icon" aria-hidden="true">@(isReady ? "✓" : "!")</span>
         <div>
             <h2>@(isReady ? T["Examen prêt"] : T["Configuration à vérifier"])</h2>
@@ -184,6 +218,22 @@
 </div>
 
 @section Scripts {
+    <script>
+        (() => {
+            const drawer = document.getElementById('skillCreateDrawer');
+            if (!drawer) return;
+            const form = document.getElementById('skillDrawerForm');
+            const weight = form.querySelector('[data-skill-weight]');
+            const warning = form.querySelector('[data-skill-weight-warning]');
+            const current = @totalWeight;
+            const toggle = open => { drawer.hidden = !open; document.body.classList.toggle('skill-drawer-open', open); if (open) form.querySelector('input[name="Name"]').focus(); };
+            document.querySelector('[data-skill-drawer-open]')?.addEventListener('click', () => toggle(true));
+            drawer.querySelectorAll('[data-skill-drawer-close]').forEach(button => button.addEventListener('click', () => toggle(false)));
+            document.addEventListener('keydown', event => { if (event.key === 'Escape' && !drawer.hidden) toggle(false); });
+            weight.addEventListener('input', () => { const total = current + (Number(weight.value) || 0); warning.hidden = total <= 100; warning.textContent = `⚠ La pondération totale passerait à ${total}%.`; });
+            form.addEventListener('submit', async event => { event.preventDefault(); const response = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'X-Requested-With': 'XMLHttpRequest' } }); if (response.ok) { const result = await response.json(); if (result.success) window.location.reload(); } else { document.querySelector('.skill-drawer-error').hidden = false; document.querySelector('.skill-drawer-error').textContent = '@T["Vérifiez les champs du formulaire."]'; } });
+        })();
+    </script>
     <script>
         document.addEventListener('click', async (event) => {
             const button = event.target.closest('[data-copy-public-link]');

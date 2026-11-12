@@ -37,10 +37,12 @@ public sealed class ExamController : Controller
         return model == null ? NotFound() : View(model);
     }
 
-    public async Task<IActionResult> Details(Guid id)
+    public async Task<IActionResult> Details(Guid id, string? tab = null)
     {
         var model = await _service.GetExamDetailsAsync(id);
-        return model == null ? NotFound() : View(model);
+        if (model == null) return NotFound();
+        model.ActiveTab = tab?.ToLowerInvariant() is "skills" or "questions" ? tab!.ToLowerInvariant() : "overview";
+        return View(model);
     }
 
     [HttpPost]

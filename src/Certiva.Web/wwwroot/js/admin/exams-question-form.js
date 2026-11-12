@@ -20,7 +20,7 @@
 
         form.addEventListener('click', function (event) {
             const target = event.target;
-            if (target.matches('[data-add-choice]')) addChoice(target.closest('[data-type-panel]'));
+            if (target.matches('[data-add-choice]')) addChoice(target.closest('[data-type-panel]'), form);
             if (target.matches('[data-remove-row]')) removeChoice(target);
             if (target.matches('[data-add-pair]')) addDragDropPair(form);
             if (target.matches('[data-add-grouped]')) addGroupedChoice(form);
@@ -95,7 +95,7 @@
         if (list.dataset.correctMode === 'single') syncSingleChoiceCorrect(list);
     }
 
-    function addChoice(panel) {
+    function addChoice(panel, form) {
         const list = panel?.querySelector('[data-choice-list]');
         if (!list) return;
         const index = list.querySelectorAll('.choice-row-modern').length;
@@ -104,14 +104,14 @@
         row.className = 'choice-row-modern';
         row.innerHTML = isSingle
             ? `<input type="hidden" name="Choices[${index}].Id" value="00000000-0000-0000-0000-000000000000" />
-               <label>${form.dataset.answerFr} <input name="Choices[${index}].ChoiceText" placeholder="${form.dataset.answerPlaceholderFr}" /></label>
-               <label>${form.dataset.answerEn} <input name="Choices[${index}].EnglishChoiceText" lang="en" placeholder="${form.dataset.answerPlaceholderEn}" /></label>
+               <label>${form.dataset.answerFr} <textarea name="Choices[${index}].ChoiceText" rows="2" placeholder="${form.dataset.answerPlaceholderFr}"></textarea></label>
+               <label>${form.dataset.answerEn} <textarea name="Choices[${index}].EnglishChoiceText" rows="2" lang="en" placeholder="${form.dataset.answerPlaceholderEn}"></textarea></label>
                <label class="radio-card"><input type="radio" name="singleCorrectChoice" data-choice-correct-radio /> ${form.dataset.correct}</label>
                <input type="hidden" name="Choices[${index}].IsCorrect" value="false" data-choice-correct />
                <button type="button" class="remove-choice" data-remove-row>${form.dataset.remove}</button>`
             : `<input type="hidden" name="Choices[${index}].Id" value="00000000-0000-0000-0000-000000000000" />
-               <label>${form.dataset.answerFr} <input name="Choices[${index}].ChoiceText" placeholder="${form.dataset.answerPlaceholderFr}" /></label>
-               <label>${form.dataset.answerEn} <input name="Choices[${index}].EnglishChoiceText" lang="en" placeholder="${form.dataset.answerPlaceholderEn}" /></label>
+               <label>${form.dataset.answerFr} <textarea name="Choices[${index}].ChoiceText" rows="2" placeholder="${form.dataset.answerPlaceholderFr}"></textarea></label>
+               <label>${form.dataset.answerEn} <textarea name="Choices[${index}].EnglishChoiceText" lang="en" rows="2" placeholder="${form.dataset.answerPlaceholderEn}"></textarea></label>
                <label class="checkline"><input type="checkbox" name="Choices[${index}].IsCorrect" value="true" /> ${form.dataset.correct}</label>
                <input type="hidden" name="Choices[${index}].IsCorrect" value="false" />
                <button type="button" class="remove-choice" data-remove-row>${form.dataset.remove}</button>`;
