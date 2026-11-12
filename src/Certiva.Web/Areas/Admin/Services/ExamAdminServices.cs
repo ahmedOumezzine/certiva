@@ -3,6 +3,7 @@ using Certiva.Infrastructure.Data;
 using Certiva.Domain.Exams;
 using Certiva.Domain.Attempts;
 using Certiva.Domain.Enums;
+using Certiva.Application.Exams;
 using Certiva.Services.Exams;
 using Microsoft.EntityFrameworkCore;
 using Certiva.Localization;
@@ -261,6 +262,22 @@ public sealed class ExamAdminService : IExamAdminService
 
         if (model == null)
             return null;
+
+        var publicationExam = await _db.Set<Exam>()
+            .AsNoTracking()
+            .Include(e => e.Questions!)
+                .ThenInclude(q => q.Choices)
+            .Include(e => e.Skills)
+            .FirstOrDefaultAsync(e => e.Id == id);
+        if (publicationExam != null)
+        {
+            model.PublicationErrors = ExamPublicationValidator
+                .Validate(publicationExam, publicationExam.Name, publicationExam.Description,
+                    publicationExam.Code, publicationExam.Slug, publicationExam.DurationMinutes,
+                    publicationExam.PassingPercentage, _text)
+                .ToList();
+            model.CanStart = model.PublicationErrors.Count == 0;
+        }
 
         if (includeQuestionTypeCounts)
         {

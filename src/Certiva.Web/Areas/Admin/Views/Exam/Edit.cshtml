@@ -193,6 +193,24 @@
                             <strong>@T["Bon à savoir"]</strong>
                             <p>@T["Cet aperçu reprend les informations principales visibles dans le catalogue des examens."]</p>
                         </div>
+
+                        <div class="admin-preview-note @(Model.CanStart ? "is-ready" : "is-warning")" role="status">
+                            <strong>@(Model.CanStart ? T["Examen prêt"] : T["Examen non prêt"])</strong>
+                            @if (Model.CanStart)
+                            {
+                                <p>@T["Cet examen peut être commencé par les candidats."]</p>
+                            }
+                            else
+                            {
+                                <p>@T["Corrigez les éléments suivants avant de démarrer l’examen :"]</p>
+                                <ul>
+                                    @foreach (var error in Model.PublicationErrors)
+                                    {
+                                        <li>@error</li>
+                                    }
+                                </ul>
+                            }
+                        </div>
                     </section>
 
                     <section class="admin-card admin-form-section admin-context-card" aria-labelledby="exam-skills-title">

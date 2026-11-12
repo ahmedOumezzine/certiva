@@ -105,6 +105,8 @@ public class ExamEditViewModel
 
     public DateTime CreatedOnUtc { get; set; }
     public DateTime? LastModifiedOnUtc { get; set; }
+    public bool CanStart { get; set; }
+    public List<string> PublicationErrors { get; set; } = new();
     public List<ExamQuestionTypeCountViewModel> QuestionTypeCounts { get; set; } = new();
     public string ActiveTab { get; set; } = "overview";
     public List<SkillRowViewModel> Skills { get; set; } = new();

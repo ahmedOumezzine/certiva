@@ -99,7 +99,7 @@
                             </header>
 
                             <div class="exam-question-badges"><span>@question.SkillName</span><span>@TypeLabel(question.QuestionType)</span></div>
-                            <h2 class="exam-question-text" tabindex="-1">@question.Description</h2>
+                            <h2 class="exam-question-text" tabindex="-1">@Html.Raw(question.Description)</h2>
                             <p class="exam-question-helper">@(question.QuestionType == QuestionType.MultiChoice ? T["Plusieurs réponses peuvent être correctes."] : question.QuestionType == QuestionType.ShortAnswer ? T["Saisissez votre réponse dans le champ ci-dessous."] : T["Choisissez la réponse qui vous semble correcte."])</p>
                             <p class="answer-save-status exam-answer-save-status" data-state="saved" aria-live="polite"></p>
 
@@ -114,7 +114,7 @@
                                         <label class="choice-option exam-answer-option">
                                             <input type="radio" name="question_@question.Id" value="@choice.Id" data-attempt-choice-id="@choice.AttemptChoiceId" id="choice_@choice.Id" checked="@(question.SelectedChoiceIds.Contains(choice.Id))" />
                                             <span class="exam-answer-indicator" aria-hidden="true"></span>
-                                            <span class="exam-answer-label">@label</span>
+                                            <span class="exam-answer-label">@Html.Raw(label)</span>
                                         </label>
                                     }
                                 </div>
@@ -133,7 +133,7 @@
                                             <label class="choice-option exam-answer-option exam-answer-option-checkbox">
                                                 <input type="checkbox" name="question_@question.Id" value="@choice.Id" data-attempt-choice-id="@choice.AttemptChoiceId" id="choice_@choice.Id" checked="@(question.SelectedChoiceIds.Contains(choice.Id))" />
                                                 <span class="exam-answer-indicator" aria-hidden="true"></span>
-                                                <span class="exam-answer-label">@choice.ChoiceText</span>
+                                                <span class="exam-answer-label">@Html.Raw(choice.ChoiceText)</span>
                                             </label>
                                         }
                                     }

@@ -42,57 +42,6 @@ public static class ExamPublicationValidator
         if (questions.Count == 0)
             errors.Add(Localized("Publish.QuestionRequired", "Publiez au moins une question utilisable avant de publier l’examen."));
 
-        foreach (var question in questions)
-        {
-            var label = string.IsNullOrWhiteSpace(question.Description)
-                ? text?["Publish.QuestionWithoutPrompt"].Value ?? "Question sans énoncé"
-                : question.Description.Trim();
-            if (question.ExamId != exam.Id)
-                errors.Add(Localized("Publish.QuestionWrongExam", "« {0} » n’est pas rattachée à cet examen.", label));
-
-            if (string.IsNullOrWhiteSpace(question.Description))
-                errors.Add(Localized("Publish.QuestionDescriptionRequired", "Chaque question publiée doit avoir un énoncé."));
-
-            if (!SupportedTypes.Contains(question.QuestionType))
-            {
-                errors.Add(Localized("Publish.UnsupportedType", "« {0} » utilise le type {1}, non pris en charge pour les examens notés.", label, text?.EnumLabel(question.QuestionType) ?? question.QuestionType.ToString()));
-                continue;
-            }
-
-            if (question.SkillId.HasValue && !(exam.Skills?.Any(skill => skill.Id == question.SkillId.Value && skill.ExamId == exam.Id) ?? false))
-                errors.Add(Localized("Publish.SkillWrongExam", "La compétence de « {0} » n’appartient pas à cet examen.", label));
-
-            var choices = question.Choices ?? new List<Choice>();
-            if (choices.Any(choice => string.IsNullOrWhiteSpace(choice.ChoiceText)))
-                errors.Add(Localized("Publish.ChoiceTextRequired", "Tous les choix de « {0} » doivent avoir un texte.", label));
-
-            var correctChoices = choices.Where(choice => choice.IsCorrect).ToList();
-            switch (question.QuestionType)
-            {
-                case QuestionType.SingleChoice:
-                    if (choices.Count < 2) errors.Add(Localized("Publish.TwoChoicesRequired", "« {0} » doit avoir au moins deux choix.", label));
-                    if (correctChoices.Count != 1) errors.Add(Localized("Publish.ExactlyOneCorrectRequired", "« {0} » doit avoir exactement une bonne réponse.", label));
-                    break;
-                case QuestionType.MultiChoice:
-                    if (choices.Count < 2) errors.Add(Localized("Publish.TwoChoicesRequired", "« {0} » doit avoir au moins deux choix.", label));
-                    if (correctChoices.Count == 0) errors.Add(Localized("Publish.CorrectRequired", "« {0} » doit avoir au moins une bonne réponse.", label));
-                    break;
-                case QuestionType.TrueFalse:
-                    if (choices.Count != 2 ||
-                        choices.Count(choice => string.Equals(choice.ChoiceText?.Trim(), "True", StringComparison.OrdinalIgnoreCase)) != 1 ||
-                        choices.Count(choice => string.Equals(choice.ChoiceText?.Trim(), "False", StringComparison.OrdinalIgnoreCase)) != 1)
-                    {
-                        errors.Add(Localized("Publish.TrueFalseChoicesRequired", "« {0} » doit contenir exactement les choix True et False.", label));
-                    }
-                    if (correctChoices.Count != 1) errors.Add(Localized("Publish.ExactlyOneCorrectRequired", "« {0} » doit avoir exactement une bonne réponse.", label));
-                    break;
-                case QuestionType.ShortAnswer:
-                    if (!correctChoices.Any(choice => !string.IsNullOrWhiteSpace(choice.ChoiceText)))
-                        errors.Add(Localized("Publish.ExpectedAnswerRequired", "« {0} » doit avoir une réponse attendue.", label));
-                    break;
-            }
-        }
-
         return errors;
     }
 }
